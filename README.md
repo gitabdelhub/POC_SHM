@@ -59,16 +59,3 @@ npm run lint
 ```
 > Remarque : `npm run lint` peut faire ressortir des écarts historiques du POC.
 
-## 7) Équipe / contributeurs
-- **Porteur du projet** : @gitabdelhub
-- **Contributeurs techniques** : voir l’historique Git du dépôt
-
-## 8) Roadmap (court terme)
-- Clarifier davantage la séparation entre code applicatif et scripts de maintenance.
-- Structurer les modules JS par domaine métier.
-- Ajouter une documentation technique par module (données, règles, dépendances).
-
----
-Pour un guide rapide de contribution et d’organisation, consulter aussi :
-- [`CONTRIBUTING.md`](./CONTRIBUTING.md)
-- [`docs/README.md`](./docs/README.md)
