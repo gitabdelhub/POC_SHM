@@ -1,61 +1,54 @@
-# POC SAHAM — Portail Analytique
+# POC_SAHAM - Portail Analytique & Data Engineering
 
-## 1) Vue d’ensemble
-Ce dépôt contient un **Proof of Concept (POC)** d’un portail analytique pour SAHAM Bank.
-L’objectif est de centraliser, dans une interface unique, des indicateurs métiers pour le pilotage commercial, le risque et la qualité de service.
+Bienvenue sur le Proof of Concept (POC) du **Portail Analytique de Saham Bank**, réalisé dans le cadre d'un stage de fin d'études / stage d'été en Data Engineering.
 
-## 2) Contexte métier et objectif
-Le projet vise à fournir une base de démonstration pour :
-- visualiser des KPI bancaires par profil utilisateur ;
-- simuler des parcours de consultation pour différentes directions ;
-- préparer une industrialisation progressive (intégration SI, gouvernance des accès, connecteurs BI).
+Ce dépôt contient l'interface frontend (POC) qui démontre les cas d'usage métiers : vision 360 des clients, rentabilité, suivi des commissions, cartographie des agences et l'assistant IA (Text-to-SQL).
 
-## 3) Fonctionnalités / cas d’usage (POC)
-- **Tableaux de bord de pilotage** (indicateurs globaux, tendances).
-- **Ciblage & campagnes**.
-- **Espace engagements** (octroi, suivi des dossiers).
-- **Qualité de service clientèle**.
-- **Analyse des risques**.
-- **Console d’administration** (utilisateurs, accès, dashboards).
-- **Placeholder d’intégration Power BI** pour la démonstration.
+## 🎯 Objectif du Stage
+Transformer ce POC frontend en un **produit Data complet et robuste**. L'objectif est de concevoir et d'implémenter l'ensemble de la chaîne de valeur de la donnée (Data Pipeline), du backend jusqu'à la restitution, en appliquant les meilleures pratiques de l'ingénierie des données.
 
-## 4) Stack technique
-- **Front-end** : HTML/CSS/JavaScript + Vite
-- **Visualisation** : D3 Geo / TopoJSON
-- **Runtime** : Node.js
-- **Outils** : TypeScript (vérification statique), npm
+## 🏗️ Architecture Cible (Réalisation)
 
-## 5) Structure du dépôt
-```text
-POC_SAHAM/
-├── README.md                  # Présentation projet
-├── CONTRIBUTING.md            # Règles de contribution
-├── docs/
-│   └── README.md              # Guide de structure et conventions
-├── index.html                 # Entrée principale de l’interface POC
-├── scripts.js                 # Logique front-end principale
-├── assets/                    # Ressources visuelles
-├── public/                    # Ressources publiques
-├── *.geojson                  # Données cartographiques de démonstration
-└── fix_*.cjs / patch_*.cjs    # Scripts utilitaires de maintenance ponctuelle
-```
+L'architecture globale du projet final se décompose en plusieurs couches :
 
-## 6) Installation locale et usage
-### Prérequis
-- Node.js 20+
-- npm
+### 1. Frontend (Ce POC)
+- **Technologies** : React, Tailwind CSS, Chart.js, Leaflet (Cartographie).
+- **Rôle** : Interface utilisateur, Data Visualization, intégration des rapports Power BI embarqués, et interface conversationnelle pour l'IA.
 
-### Démarrage
-```bash
-npm ci
-npm run dev
-```
-Application disponible sur : `http://localhost:3000`
+### 2. Backend & API
+- **Technologies** : Spring Boot (Java), Spring Security, Spring Data JPA.
+- **Rôle** : Sécurisation des endpoints, gestion des rôles (Directeurs, Agents, Admin), orchestration des requêtes vers la base de données et l'API d'IA.
 
-### Vérifications utiles
-```bash
-npm run build
-npm run lint
-```
-> Remarque : `npm run lint` peut faire ressortir des écarts historiques du POC.
+### 3. Data Engineering & Architecture Médaillon (Data Lakehouse / Data Warehouse)
+L'alimentation des tableaux de bord (Power BI / Frontend) et du Chatbot IA repose sur une architecture médaillon stricte :
+- 🥉 **Bronze (Raw)** : Ingestion des données brutes depuis le Core Banking System (transactions, CRM, crédits). Historisation sans transformation.
+- 🥈 **Silver (Cleansed & Conformed)** : Nettoyage, dédoublonnage, standardisation et jointures. Création d'un référentiel unique (ex: Référentiel Client, Référentiel Agence).
+- 🥇 **Gold (Curated / Business)** : Modélisation dimensionnelle (Fait/Dimension, Modèle en étoile). Tables agrégées prêtes pour la BI (ex: `Fact_Commissions`, `Fact_Credit`, `Dim_Agence`) et l'IA (Text-to-SQL).
+- **Outils** : Apache Airflow (Orchestration), dbt (Transformation), PostgreSQL / Snowflake / BigQuery (Stockage).
 
+### 4. Intelligence Artificielle (Text-to-SQL)
+- **Fonctionnement** : Le chatbot intercepte les questions en langage naturel, utilise un LLM (via LangChain / LlamaIndex) pour générer une requête SQL optimisée ciblant spécifiquement la couche **Gold**.
+- **Sécurité** : Application de filtres (Row-Level Security) pour s'assurer qu'un directeur d'agence ne voit que les données de son agence.
+
+### 5. CI/CD & DevOps
+- **Pipeline** : GitHub Actions ou GitLab CI.
+- **Étapes** : Linting, Tests unitaires (Data Tests via dbt), Build d'images Docker, et Déploiement continu.
+
+## 🚀 Comment exécuter ce POC en local ?
+
+1. Installez les dépendances :
+   \`\`\`bash
+   npm install
+   \`\`\`
+2. Lancez le serveur de développement :
+   \`\`\`bash
+   npm run dev
+   \`\`\`
+3. Ouvrez votre navigateur sur \`http://localhost:3000\`
+
+## 👥 Équipe et Intervenants
+- **Stagiaires Data Engineering** : Conception des pipelines de données, modélisation (Bronze/Silver/Gold), et implémentation du Text-to-SQL.
+- **Encadrement** : Supervision de l'architecture, validation métier et technique.
+
+---
+*Ce POC a été généré et structuré pour servir de fondation au projet de stage.*
