@@ -1,0 +1,201 @@
+  1450	                <button class="btn btn-primary" onclick="showToast('Ouverture du rapport PBI en plein écran simulée')">Ouvrir en plein écran</button>
+  1451	            </div>`;
+  1452	
+  1453	        /* --- 4. CORE LOGIC & ROUTING --- */
+  1454	
+  1455	        function login(role) {
+  1456	            APP.userRole = role;
+  1457	            document.getElementById('login-screen').classList.add('hidden');
+  1458	            document.getElementById('app-layout').classList.remove('hidden');
+  1459	            document.getElementById('saham-fab').classList.remove('hidden');
+  1460	            
+  1461	            // Set User Info
+  1462	            const roleNames = { 'DG': 'Directeur Général', 'DR': 'Directeur Régional', 'CA': "Chargé d'Affaires", 'AR': 'Analyste Risque', 'Admin': 'Administrateur IT' };
+  1463	            const nameMapping = { 'DG': 'Mehdi Tazi', 'DR': 'Youssef Berrada', 'CA': 'Amine Benali', 'AR': 'Nadia Fassi', 'Admin': 'Meryem El Asri' };
+  1464	            document.getElementById('user-avatar').innerText = (nameMapping[role] || role).substring(0,2).toUpperCase();
+  1465	            document.getElementById('user-name').innerText = nameMapping[role] || role;
+  1466	
+  1467	            buildSidebar();
+  1468	            
+  1469	            // Navigate to appropriate default tab based on role
+  1470	            if (role === 'Admin') {
+  1471	                location.hash = 'admin-add-dash';
+  1472	            } else {
+  1473	                        // Fallback
+  1474	                        location.hash = 'admin';
+  1475	                    }
+  1476	                }, 50);
+  1477	            } else {
+  1478	                const firstModule = APP.modules.find(m => m.roles && m.roles.includes(role));
+  1479	                if (firstModule) location.hash = firstModule.id;
+  1480	            }
+  1481	            route();
+  1482	        }
+  1483	
+  1484	        window.createCustomDashboard = function() {
+  1485	            const name = document.getElementById('new-dash-name').value;
+  1486	            const url = document.getElementById('new-dash-url').value;
+  1487	            const roles = Array.from(document.querySelectorAll('.new-dash-role:checked')).map(el => el.value);
+  1488	            
+  1489	            if(!name || !url || roles.length === 0) {
+  1490	                showToast("Veuillez remplir tous les champs et sélectionner au moins un rôle.", "error");
+  1491	                return;
+  1492	            }
+  1493	            
+  1494	            const newId = 'custom_pbi_' + Date.now();
+  1495	            APP.modules.push({
+  1496	                id: newId,
+  1497	                name: name,
+  1498	                icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>',
+  1499	                roles: roles,
+  1500	                isCustomExt: true,
+  1501	                url: url
+  1502	            });
+  1503	            
+  1504	            buildSidebar();
+  1505	            showToast("Module '" + name + "' créé avec succès.");
+  1506	            document.getElementById('new-dash-name').value = '';
+  1507	            document.getElementById('new-dash-url').value = '';
+  1508	        };
+  1509	
+  1510	        
+  1511	        function login(role) {
+  1512	            APP.userRole = role;
+  1513	            document.getElementById('login-screen').classList.add('hidden');
+  1514	            document.getElementById('app-layout').classList.remove('hidden');
+  1515	            document.getElementById('saham-fab').classList.remove('hidden');
+  1516	            
+  1517	            // Set User Info
+  1518	            const roleNames = { 'DG': 'Directeur Général', 'DR': 'Directeur Régional', 'CA': "Chargé d'Affaires", 'AR': 'Analyste Risque', 'Admin': 'Administrateur IT' };
+  1519	            document.getElementById('user-avatar').innerText = role.substring(0,2);
+  1520	            document.getElementById('user-name').innerText = roleNames[role] || role;
+  1521	
+  1522	            buildSidebar();
+  1523	            route();
+  1524	        }
+  1525	
+  1526	        function logout() {
+  1527	            location.hash = '';
+  1528	            document.getElementById('app-layout').classList.add('hidden');
+  1529	            document.getElementById('saham-fab').classList.add('hidden');
+  1530	            document.getElementById('saham-chat-panel').classList.remove('active');
+  1531	            document.getElementById('login-screen').classList.remove('hidden');
+  1532	        }
+  1533	
+  1534	
+  1535	        function toggleSidebar() {
+  1536	            document.getElementById('sidebar').classList.toggle('collapsed');
+  1537	        }
+  1538	
+  1539	        function buildSidebar() {
+  1540	            const ul = document.getElementById('sidebar-nav');
+  1541	            ul.innerHTML = '';
+  1542	            APP.modules.forEach(m => {
+  1543	                let showModule = false;
+  1544	                if (APP.userRole === 'Admin') {
+  1545	                    // Pour l'Admin, on ne montre que la section 'admin'
+  1546	                    showModule = (m.id === 'admin');
+  1547	                } else {
+  1548	                    // Pour les autres, on montre les modules où ils ont accès, mais on cache la section admin si ce n'est pas censé être vu (normalement seul Admin y a accès)
+  1549	                    showModule = m.roles && m.roles.includes(APP.userRole);
+  1550	                }
+  1551	
+  1552	                if (showModule) {
+  1553	                    if (m.isGroup) {
+  1554	                        ul.innerHTML += `<div style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--slate-500); padding: 16px 24px 8px; letter-spacing: 0.5px;">${m.name}</div>`;
+  1555	                        m.subItems.forEach(sub => {
+  1556	                            ul.innerHTML += `
+  1557	                                <li class="nav-item" id="nav-${sub.id}">
+  1558	                                    <a href="#${sub.id}" class="nav-link" style="padding-left: 32px;">
+  1559	                                        <span>${sub.name}</span>
+  1560	                                    </a>
+  1561	                                </li>`;
+  1562	                        });
+  1563	                    } else {
+  1564	                        ul.innerHTML += `
+  1565	                            <li class="nav-item" id="nav-${m.id}">
+  1566	                                <a href="#${m.id}" class="nav-link">
+  1567	                                    <div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${m.icon}</svg></div>
+  1568	                                    <span>${m.name}</span>
+  1569	                                </a>
+  1570	                            </li>`;
+  1571	                    }
+  1572	                }
+  1573	            });
+  1574	        } else {
+  1575	                        ul.innerHTML += `
+  1576	                            <li class="nav-item" id="nav-${m.id}">
+  1577	                                <a href="#${m.id}" class="nav-link">
+  1578	                                    <div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${m.icon}</svg></div>
+  1579	                                    <span>${m.name}</span>
+  1580	                                </a>
+  1581	                            </li>`;
+  1582	                    }
+  1583	                }
+  1584	            });
+  1585	        }
+  1586	
+  1587	        window.switchTab = function(btn, targetId) {
+  1588	            const tabs = btn.parentElement.querySelectorAll('.tab');
+  1589	            tabs.forEach(t => t.classList.remove('active'));
+  1590	            btn.classList.add('active');
+  1591	
+  1592	            const container = btn.closest('.fade-in');
+  1593	            if (targetId.startsWith('pbi-')) {
+  1594	                ['pbi-fin', 'pbi-risk', 'pbi-com'].forEach(id => {
+  1595	                    const el = document.getElementById(id);
+  1596	                    if(el) el.classList.add('hidden');
+  1597	                });
+  1598	            } else if (targetId.startsWith('admin-')) {
+  1599	                ['admin-users', 'admin-access', 'admin-dashboards', 'admin-embeddings', 'admin-filters', 'admin-add-dash'].forEach(id => {
+  1600	                    const el = document.getElementById(id);
+  1601	                    if(el) el.classList.add('hidden');
+  1602	                });
+  1603	            }
+  1604	            
+  1605	            const target = document.getElementById(targetId);
+  1606	            if(target) target.classList.remove('hidden');
+  1607	        };
+  1608	
+  1609	        
+  1610	        function createCustomDashboard() {
+  1611	            const name = document.getElementById('new-dash-name').value.trim();
+  1612	            const url = document.getElementById('new-dash-url').value.trim();
+  1613	            const parentId = document.getElementById('new-dash-parent').value;
+  1614	            if (!name) {
+  1615	                showToast('Veuillez donner un nom au module', true);
+  1616	                return;
+  1617	            }
+  1618	            const roles = Array.from(document.querySelectorAll('.new-dash-role:checked')).map(cb => cb.value);
+  1619	            if (roles.length === 0) {
+  1620	                showToast('Veuillez sélectionner au moins un rôle', true);
+  1621	                return;
+  1622	            }
+  1623	            const id = 'custom-' + Date.now();
+  1624	            const newModule = {
+  1625	                id: id,
+  1626	                name: name,
+  1627	                icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />',
+  1628	                roles: roles,
+  1629	                isCustomExt: true,
+  1630	                url: url || ''
+  1631	            };
+  1632	
+  1633	            if (parentId) {
+  1634	                const parentGroup = APP.modules.find(m => m.id === parentId);
+  1635	                if (parentGroup) {
+  1636	                    if (!parentGroup.isGroup) {
+  1637	                        parentGroup.isGroup = true;
+  1638	                        parentGroup.subItems = [];
+  1639	                    }
+  1640	                    parentGroup.subItems.push(newModule);
+  1641	                } else {
+  1642	                    APP.modules.push(newModule);
+  1643	                }
+  1644	            } else {
+  1645	                APP.modules.push(newModule);
+  1646	            }
+  1647	            buildSidebar();
+  1648	            showToast('Dashboard créé avec succès');
+  1649	            document.getElementById('new-dash-name').value = '';
+  1650	            document.getElementById('new-dash-url').value = '';

@@ -1,0 +1,161 @@
+  2270	
+  2271	        function renderAdmin(container, activeTab = 'admin-users') {
+  2272	            container.innerHTML = `<div class="fade-in" style="height: 100%; display: flex; flex-direction: column;">
+  2273	                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+  2274	                        <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; color:var(--dark-teal); font-weight:700; margin: 0;">CONSOLE ADMIN</h2>
+  2275	                        <span style="background: var(--light-bg); color: var(--primary-teal); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600;">${
+  2276	                            activeTab === 'admin-users' ? 'Gestion des Utilisateurs' :
+  2277	                            activeTab === 'admin-access' ? 'Gestion des Accès' :
+  2278	                            activeTab === 'admin-dashboards' ? 'Gestion des Dashboards' :
+  2279	                            activeTab === 'admin-embeddings' ? 'Configuration Power BI' :
+  2280	                            activeTab === 'admin-filters' ? 'Configuration des Filtres' :
+  2281	                            'Ajouter un Dashboard'
+  2282	                        }</span>
+  2283	                    </div>
+  2284	                    
+  2285	                    <div style="flex: 1; overflow-y: auto;">
+  2286	                        <!-- Utilisateurs -->
+  2287	                        <div id="admin-users" class="${activeTab === 'admin-users' ? '' : 'hidden'}">
+  2288	                            <div class="card">
+  2289	                                <div class="card-header">
+  2290	                                    <h3 class="chart-title" style="margin:0;">Liste des Utilisateurs</h3>
+  2291	                                    <button class="btn btn-primary" onclick="showToast('Ajouter utilisateur')">+ Nouvel Utilisateur</button>
+  2292	                                </div>
+  2293	                                <div class="table-responsive">
+  2294	                                    <table>
+  2295	                                        <thead><tr><th>Utilisateur</th><th>Email</th><th>Profil Technique</th><th>Agence / DR</th><th>Statut</th><th>Actions</th></tr></thead>
+  2296	                                        <tbody>
+  2297	                                            ${MOCK.admins.map(a => `
+  2298	                                                <tr>
+  2299	                                                    <td style="font-weight:600">${a.nom}</td>
+  2300	                                                    <td>${a.email}</td>
+  2301	                                                    <td><span style="background:var(--accent-teal-light); color:var(--primary-teal); padding:4px 8px; border-radius:4px; font-size:11px;">${a.profil}</span></td>
+  2302	                                                    <td>${a.agence}</td>
+  2303	                                                    <td>${getStatutBadge(a.statut)}</td>
+  2304	                                                    <td>
+  2305	                                                        <button class="icon-btn" onclick="showToast('Modifier utilisateur')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
+  2306	                                                    </td>
+  2307	                                                </tr>`).join('')}
+  2308	                                        </tbody>
+  2309	                                    </table>
+  2310	                                </div>
+  2311	                            </div>
+  2312	                        </div>
+  2313	
+  2314	                        <!-- Gestion des accès -->
+  2315	                        <div id="admin-access" class="${activeTab === 'admin-access' ? '' : 'hidden'}">
+  2316	                            <div class="card" style="padding:32px;">
+  2317	                                <h3 class="chart-title">Gestion des Accès / Permissions</h3>
+  2318	                                <p style="color:var(--slate-500); margin-bottom:24px;">Configurez la visibilité des modules pour chaque profil métier ou accordez des accès exceptionnels.</p>
+  2319	                                <div style="background:var(--light-bg); border-radius:8px; padding:24px; text-align:center;">
+  2320	                                    <svg width="48" height="48" fill="none" stroke="var(--primary-teal)" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom:16px; opacity:0.5;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+  2321	                                    <h4 style="font-weight:600; color:var(--dark-teal); margin-bottom:8px;">Matrice des rôles</h4>
+  2322	                                    <p style="color:var(--slate-500); font-size:13px; margin-bottom:16px;">Sélectionnez un profil pour modifier ses habilitations sur les rapports et modules.</p>
+  2323	                                    <select style="padding:10px 16px; border-radius:8px; border:1px solid var(--sec-bg); font-size:14px; width:250px;">
+  2324	                                        <option>Directeur Général</option>
+  2325	                                        <option>Directeur de Réseau</option>
+  2326	                                        <option>Chargé d'Affaires</option>
+  2327	                                        <option>Directeur Risques</option>
+  2328	                                    </select>
+  2329	                                </div>
+  2330	                            </div>
+  2331	                        </div>
+  2332	
+  2333	                        <!-- Gestion des dashboards -->
+  2334	                        <div id="admin-dashboards" class="${activeTab === 'admin-dashboards' ? '' : 'hidden'}">
+  2335	                            <div class="card" style="padding:32px;">
+  2336	                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+  2337	                                    <h3 class="chart-title" style="margin: 0;">Dashboards Configurés</h3>
+  2338	                                    <button class="btn btn-primary" onclick="location.hash='admin-add-dash'">+ Ajouter Dashboard</button>
+  2339	                                </div>
+  2340	                                <div class="table-responsive">
+  2341	                                    <table>
+  2342	                                        <thead><tr><th>Nom du Module</th><th>ID</th><th>Type</th><th>Rôles autorisés</th><th>Actions</th></tr></thead>
+  2343	                                        <tbody id="admin-dash-list">
+  2344	                                        </tbody>
+  2345	                                    </table>
+  2346	                                </div>
+  2347	                            </div>
+  2348	                        </div>
+  2349	
+  2350	                        <!-- Gestion des embeddings -->
+  2351	                        <div id="admin-embeddings" class="${activeTab === 'admin-embeddings' ? '' : 'hidden'}">
+  2352	                            <div class="card" style="padding:32px;">
+  2353	                                <h3 class="chart-title">Configuration Power BI / Embeddings</h3>
+  2354	                                <p style="color:var(--slate-500); margin-bottom:24px; line-height:1.6;">Configurez les identifiants Azure AD et le Workspace ID pour l'affichage natif des rapports Power BI dans l'application.</p>
+  2355	                                
+  2356	                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:20px;">
+  2357	                                    <div>
+  2358	                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Tenant ID</label>
+  2359	                                        <input type="text" value="b41b72d0-4e9f-4c26-8a69-f949f367c91d" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+  2360	                                    </div>
+  2361	                                    <div>
+  2362	                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Client ID</label>
+  2363	                                        <input type="text" value="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+  2364	                                    </div>
+  2365	                                    <div style="grid-column:1/-1;">
+  2366	                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Workspace ID (Production)</label>
+  2367	                                        <input type="text" value="wks-saham-prod-001" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+  2368	                                    </div>
+  2369	                                </div>
+  2370	                                <button class="btn btn-primary" style="margin-top:24px;" onclick="showToast('Configuration enregistrée')">Sauvegarder Configuration</button>
+  2371	                            </div>
+  2372	                        </div>
+  2373	
+  2374	                        <!-- Configuration des filtres -->
+  2375	                        <div id="admin-filters" class="${activeTab === 'admin-filters' ? '' : 'hidden'}">
+  2376	                            <div class="card" style="padding:32px;">
+  2377	                                <h3 class="chart-title">Configuration Globale des Filtres</h3>
+  2378	                                <p style="color:var(--slate-500); margin-bottom:24px;">Gérez les filtres par défaut appliqués sur les embeddings via le RLS (Row-Level Security) selon le profil utilisateur connecté.</p>
+  2379	                                <div style="padding:16px; border:1px solid var(--sec-bg); border-radius:8px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+  2380	                                    <div>
+  2381	                                        <div style="font-weight:600; color:var(--dark-teal);">Filtre: Région Automatique</div>
+  2382	                                        <div style="font-size:12px; color:var(--slate-500);">Applique le filtre "Région" selon l'affectation du DR.</div>
+  2383	                                    </div>
+  2384	                                    <div style="width:40px; height:24px; background:var(--primary-teal); border-radius:12px; position:relative;">
+  2385	                                        <div style="width:20px; height:20px; background:white; border-radius:50%; position:absolute; top:2px; right:2px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
+  2386	                                    </div>
+  2387	                                </div>
+  2388	                                <button class="btn btn-secondary" onclick="showToast('Ajouter un filtre global')">+ Ajouter Règle</button>
+  2389	                            </div>
+  2390	                        </div>
+  2391	
+  2392	                        <!-- Ajouter un Dashboard -->
+  2393	                        <div id="admin-add-dash" class="${activeTab === 'admin-add-dash' ? '' : 'hidden'}">
+  2394	                            <div class="card" style="padding:32px;">
+  2395	                                <h3 class="chart-title">Créer un Nouveau Module</h3>
+  2396	                                <p style="color:var(--slate-500); margin-bottom:24px; line-height:1.6;">Créez dynamiquement un nouveau lien dans le menu de gauche pour intégrer un rapport Power BI ou une page web externe.</p>
+  2397	                                
+  2398	                                <div style="display:flex; flex-direction:column; gap:20px;">
+  2399	                                    <div>
+  2400	                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Nom du Module</label>
+  2401	                                        <input type="text" id="new-dash-name" placeholder="Ex: Suivi des Réclamations" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+  2402	                                    </div>
+  2403	                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+  2404	                                        <div>
+  2405	                                            <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Module Parent (Optionnel)</label>
+  2406	                                            <select id="new-dash-parent" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+  2407	                                                <option value="">Aucun (Module Principal)</option>
+  2408	                                                <option value="dashboard">Pilotage Commercial</option>
+  2409	                                                <option value="engagements">Espace Engagements</option>
+  2410	                                                <option value="qualite">Qualité de Service Clientèle</option>
+  2411	                                                <option value="rentabilite">Rentabilité</option>
+  2412	                                            </select>
+  2413	                                        </div>
+  2414	                                        <div>
+  2415	                                            <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">URL du rapport (Optionnel)</label>
+  2416	                                            <input type="text" id="new-dash-url" placeholder="https://app.powerbi.com/reportEmbed?reportId=..." style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+  2417	                                        </div>
+  2418	                                    </div>
+  2419	                                    <div>
+  2420	                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Accès (Rôles autorisés)</label>
+  2421	                                        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+  2422	                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="DG" checked> Direction Générale</label>
+  2423	                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="DR" checked> Dir. Réseau</label>
+  2424	                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="CA"> Chargé d'Affaires</label>
+  2425	                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="AR"> Dir. Risques</label>
+  2426	                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="Admin" checked> Admin</label>
+  2427	                                        </div>
+  2428	                                    </div>
+  2429	                                    <div>
+  2430	                                        <button class="btn btn-primary" onclick="createCustomDashboard()">Créer le module</button>

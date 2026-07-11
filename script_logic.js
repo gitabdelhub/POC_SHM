@@ -1,0 +1,1878 @@
+        /* --- 1. MOCK DATA GENERATION --- */
+                // Realistic data generation
+        const MOCK = {
+            agences: ['Casablanca Anfa', 'Casablanca Maarif', 'Rabat Agdal', 'Rabat Hassan', 'Marrakech Gueliz', 'Agadir Centre', 'Fès Ville Nouvelle', 'Tanger Marina'],
+            segments: ['Particuliers', 'Professionnels', 'PME', 'Grandes Entreprises', 'Bancassurance'],
+            firstNames: ['Rachid', 'Fatima', 'Youssef', 'Khadija', 'Omar', 'Amina', 'Mehdi', 'Laila', 'Hassan', 'Sanae', 'Karim', 'Nadia', 'Adil', 'Mouna', 'Tarik'],
+            lastNames: ['Benali', 'El Idrissi', 'Amrani', 'Tazi', 'Berrada', 'Bennani', 'Chraibi', 'Mansour', 'El Fassi', 'Alaoui', 'Tahiri', 'Zniber', 'Filali', 'El Ouardi', 'Kabbaj'],
+            clients: [],
+            dossiers: [
+                { id: 'CR-2026-001', client: 'Groupe SNI', type: 'Assurance Flotte Auto', montant: 45000000, score: 88, statut: 'Actif' },
+                { id: 'CR-2026-002', client: 'Maroc Telecom', type: 'Assurance Maladie', montant: 12000000, score: 92, statut: 'En attente' },
+                { id: 'CR-2026-003', client: 'OCP Group', type: 'Couverture Multirisque', montant: 85000000, score: 95, statut: 'Actif' },
+                { id: 'CR-2026-004', client: 'StartUp Tech M', type: 'Assurance RC Pro', montant: 500000, score: 62, statut: 'A risque' }
+            ],
+            // Seasonality: Peaks in Q2 (M6) and Q4 (M12)
+            pnbData: [11.2, 12.5, 13.8, 14.1, 15.6, 18.4, 14.2, 13.5, 15.1, 16.5, 17.8, 22.1], // Millions MAD
+            creditDistrib: [
+                { label: 'Assurance Non-Vie', value: 40 }, { label: 'Assurance Vie', value: 30 }, 
+                { label: 'Bancassurance', value: 15 }, { label: 'Corporate', value: 10 }, { label: 'Santé', value: 5 }
+            ],
+            admins: [
+                { nom: 'Amina Bennani', email: 'a.bennani@saham.ma', profil: 'Admin IT', agence: 'Siège Casa', statut: 'Actif', dashboards: 4 },
+                { nom: 'Youssef Amrani', email: 'y.amrani@saham.ma', profil: 'Admin Data', agence: 'Siège Casa', statut: 'Actif', dashboards: 8 },
+                { nom: 'Hassan El Fassi', email: 'h.elfassi@saham.ma', profil: 'Admin Risque', agence: 'Siège Casa', statut: 'Suspendu', dashboards: 1 }
+            ],
+            
+            queries: [
+                { id: 'Q001', question: "Clients avec score de risque critique (&lt; 30)", sql: "SELECT id, nom, score, encours FROM clients WHERE score < 30 ORDER BY score ASC LIMIT 5;", results: 14, time: 142, date: "07/07/2026 09:14", user: "Directeur Régional", tables: ['clients'], status: 'Succès' },
+                { id: 'Q002', question: "Agences avec le plus fort taux NPL", sql: "SELECT agence, npl_ratio FROM agences_perf ORDER BY npl_ratio DESC LIMIT 3;", results: 8, time: 85, date: "07/07/2026 09:42", user: "Administrateur", tables: ['agences_perf', 'credits'], status: 'Succès' },
+                { id: 'Q003', question: "Transactions suspectes dernières 48h", sql: "SELECT id_trx, montant, motif_alerte FROM transactions WHERE alerte_aml = true AND date_trx >= NOW() - INTERVAL '48 hours';", results: 4, time: 210, date: "07/07/2026 10:05", user: "Directeur Agence", tables: ['transactions', 'alertes_aml'], status: 'Succès' },
+                { id: 'Q004', question: "Quel est le CA de l'agence Anfa ?", sql: "SELECT sum(ca) FROM agences_perf WHERE agence = 'Casablanca Anfa';", results: 1, time: 54, date: "06/07/2026 14:22", user: "Chef d'Agence", tables: ['agences_perf'], status: 'Succès' },
+                { id: 'Q005', question: "Montre moi les clients de Tanger", sql: "SELECT * FROM clients WHERE ville = 'Tanger';", results: 342, time: 120, date: "06/07/2026 15:10", user: "Conseiller Pro", tables: ['clients'], status: 'Succès' },
+                { id: 'Q006', question: "Dossiers crédit en surveillance ce mois", sql: "SELECT id, type, montant, agence FROM dossiers WHERE statut = 'Surveillance' AND extract(month from date_maj) = extract(month from current_date);", results: 8, time: 165, date: "06/07/2026 16:45", user: "Analyste Risque", tables: ['dossiers'], status: 'Succès' },
+                { id: 'Q007', question: "Evolution des dépôts par trimestre", sql: "SELECT trimestre, sum(depots) FROM performances GROUP BY trimestre ORDER BY trimestre;", results: 4, time: 88, date: "05/07/2026 09:30", user: "Directeur Régional", tables: ['performances'], status: 'Succès' },
+                { id: 'Q008', question: "Clients ayant souscrit à l'assurance vie", sql: "SELECT * FROM clients c JOIN produits p ON c.id = p.client_id WHERE p.type = 'Assurance Vie';", results: 1250, time: 310, date: "05/07/2026 11:15", user: "Marketing", tables: ['clients', 'produits'], status: 'Erreur' },
+                { id: 'Q009', question: "Top 5 expositions crédit par segment", sql: "SELECT segment, sum(encours) as total_encours FROM clients GROUP BY segment ORDER BY total_encours DESC LIMIT 5;", results: 5, time: 112, date: "05/07/2026 14:50", user: "Analyste Risque", tables: ['clients'], status: 'Succès' },
+                { id: 'Q010', question: "Churn prévu par agence Q3 2026", sql: "SELECT agence, predicted_churn_rate FROM churn_predictions WHERE quarter = 'Q3-2026' ORDER BY predicted_churn_rate DESC LIMIT 3;", results: 8, time: 195, date: "04/07/2026 08:20", user: "Data Scientist", tables: ['churn_predictions'], status: 'Succès' },
+                { id: 'Q011', question: "PME éligibles à une offre crédit", sql: "SELECT nom, encours, score_appetence FROM clients WHERE segment = 'PME' AND eligibilite_credit = true ORDER BY score_appetence DESC LIMIT 5;", results: 142, time: 240, date: "04/07/2026 10:30", user: "Conseiller Pro", tables: ['clients', 'scoring'], status: 'Succès' },
+                { id: 'Q012', question: "Comparatif encours vs objectifs par DR", sql: "SELECT dr, sum(encours) as realise, sum(objectif) as cible FROM agences_perf GROUP BY dr;", results: 3, time: 95, date: "04/07/2026 16:15", user: "Directeur Régional", tables: ['agences_perf'], status: 'Succès' },
+                { id: 'Q013', question: "Nombre de réclamations ouvertes", sql: "SELECT count(*) FROM reclamations WHERE statut = 'Ouverte';", results: 1, time: 42, date: "03/07/2026 09:05", user: "Service Client", tables: ['reclamations'], status: 'Succès' },
+                { id: 'Q014', question: "Temps moyen de traitement des crédits", sql: "SELECT avg(date_decision - date_depot) FROM dossiers WHERE statut IN ('Approuvé', 'Rejeté');", results: 1, time: 134, date: "03/07/2026 11:40", user: "Administrateur", tables: ['dossiers'], status: 'Succès' },
+                { id: 'Q015', question: "Liste des collaborateurs absents", sql: "SELECT * FROM rh_absences WHERE date_debut <= CURRENT_DATE AND date_fin >= CURRENT_DATE;", results: 24, time: 68, date: "02/07/2026 08:50", user: "RH", tables: ['rh_absences'], status: 'Erreur' },
+                { id: 'Q016', question: "Portefeuille à risque Casablanca vs Marrakech", sql: "SELECT ville, sum(encours_npl) as risque_total FROM clients WHERE ville IN ('Casablanca', 'Marrakech') GROUP BY ville;", results: 2, time: 105, date: "02/07/2026 14:12", user: "Analyste Risque", tables: ['clients'], status: 'Succès' },
+                { id: 'Q017', question: "Évolution du PNB ce trimestre", sql: "SELECT mois, pnb_realise, pnb_objectif FROM performances WHERE trimestre = 'Q3' ORDER BY mois ASC;", results: 3, time: 76, date: "01/07/2026 09:25", user: "Directeur Financier", tables: ['performances'], status: 'Succès' },
+                { id: 'Q018', question: "Clients VIP sans visite depuis 6 mois", sql: "SELECT * FROM clients WHERE segment = 'Premium' AND last_visit < NOW() - INTERVAL '6 months';", results: 45, time: 180, date: "01/07/2026 11:55", user: "Conseiller VIP", tables: ['clients', 'visites'], status: 'Succès' },
+                { id: 'Q019', question: "Taux de transformation des leads", sql: "SELECT count(case when converted then 1 end)::float / count(*) FROM leads;", results: 1, time: 155, date: "30/06/2026 15:30", user: "Marketing", tables: ['leads'], status: 'Succès' },
+                { id: 'Q020', question: "Liste des guichets automatiques en panne", sql: "SELECT id_atm, localisation FROM atms WHERE statut_technique != 'OK';", results: 12, time: 50, date: "30/06/2026 17:45", user: "Support IT", tables: ['atms'], status: 'Succès' }
+            ], // Query logger
+        };
+
+        // Generate 100 Clients with realistic risk correlation
+        for(let i=1; i<=100; i++) {
+            const fname = MOCK.firstNames[Math.floor(Math.random() * MOCK.firstNames.length)];
+            const lname = MOCK.lastNames[Math.floor(Math.random() * MOCK.lastNames.length)];
+            const segment = MOCK.segments[Math.floor(Math.random() * MOCK.segments.length)];
+            const agence = MOCK.agences[Math.floor(Math.random() * MOCK.agences.length)];
+            
+            // Base encours
+            let baseEncours = 50000;
+            if (segment === 'Premium') baseEncours = 300000;
+            if (segment === 'PME') baseEncours = 1000000;
+            if (segment === 'Corporate') baseEncours = 5000000;
+            
+            const encours = Math.floor(Math.random() * baseEncours) + baseEncours / 2;
+            
+            // Risk correlation: PME and Agricole have slightly higher risk. Corporate has lower risk.
+            let baseScore = 65;
+            if (segment === 'Corporate') baseScore += 20;
+            if (segment === 'PME') baseScore -= 15;
+            if (segment === 'Agricole') baseScore -= 20;
+            
+            // Some specific agencies have higher risk (e.g. Tanger Marina)
+            if (agence === 'Tanger Marina') baseScore -= 10;
+            
+            let score = baseScore + (Math.floor(Math.random() * 40) - 20);
+            score = Math.max(10, Math.min(99, score)); // clamp 10-99
+            
+            let statut = 'Actif';
+            if (score < 40) statut = 'À risque';
+            if (score < 25) statut = 'Défaut';
+
+            MOCK.clients.push({ id: `CLI-${10000+i}`, nom: `${fname} ${lname}`, segment, agence, ville: agence.split(' ')[0], encours, score, statut, age: Math.floor(Math.random() * 50) + 22 });
+        }
+
+        // Generate 35 Dossiers (Engagements)
+        const statutsDossier = ['En analyse', 'Validé', 'Débloqué', 'Surveillance', 'Contentieux'];
+        const typesCredit = ['Mourabaha Immo', 'Ijara', 'Mourabaha Auto', 'Crédit Tréso', 'Investissement PME'];
+        for(let i=1; i<=35; i++) {
+            const client = MOCK.clients[Math.floor(Math.random() * MOCK.clients.length)];
+            MOCK.dossiers.push({
+                ref: `SBK-${new Date().getFullYear()}-${1000+i}`,
+                client: client.nom,
+                type: typesCredit[Math.floor(Math.random() * typesCredit.length)],
+                montant: Math.floor(Math.random() * 1900000) + 100000,
+                duree: [12, 24, 36, 48, 60, 120, 240][Math.floor(Math.random() * 7)],
+                taux: (Math.random() * 3 + 2).toFixed(2),
+                score: client.score,
+                statut: statutsDossier[Math.floor(Math.random() * statutsDossier.length)]
+            });
+        }
+
+        /* --- 2. APP STATE --- */
+        const APP = {
+            userRole: null,
+            modules: [
+                { id: 'dashboard', name: "Pilotage Commercial", icon: '<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>', roles: ['DG', 'DR', 'CA', 'AR', 'Admin'], hasSub: true },
+                { id: 'ciblage', name: "Ciblage & Campagnes", icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />', roles: ['DG', 'DR', 'CA', 'Admin'] },
+                { id: 'engagements', name: "Espace Engagements", icon: '<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.956 11.956 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>', roles: ['DG', 'DR', 'CA', 'AR', 'Admin'], hasSub: true },
+                { id: 'qualite', name: "Qualité de Service Clientèle", icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>', roles: ['DG', 'DR', 'CA', 'AR', 'Admin'], hasSub: true },
+                { id: 'rentabilite', name: "Rentabilité", icon: '<path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>', roles: ['DG', 'DR', 'CA', 'AR', 'Admin'], isGroup: true, subItems: [
+                    { id: 'powerbi', name: "PNB Commercial" },
+                    { id: 'commissions', name: "Suivi des Commissions" }
+                ]},
+                { id: 'admin', name: "CONSOLE ADMIN", icon: '<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>', roles: ['Admin'], isGroup: true, subItems: [
+                    { id: 'admin-users', name: "Gestion des utilisateurs" },
+                    { id: 'admin-access', name: "Gestion des accès" },
+                    { id: 'admin-dashboards', name: "Gestion des dashboards" },
+                    { id: 'admin-embeddings', name: "Gestion des embeddings" },
+                    { id: 'admin-filters', name: "Configuration des filtres" },
+                    { id: 'admin-add-dash', name: "Ajouter un dashboard" }
+                ] }
+            ]
+        };
+
+        /* --- 3. UTILITIES & COMPONENTS --- */
+        const formatMAD = (num) => new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD', maximumFractionDigits: 0 }).format(num);
+        
+        function showToast(message, type='success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast`;
+            toast.style.borderLeftColor = type === 'success' ? '#10B981' : 'var(--primary-orange)';
+            toast.innerHTML = `<svg width="24" height="24" fill="none" stroke="${type === 'success' ? '#10B981' : 'var(--primary-orange)'}" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function openDrawer(title, contentHTML) {
+            document.getElementById('drawer-title').innerText = title;
+            document.getElementById('drawer-content').innerHTML = contentHTML;
+            document.getElementById('drawer-overlay').classList.add('active');
+            document.getElementById('drawer-panel').classList.add('active');
+        }
+        function closeDrawer() {
+            document.getElementById('drawer-overlay').classList.remove('active');
+            document.getElementById('drawer-panel').classList.remove('active');
+        }
+
+                function getScoreBadge(score) {
+            let color = '#10B981';
+            let label = 'Bon';
+            if(score < 70) { color = '#F59E0B'; label = 'Moyen'; }
+            if(score < 40) { color = '#EF4444'; label = 'Risqué'; }
+            
+            return `
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-weight:700; width:24px; text-align:right;">${score}</span>
+                <div style="flex:1; max-width:80px; height:6px; background:var(--sec-bg); border-radius:3px; overflow:hidden;">
+                    <div style="height:100%; width:${score}%; background:${color};"></div>
+                </div>
+                <span style="font-size:11px; color:var(--slate-500);">${label}</span>
+            </div>`;
+        }
+
+                function getStatutBadge(statut) {
+            const map = {
+                'Actif': 'success', 'À risque': 'warning', 'Défaut': 'danger',
+                'Validé': 'success', 'Débloqué': 'success', 'En analyse': 'info', 'Surveillance': 'warning', 'Contentieux': 'danger'
+            };
+            const colorClass = map[statut] || 'info';
+            let dot = '';
+            if (statut === 'À risque') {
+                dot = '<span style="display:inline-block; width:6px; height:6px; background:currentColor; border-radius:50%; margin-right:6px; animation: pulse 1.5s infinite;"></span>';
+            }
+            return `<span class="status-badge status-${colorClass}" style="display:inline-flex; align-items:center;">${dot}${statut}</span>`;
+        }
+
+                function buildKPI(title, value, delta, isPos, iconSvg) {
+            // value might be string like '1.2M MAD' or number
+            return `
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span>${title}</span>
+                    <div class="kpi-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${iconSvg}</svg></div>
+                </div>
+                <div class="kpi-value animate-val" data-val="${value}">0</div>
+                <div class="kpi-delta ${isPos ? 'delta-positive' : 'delta-negative'}">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="${isPos ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' : 'M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6'}"></path></svg>
+                    ${delta}
+                </div>
+            </div>`;
+        }
+
+        /* SVG Line Chart Builder */
+        function createLineChart(data, width=700, height=250) {
+            const padX = 40, padY = 40;
+            const max = Math.max(...data) * 1.1;
+            const stepX = (width - padX * 2) / (data.length - 1);
+            
+            let points = data.map((d, i) => {
+                const x = padX + i * stepX;
+                const y = height - padY - (d / max) * (height - padY * 2);
+                return `${x},${y}`;
+            }).join(' ');
+
+            let circles = data.map((d, i) => {
+                const x = padX + i * stepX;
+                const y = height - padY - (d / max) * (height - padY * 2);
+                return `<circle cx="${x}" cy="${y}" r="4" fill="var(--primary-orange)" stroke="var(--surface)" stroke-width="2" class="hover-point" data-val="${d}M MAD" onmouseover="showTooltip(event, '${d}M MAD')" onmouseout="hideTooltip()"/>
+                        <text x="${x}" y="${height - 10}" font-size="10" fill="var(--slate-500)" text-anchor="middle">M${i+1}</text>`;
+            }).join('');
+
+            return `
+            <svg viewBox="0 0 ${width} ${height}" class="nat-chart">
+                <!-- Grid -->
+                <line x1="${padX}" y1="${padY}" x2="${width-padX}" y2="${padY}" stroke="var(--sec-bg)" />
+                <line x1="${padX}" y1="${height/2}" x2="${width-padX}" y2="${height/2}" stroke="var(--sec-bg)" />
+                <line x1="${padX}" y1="${height-padY}" x2="${width-padX}" y2="${height-padY}" stroke="var(--slate-300)" />
+                <!-- Path -->
+                <polyline points="${points}" fill="rgba(46, 71, 65, 0.1)" stroke="var(--primary-teal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                ${circles}
+            </svg>`;
+        }
+
+        /* SVG Bar Chart Builder */
+        function createBarChart(dataArr, width=700, height=250) {
+            const padX = 40, padY = 40;
+            const max = Math.max(...dataArr.map(d => d.value)) * 1.1;
+            const barWidth = 40;
+            const stepX = (width - padX * 2) / dataArr.length;
+
+            let rects = dataArr.map((d, i) => {
+                const x = padX + (i * stepX) + (stepX/2) - (barWidth/2);
+                const h = (d.value / max) * (height - padY * 2);
+                const y = height - padY - h;
+                return `
+                <rect x="${x}" y="${y}" width="${barWidth}" height="${h}" fill="var(--primary-teal)" rx="4" ry="4" 
+                      onmouseover="this.setAttribute('fill', 'var(--dark-teal)'); showTooltip(event, '${d.value}%')" 
+                      onmouseout="this.setAttribute('fill', 'var(--primary-teal)'); hideTooltip()"/>
+                <text x="${x + barWidth/2}" y="${height - 15}" font-size="10" fill="var(--slate-500)" text-anchor="middle" transform="rotate(-30 ${x + barWidth/2},${height - 15})">${d.label}</text>
+                <text x="${x + barWidth/2}" y="${y - 8}" font-size="12" fill="var(--text-main)" font-weight="bold" text-anchor="middle">${d.value}%</text>`;
+            }).join('');
+
+            return `<svg viewBox="0 0 ${width} ${height}" class="nat-chart">
+                 <line x1="${padX}" y1="${height-padY}" x2="${width-padX}" y2="${height-padY}" stroke="var(--slate-300)" />
+                ${rects}
+            </svg>`;
+        }
+
+        let tooltipEl = null;
+        function showTooltip(e, text) {
+            if(!tooltipEl) tooltipEl = document.getElementById('tooltip');
+            tooltipEl.innerText = text;
+            tooltipEl.style.opacity = 1;
+            tooltipEl.style.left = (e.pageX + 10) + 'px';
+            tooltipEl.style.top = (e.pageY - 20) + 'px';
+        }
+        function hideTooltip() { if(tooltipEl) tooltipEl.style.opacity = 0; }
+
+        /* Power BI Placeholder */
+        const PBI_TEMPLATE = `
+            <div class="pbi-placeholder fade-in">
+                <div class="pbi-logo"><svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M4 10h4v10H4zM10 4h4v16h-4zM16 14h4v6h-4z"/></svg></div>
+                <h3 class="font-brand" style="font-size:24px; color:var(--text-main); margin-bottom:12px;">Rapport connecté au workspace Saham Bank</h3>
+                <p style="max-width:400px; margin-bottom:24px;">Cette vue nécessite une licence Power BI Pro. L'intégration iframe est configurée en backend.</p>
+                <button class="btn btn-primary" onclick="showToast('Ouverture du rapport PBI en plein écran simulée')">Ouvrir en plein écran</button>
+            </div>`;
+
+        /* --- 4. CORE LOGIC & ROUTING --- */
+
+        function login(role) {
+            APP.userRole = role;
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-layout').classList.remove('hidden');
+            document.getElementById('saham-fab').classList.remove('hidden');
+            
+            // Set User Info
+            const roleNames = { 'DG': 'Directeur Général', 'DR': 'Directeur Régional', 'CA': "Chargé d'Affaires", 'AR': 'Analyste Risque', 'Admin': 'Administrateur IT' };
+            const nameMapping = { 'DG': 'Mehdi Tazi', 'DR': 'Youssef Berrada', 'CA': 'Amine Benali', 'AR': 'Nadia Fassi', 'Admin': 'Meryem El Asri' };
+            document.getElementById('user-avatar').innerText = (nameMapping[role] || role).substring(0,2).toUpperCase();
+            document.getElementById('user-name').innerText = nameMapping[role] || role;
+
+            buildSidebar();
+            
+            // Navigate to appropriate default tab based on role
+            if (role === 'Admin') {
+                location.hash = 'admin-add-dash';
+            } else {
+                const firstModule = APP.modules.find(m => m.roles && m.roles.includes(role) && m.id !== 'admin');
+                if (firstModule) location.hash = firstModule.id;
+                else location.hash = 'dashboard';
+            }
+            route();
+        }
+
+        function logout() {
+            location.hash = '';
+            document.getElementById('app-layout').classList.add('hidden');
+            document.getElementById('saham-fab').classList.add('hidden');
+            document.getElementById('saham-chat-panel').classList.remove('active');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        }
+
+        function buildSidebar() {
+            const ul = document.getElementById('sidebar-nav');
+            ul.innerHTML = '';
+            APP.modules.forEach(m => {
+                let showModule = false;
+                if (APP.userRole === 'Admin') {
+                    // Pour l'Admin, on ne montre que la section 'admin'
+                    showModule = (m.id === 'admin');
+                } else {
+                    showModule = m.roles && m.roles.includes(APP.userRole);
+                }
+
+                if (showModule) {
+                    if (m.isGroup) {
+                        ul.innerHTML += `<div style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--slate-500); padding: 16px 24px 8px; letter-spacing: 0.5px;">${m.name}</div>`;
+                        m.subItems.forEach(sub => {
+                            ul.innerHTML += `
+                                <li class="nav-item" id="nav-${sub.id}">
+                                    <a href="#${sub.id}" class="nav-link" style="padding-left: 32px;">
+                                        <span>${sub.name}</span>
+                                    </a>
+                                </li>`;
+                        });
+                    } else {
+                        ul.innerHTML += `
+                            <li class="nav-item" id="nav-${m.id}">
+                                <a href="#${m.id}" class="nav-link">
+                                    <div class="nav-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${m.icon}</svg></div>
+                                    <span>${m.name}</span>
+                                </a>
+                            </li>`;
+                    }
+                }
+            });
+        }
+
+        window.switchTab = function(btn, targetId) {
+            const tabs = btn.parentElement.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+
+            const container = btn.closest('.fade-in');
+            if (targetId.startsWith('pbi-')) {
+                ['pbi-fin', 'pbi-risk', 'pbi-com'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.classList.add('hidden');
+                });
+            } else if (targetId.startsWith('admin-')) {
+                ['admin-users', 'admin-access', 'admin-dashboards', 'admin-embeddings', 'admin-filters', 'admin-add-dash'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.classList.add('hidden');
+                });
+            }
+            
+            const target = document.getElementById(targetId);
+            if(target) target.classList.remove('hidden');
+        };
+
+        
+        function createCustomDashboard() {
+            const name = document.getElementById('new-dash-name').value.trim();
+            const url = document.getElementById('new-dash-url').value.trim();
+            const parentId = document.getElementById('new-dash-parent').value;
+            if (!name) {
+                showToast('Veuillez donner un nom au module', true);
+                return;
+            }
+            const roles = Array.from(document.querySelectorAll('.new-dash-role:checked')).map(cb => cb.value);
+            if (roles.length === 0) {
+                showToast('Veuillez sélectionner au moins un rôle', true);
+                return;
+            }
+            const id = 'custom-' + Date.now();
+            const newModule = {
+                id: id,
+                name: name,
+                icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />',
+                roles: roles,
+                isCustomExt: true,
+                url: url || ''
+            };
+
+            if (parentId) {
+                const parentGroup = APP.modules.find(m => m.id === parentId);
+                if (parentGroup) {
+                    if (!parentGroup.isGroup) {
+                        parentGroup.isGroup = true;
+                        parentGroup.subItems = [];
+                    }
+                    parentGroup.subItems.push(newModule);
+                } else {
+                    APP.modules.push(newModule);
+                }
+            } else {
+                APP.modules.push(newModule);
+            }
+            buildSidebar();
+            showToast('Dashboard créé avec succès');
+            document.getElementById('new-dash-name').value = '';
+            document.getElementById('new-dash-url').value = '';
+        }
+
+        function route() {
+            const hash = location.hash.replace('#', '') || 'dashboard';
+            
+            // Update Active Nav
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const activeNav = document.getElementById(`nav-${hash}`);
+            if(activeNav) activeNav.classList.add('active');
+
+            let moduleDef = APP.modules.find(m => m.id === hash);
+            if (!moduleDef) {
+                APP.modules.forEach(m => {
+                    if (m.isGroup) {
+                        const sub = m.subItems.find(s => s.id === hash);
+                        if (sub) moduleDef = { ...sub, name: m.name + ' / ' + sub.name };
+                    }
+                });
+            }
+            if(moduleDef) document.getElementById('breadcrumb').innerText = moduleDef.name;
+
+            const content = document.getElementById('main-content');
+            content.innerHTML = ''; // clear
+            content.scrollTop = 0;
+
+            switch(hash) {
+                case 'dashboard': renderDashboard(content); break;
+                case 'custom_dash': renderCustomDash(content); break;
+                case 'powerbi': renderPowerbi(content); break;
+                case 'portefeuille': renderPortefeuille(content); break;
+                case 'engagements': renderEngagements(content); break;
+                case 'ciblage': renderCiblage(content); break;
+                case 'risques': renderRisques(content); break;
+                case 'chatbot': renderChatbot(content); break;
+                case 'admin':
+                case 'admin-users':
+                case 'admin-access':
+                case 'admin-dashboards':
+                case 'admin-embeddings':
+                case 'admin-filters':
+                case 'admin-add-dash':
+                    renderAdmin(content, hash === 'admin' ? 'admin-users' : hash);
+                    break;
+                case 'qualite': renderQualite(content); break; // Fallback or distinct view
+                case 'commissions': renderCommissions(content); break; // Fallback or distinct view
+                default: 
+                    if (moduleDef && moduleDef.isCustomExt) {
+                        if (moduleDef.url) {
+                            content.innerHTML = `<div class="fade-in" style="height:100%; display:flex; flex-direction:column;">
+                                <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; color:var(--dark-teal); font-weight:700; margin-bottom:16px;">${moduleDef.name}</h2>
+                                <div style="flex:1; background:var(--surface); border:1px solid var(--sec-bg); border-radius:var(--border-radius); overflow:hidden;">
+                                    <iframe src="${moduleDef.url}" style="width:100%; height:100%; border:none;"></iframe>
+                                </div>
+                            </div>`;
+                        } else {
+                            content.innerHTML = `<div class="fade-in" style="height:100%; display:flex; flex-direction:column;">
+                                <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; color:var(--dark-teal); font-weight:700; margin-bottom:16px;">${moduleDef.name}</h2>
+                                
+                                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; margin-bottom:24px;">
+                                    <div class="card" style="padding:24px;">
+                                        <h3 style="font-size:14px; color:var(--slate-500); margin-bottom:12px;">Indicateur Principal</h3>
+                                        <div style="font-size:36px; font-weight:800; color:var(--primary-teal);">N/A</div>
+                                        <div style="font-size:12px; color:var(--slate-500); margin-top:8px;">Configuration en attente</div>
+                                    </div>
+                                    <div class="card" style="padding:24px;">
+                                        <h3 style="font-size:14px; color:var(--slate-500); margin-bottom:12px;">Progression</h3>
+                                        <div style="font-size:36px; font-weight:800; color:#10b981;">--</div>
+                                    </div>
+                                    <div class="card" style="padding:24px;">
+                                        <h3 style="font-size:14px; color:var(--slate-500); margin-bottom:12px;">Statut</h3>
+                                        <div style="display:inline-block; margin-top:8px; padding:6px 12px; background:var(--light-bg); color:var(--primary-teal); border-radius:12px; font-weight:600; font-size:14px;">Module initialisé</div>
+                                    </div>
+                                </div>
+                                <div class="card" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px; text-align:center;">
+                                    <div style="width:64px; height:64px; border-radius:50%; background:var(--light-bg); color:var(--primary-teal); display:flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                    </div>
+                                    <h3 style="font-family:'Montserrat', sans-serif; font-size:20px; color:var(--dark-teal); font-weight:600; margin-bottom:12px;">Ce module est en cours de construction</h3>
+                                    <p style="color:var(--slate-500); max-width:400px; line-height:1.6; margin-bottom:24px;">Le tableau de bord "${moduleDef.name}" a été créé, mais aucune source de données ou URL n'a encore été connectée.</p>
+                                    <button class="btn btn-primary" onclick="location.hash='admin'">Configurer ce module</button>
+                                </div>
+                            </div>`;
+                        }
+                    } else {
+                        renderDashboard(content);
+                    }
+                    break;
+            }
+        }
+        window.addEventListener('hashchange', route);
+
+        
+        window.toggleSql = function(btn) {
+            const container = btn.nextElementSibling;
+            if(container.classList.contains('active')) {
+                container.classList.remove('active');
+                btn.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg> Voir la requête SQL';
+            } else {
+                container.classList.add('active');
+                btn.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg> Masquer la requête SQL';
+            }
+        }
+
+        /* --- 5. MODULE RENDERERS --- */
+
+        function renderDashboard(container) {
+            const profileData = {
+                'DG': { title: 'Vue Macro Groupe', pnb: '1.42 Md', credits: '45.8 Md', depots: '52.4 Md', npl: '0.85', trendPNB: '+5.4%', trendCred: '+2.1%', trendDep: '+3.8%' },
+                'DR': { title: 'Vue Régionale (Rabat Agdal)', pnb: '345 M', credits: '12.1 Md', depots: '15.2 Md', npl: '0.92', trendPNB: '+3.2%', trendCred: '+1.5%', trendDep: '+2.1%' },
+                'CA': { title: 'Vue Portefeuille Clientèle', pnb: '85 M', credits: '2.4 Md', depots: '3.1 Md', npl: '1.02', trendPNB: '+1.4%', trendCred: '+0.8%', trendDep: '+1.2%' },
+                'AR': { title: 'Vue Agence', pnb: '65 M', credits: '1.8 Md', depots: '2.5 Md', npl: '0.98', trendPNB: '+1.1%', trendCred: '+0.5%', trendDep: '+0.9%' },
+                'Admin': { title: 'Vue Complète Système', pnb: '1.42 Md', credits: '45.8 Md', depots: '52.4 Md', npl: '0.85', trendPNB: '+5.4%', trendCred: '+2.1%', trendDep: '+3.8%' }
+            };
+            const data = profileData[APP.userRole] || profileData['DG'];
+            const formatVal = (str) => {
+                const parts = str.split(' ');
+                return `${parts[0]} <span style="font-size:16px; font-weight:600; color:var(--slate-500);">${parts[1] || ''} MAD</span>`;
+            };
+
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+                        <span style="background:var(--light-bg); color:var(--primary-teal); padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">${data.title}</span>
+                        <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; color:var(--dark-teal); font-weight:800; margin:0; flex:1;">Performances Financières & Commerciales</h2>
+                        <button onclick="exportDashCSV()" style="background:var(--primary-teal); color:white; border:none; padding:8px 16px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Exporter CSV
+                        </button>
+                    </div>
+
+                    <!-- KPI Row -->
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-bottom:24px;">
+                        <div style="background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                            <h3 style="font-family:'Montserrat', sans-serif; font-size:12px; color:var(--slate-500); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                                Produit Net Bancaire <div style="width:24px; height:24px; border-radius:50%; background:#f0fdf4; color:#10b981; display:flex; align-items:center; justify-content:center; font-size:12px;">▲</div>
+                            </h3>
+                            <div style="font-size:32px; font-weight:800; color:var(--dark-teal); margin-bottom:12px; font-family:'Manrope', sans-serif;">${formatVal(data.pnb)}</div>
+                            <div style="font-size:12px; color:var(--slate-500); display:flex; align-items:center; gap:6px;">
+                                <span style="background:#f0fdf4; color:#10b981; padding:2px 6px; border-radius:4px; font-weight:600; font-size:10px;">${data.trendPNB}</span> vs année précédente
+                            </div>
+                        </div>
+
+                        <div style="background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                            <h3 style="font-family:'Montserrat', sans-serif; font-size:12px; color:var(--slate-500); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                                Encours Crédits <div style="width:24px; height:24px; border-radius:50%; background:#f0fdf4; color:#10b981; display:flex; align-items:center; justify-content:center; font-size:12px;">▲</div>
+                            </h3>
+                            <div style="font-size:32px; font-weight:800; color:var(--dark-teal); margin-bottom:12px; font-family:'Manrope', sans-serif;">${formatVal(data.credits)}</div>
+                            <div style="font-size:12px; color:var(--slate-500); display:flex; align-items:center; gap:6px;">
+                                <span style="background:#f0fdf4; color:#10b981; padding:2px 6px; border-radius:4px; font-weight:600; font-size:10px;">${data.trendCred}</span> vs objectif annuel
+                            </div>
+                        </div>
+
+                        <div style="background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                            <h3 style="font-family:'Montserrat', sans-serif; font-size:12px; color:var(--slate-500); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                                Encours Dépôts <div style="width:24px; height:24px; border-radius:50%; background:#f0fdf4; color:#10b981; display:flex; align-items:center; justify-content:center; font-size:12px;">▲</div>
+                            </h3>
+                            <div style="font-size:32px; font-weight:800; color:var(--dark-teal); margin-bottom:12px; font-family:'Manrope', sans-serif;">${formatVal(data.depots)}</div>
+                            <div style="font-size:12px; color:var(--slate-500); display:flex; align-items:center; gap:6px;">
+                                <span style="background:#f0fdf4; color:#10b981; padding:2px 6px; border-radius:4px; font-weight:600; font-size:10px;">${data.trendDep}</span> collecte nette
+                            </div>
+                        </div>
+
+                        <div style="background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                            <h3 style="font-family:'Montserrat', sans-serif; font-size:12px; color:var(--slate-500); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                                Coût du Risque <div style="width:24px; height:24px; border-radius:50%; background:#f0fdf4; color:#10b981; display:flex; align-items:center; justify-content:center; font-size:12px;">▼</div>
+                            </h3>
+                            <div style="font-size:32px; font-weight:800; color:var(--dark-teal); margin-bottom:12px; font-family:'Manrope', sans-serif;">${data.npl}<span style="font-size:24px;">%</span></div>
+                            <div style="font-size:12px; color:var(--slate-500); display:flex; align-items:center; gap:6px;">
+                                <span style="background:#f0fdf4; color:#10b981; padding:2px 6px; border-radius:4px; font-weight:600; font-size:10px;">-12 pts</span> amélioration qualité
+                            </div>
+                        </div>
+                    </div>
+                                        <!-- Interactive Bubble Map for DG/DR -->
+                    ${(APP.userRole === 'DG') ? `
+                    <div style="margin-bottom:24px; background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                        <h3 style="font-family:'Montserrat', sans-serif; font-size:16px; font-weight:700; color:var(--dark-teal); margin-top:0; margin-bottom:16px;">Cartographie Commerciale (Bubble Map)</h3>
+                        <div style="position:relative; width:100%; height:400px; background:var(--light-bg); border-radius:8px; border:1px solid #e2e8f0; overflow:hidden; display: flex; justify-content: center; align-items: center;">
+                            <div style="position: relative; height: 100%; aspect-ratio: 400/600; padding: 0;">
+                                <!-- Complete Morocco map -->
+                                <svg width="100%" height="100%" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet" style="opacity:0.25;">
+                                    <path d="M206.254,327.041L206.219,327.099L206.356,328.392L207.085,330.722L207.34,332.695L206.976,333.929L206.635,335.488L206.781,336.965L207.34,338.579L207.851,340.246L207.851,341.366L206.829,342.213L204.485,342.677L201.677,343.058L199.624,343.058L196.537,342.785L194.617,342.84L192.94,342.84L191.445,343.113L189.597,344.178L187.544,345.842L184.968,348.078L183.424,349.467L181.371,349.767L179.318,349.767L177.313,348.65L176.024,348.078L175.174,348.132L173.776,348.922L172.124,349.467L170.58,349.467L168.004,348.35L164.918,346.687L163.118,345.842L160.555,345.569L157.979,345.024L156.18,345.297L153.872,345.297L150.785,346.414L148.209,347.233L145.39,348.078L142.181,348.84L142.959,351.346L144.065,352.708L144.065,354.395L143.542,355.808L141.999,357.195L140.237,358.961L139.217,360.346L138.183,362.273L137.418,363.386L136.093,365.202L134.915,367.478L134.55,368.887L134.076,370.511L133.165,370.998L130.029,371.43L128.037,371.999L126.299,372.54L125.65,373.496L125.546,373.649L125.047,375.596L125.047,376.972L124.549,378.08L123.808,380.833L122.812,383.341L122.058,386.656L121.317,389.401L120.321,393.812L119.324,397.92L118.084,401.783L117.087,404.249L116.334,405.614L114.596,407.275L113.102,408.345L111.364,409.736L109.371,411.1L106.637,412.73L104.389,414.12L103.474,414.745L102.397,415.482L100.658,417.377L99.163,420.125L98.167,422.311L96.429,425.854L95.19,427.77L94.437,428.834L92.444,429.924L90.208,430.749L87.717,431.838L85.724,432.929L82.99,434.017L81.252,435.106L80,436.725L79.004,438.636L77.764,441.367L76.768,444.334L76.27,446.24L74.775,452.746L74.277,456.522L73.779,458.95L73.037,461.929L72.539,466.513L72.539,470.275L72.04,472.431L71.785,474.06L70.546,475.925L69.549,477.263L67.812,479.152L66.317,480.228L65.819,481.304L64.324,482.64L62.83,484.789L61.59,486.125L61.833,487.199L62.089,489.083L61.335,490.966L60.594,493.111L58.601,495.775L56.365,497.108L53.121,497.369L48.648,497.369L45.161,497.108L40.932,497.108L37.202,496.585L33.714,496.036L29.485,495.775L26.495,495.775L22.766,496.298L13.056,496.298L9.325,496.585L3.845,497.656L2.262,497.918L2.286,497.243L3.325,493.3L3.428,492.124L3.343,491.108L3.4,490.498L3.822,489.761L3.907,489.459L3.938,489.131L3.923,488.817L3.842,488.673L3.519,488.398L3.428,488.25L3.562,487.857L3.676,487.057L4.152,485.959L4.351,484.85L4.57,484.224L7.168,478.874L8.063,477.929L8.203,477.681L8.243,477.519L8.526,476.873L8.668,476.734L9.077,476.44L9.221,476.289L9.625,475.369L9.902,474.979L10.503,474.747L10.639,474.601L10.809,474.469L11.091,474.452L11.308,474.543L11.498,474.697L11.77,475.021L14.504,473.919L14.993,473.515L15.492,472.913L15.878,472.237L16.752,469.122L16.806,468.654L17.05,468.348L18.289,467.096L18.599,466.697L18.92,464.975L18.995,462.681L19.109,462.094L19.407,461.129L19.615,460.682L20.113,459.979L20.118,459.706L20.026,459.491L19.973,459.313L19.972,459.001L20.01,458.818L20.231,458.322L20.283,458.15L20.404,458.053L20.956,457.994L21.552,457.832L22.353,457.119L23.187,456.16L23.429,455.625L23.597,455.077L23.694,454.49L23.726,453.845L23.521,453.212L23.035,453.113L22.011,453.39L22.187,452.888L22.613,452.03L22.845,451.711L24.025,450.612L24.129,450.434L25.988,446.115L26.268,445.748L26.538,445.59L26.856,445.291L27.959,443.37L28.308,441.548L28.575,441.038L28.952,440.505L29.843,438.904L31.048,437.505L31.128,437.339L31.538,437.028L31.712,436.848L31.845,436.556L31.969,435.999L32.069,435.717L32.453,435.091L32.846,434.592L33.15,434.079L33.273,433.404L33.328,432.204L33.236,431.689L32.917,431.074L32.999,430.926L33.087,430.702L32.798,430.922L32.768,431.241L32.817,431.616L32.762,432.002L32.585,432.207L31.949,432.652L31.712,432.762L31.384,432.772L31.17,432.711L30.933,432.764L30.539,433.117L30.274,433.456L30.096,433.781L29.721,434.691L29.399,435.282L29.335,435.455L29.281,435.783L29.047,436.325L28.994,436.569L28.78,436.893L27.619,437.961L27.249,437.679L27.413,437.225L27.959,436.569L28.093,436.175L28.994,434.433L30.539,432.29L30.696,431.865L31.055,431.382L31.45,430.955L33.262,429.397L34.068,429.089L35.141,428.418L35.466,428.099L36.285,428.021L36.946,427.588L37.465,426.987L37.861,426.389L38.881,425.19L39.577,424.156L40.53,423.457L40.938,423.073L41.104,422.573L41.311,422.254L43.584,420.365L44.956,418.888L46.665,416.276L47.302,415.546L48.101,414.817L48.557,414.503L49.058,414.256L49.573,414.093L50.651,413.91L51.176,413.609L52.01,412.948L51.996,412.312L52.074,412.152L52.379,411.523L52.97,410.786L53.569,410.298L54.195,409.955L54.672,409.579L54.976,409.025L55.219,407.244L55.814,405.615L56.026,404.34L56.368,403.552L56.459,403.186L56.411,402.735L56.31,402.319L56.281,401.907L56.459,401.465L56.273,401.294L56.429,400.907L56.545,400.472L56.615,400.013L56.629,399.574L56.562,399.148L56.325,398.549L56.273,398.192L56.3,395.759L56.118,395.067L56.877,391.874L57.054,391.437L57.802,388.659L58.944,387.044L59.269,386.76L59.473,386.49L60.213,384.689L60.384,383.456L60.435,383.281L60.669,382.789L60.806,381.917L61.811,379.367L63.666,376.723L64.336,375.49L64.476,375.126L64.547,374.575L64.947,373.336L65.156,372.953L65.062,372.509L65.31,370.948L65.237,370.541L65,369.703L65.069,369.426L65.263,369.117L65.524,368.308L65.665,367.998L67.058,366.171L67.292,365.998L68.476,365.731L69.826,365.001L71.891,362.967L72.237,362.501L72.468,362.022L72.779,361.608L73.357,361.347L76.099,361.052L76.575,360.83L79.163,359.481L83.686,356.22L86.723,354.248L88.188,352.572L89.687,349.526L90.198,348.037L90.678,345.774L91.401,344.153L92.136,340.618L92.604,339.552L94.659,336.496L94.667,336.339L94.493,336.078L94.489,335.921L94.829,335.731L96.159,332.545L96.986,329.681L97.04,329.088L97.155,328.584L97.648,327.508L97.716,327.012L97.717,327.003L97.733,326.881L97.89,326.379L98.158,326.108L98.908,325.731L99.714,325.051L100.623,324.751L101.029,324.275L102.078,322.554L102.661,320.508L102.946,319.919L103.337,319.525L103.817,319.241L106.161,318.347L110.668,317.569L114.259,317.642L118.701,316.181L125.51,315.003L125.785,314.806L126.345,314.217L126.464,314.141L126.9,314.039L132.455,311.585L139.842,308.321L140.658,307.676L141.254,306.899L142.237,305.231L142.618,304.809L143.068,304.411L143.441,303.963L143.596,303.395L143.815,302.957L145.295,301.926L146.46,300.484L146.655,300.079L147.688,299.428L147.883,299.21L148.089,298.822L148.214,298.635L149.065,297.95L149.15,297.839L149.66,296.972L150.356,296.231L150.742,295.967L157.834,292.317L159.537,291.169L161.572,290.112L162.533,289.467L165.591,286.57L168.155,282.659L168.828,281.845L169.298,281.448L170.242,281.098L170.631,280.663L171.23,279.701L171.858,278.896L172.145,278.391L172.266,277.868L172.392,277.624L173.285,276.972L173.403,276.791L173.624,276.191L174.649,274.647L174.799,274.327L174.855,273.722L175.006,273.082L175.23,272.502L175.495,272.073L176.682,270.972L176.868,270.616L177.02,270.158L178.059,268.749L181.287,265.224L183.833,260.698L185.396,256.95L185.642,255.882L186.061,252.213L186.519,250.298L186.586,249.727L186.478,248.955L186.203,248.578L185.818,248.312L185.396,247.863L185.119,247.37L184.484,245.917L184.278,244.96L184.07,244.822L183.793,244.792L183.512,244.69L183.288,244.464L182.832,243.686L181.053,242.477L180.523,242.448L179.949,242.322L179.587,241.909L179.633,240.797L180.157,239.709L180.82,238.679L181.287,237.739L181.45,237.09L181.47,236.73L181.373,236.454L181.197,236.193L181.184,236.01L181.246,235.803L181.287,235.456L181.101,229.756L181.008,229.236L180.608,228.192L180.919,227.509L181.568,223.393L181.626,221.725L181.519,221.043L181.255,220.676L180.925,220.403L180.608,220.007L181.387,219.003L181.966,217.996L182.546,216.241L182.832,215.823L183.294,215.408L183.452,215.193L183.591,214.673L183.941,214.302L184.09,213.967L184.424,213.488L184.546,213.211L184.897,210.865L185.093,210.405L187.371,207.917L188.376,206.5L188.561,206.302L188.926,206.021L189.134,205.799L189.321,205.514L189.539,205.009L189.66,204.798L192.589,201.754L192.888,201.156L193.079,200.721L193.367,199.542L193.411,199.059L193.535,198.696L194.434,197.564L194.788,196.751L194.981,195.842L195.111,192.806L195.007,192.662L194.539,192.427L194.434,192.211L194.491,191.574L194.648,191.123L195.323,189.802L195.507,189.213L195.555,188.63L195.359,188.159L195.139,187.858L194.922,187.431L194.774,186.941L194.758,186.445L195.232,185.543L198.909,182.412L201.737,179.031L204.147,177.322L204.991,176.519L207.805,172.701L210.93,169.227L211.12,168.879L211.149,168.503L211.132,167.863L211.359,167.484L213.418,165.032L213.618,164.918L213.832,164.978L214.074,165.245L214.29,165.305L214.895,165.271L215.347,165.165L216.259,164.695L217.161,163.961L218.618,162.152L219.503,161.423L220.536,160.986L223.935,160.201L226.3,159.14L227.519,158.591L228.672,158.3L229.289,158.037L229.829,157.345L230.45,157.064L232.113,156.547L233.103,156.029L233.569,155.922L234.029,155.667L234.441,155.154L234.861,154.772L235.351,154.902L235.641,154.716L235.88,154.756L236.113,154.872L236.388,154.902L236.625,154.806L237.058,154.531L237.788,154.388L238.306,154.176L238.776,153.91L239.104,153.658L239.945,152.565L240.666,152.215L241.361,151.354L241.84,151.19L241.67,151.413L242.17,151.584L242.699,151.424L242.984,151.231L244.817,149.995L245.767,149.141L246.673,148.639L247.677,148.268L248.562,148.124L248.573,148.123L248.999,147.962L249.785,147.261L250.683,146.944L253.282,144.848L255.902,141.982L258.1,138.287L259.742,134.738L262.476,130.602L262.729,130.089L263.148,128.902L263.721,127.973L269.092,116.592L271.25,109.185L275.766,97.7L275.9,97.118L275.946,96.371L276.055,95.937L276.589,94.722L277.107,93.068L277.151,92.81L277.226,92.526L277.555,92.059L277.629,91.756L277.777,90.315L277.949,89.603L278.172,89.138L278.65,88.629L279.512,88.487L281.802,88.826L282.103,88.769L282.774,88.091L283.084,87.852L283.535,87.608L283.989,87.495L284.303,87.653L284.737,87.446L285.328,87.431L285.919,87.58L286.341,87.862L287.809,86.983L288.226,86.606L289.117,85.571L289.58,85.159L290.096,84.908L290.297,84.921L290.411,85.034L290.709,85.202L290.94,85.189L291.036,84.953L291.094,84.717L291.157,84.662L291.31,84.726L291.322,84.724L291.549,85.414L291.831,86.04L292.217,86.589L292.769,87.094L292.767,87.102L292.645,87.548L292.728,88.312L293.101,89.902L293.219,91.192L293.315,91.561L293.467,91.846L293.663,92.068L293.81,92.095L294.233,92.028L294.361,92.068L294.395,92.246L294.343,92.711L294.361,92.904L294.778,94.532L295.041,95.148L295.564,95.641L296.615,96.397L297.496,97.244L299.599,100.257L299.983,100.561L300.592,100.669L301.044,100.814L301.534,101.161L302.376,101.937L303.077,102.918L303.505,103.399L304.609,103.781L305.961,105.062L306.96,105.639L310.499,106.725L313.806,107.475L313.835,107.481L316.777,108.356L317.483,108.408L317.996,108.267L319.431,107.35L322.885,106.744L324.973,105.796L327.099,105.353L328.143,104.853L328.39,105.205L328.312,105.338L328.01,105.441L327.889,105.555L328.001,105.737L328.164,105.948L328.527,106.458L328.891,106.633L329.406,106.666L330.095,106.725L330.567,106.683L331.425,106.609L331.989,106.328L332.22,105.781L332.428,104.95L332.949,104.382L333.612,104.121L334.259,104.211L334.741,104.543L335.786,105.508L336.315,105.875L338.18,106.173L338.844,106.554L339.141,106.564L339.456,106.53L339.727,106.536L340.001,106.626L340.489,106.864L340.746,106.952L342.012,107.056L343.077,106.834L346.166,105.725L346.694,105.394L347.821,104.191L348.085,104.021L348.291,104.036L348.523,104.161L348.791,104.26L349.105,104.211L349.892,103.402L350.867,100.988L351.5,100.042L351.45,99.722L351.571,99.468L351.804,99.373L352.101,99.532L352.211,99.781L352.078,100.307L352.193,100.669L351.942,101.6L352.272,102.776L352.314,102.919L352.321,102.934L351.846,103.419L351.924,104.262L352.44,104.821L353.19,104.546L353.535,105.062L353.313,105.337L353.204,105.799L353.18,106.309L353.267,107.294L353.383,107.694L353.601,108.052L353.959,108.512L354.604,108.981L355.478,109.267L357.291,109.448L356.203,108.559L354.301,106.361L353.93,105.716L354.048,105.478L354.386,105.744L355.592,107.056L355.784,107.383L356.968,108.617L358.032,109.234L359.316,109.683L361.892,110.051L363.031,109.953L363.632,109.799L364.033,109.549L364.558,108.945L365.031,108.561L365.538,108.438L367.91,109.36L368.467,109.448L369.059,109.642L369.72,110.017L370.37,110.259L370.406,111.455L370.642,112.261L371.087,112.864L371.845,113.154L372.773,113.826L373.547,114.562L374.385,115.108L375.504,115.213L375.819,115.458L375.917,115.817L375.949,116.231L376.071,116.651L376.413,117.063L377.733,117.888L378.577,118.688L381.192,120.354L381.645,120.819L381.555,121.04L381.232,121.289L380.625,122.654L379.32,124.685L379.117,125.198L382.115,128.294L383.021,128.569L383.302,128.732L380.647,131.967L381.6,133.105L382.229,134.442L384.004,139.989L384.07,140.408L384.131,140.793L384.069,141.395L382.909,146.23L382.826,147.636L383.051,149.109L383.313,149.983L383.295,150.312L383.106,150.754L382.854,151.074L382.565,151.328L382.324,151.631L382.211,152.091L382.362,152.563L382.743,152.829L383.606,153.139L384.041,153.463L384.311,153.816L385.433,156.513L385.547,157.497L385.232,158.31L384.859,158.868L384.392,160.531L384.051,161.281L383.793,162.038L383.789,164.968L384.017,165.946L385.277,167.177L385.725,168.026L386.062,168.96L386.576,169.692L387.22,170.291L387.946,170.821L388.365,171.23L388.526,171.845L388.518,172.538L388.439,173.187L388.382,173.492L388.279,173.77L388.132,174.017L387.946,174.219L386.89,174.986L390.261,180.651L391.077,181.349L392.658,181.937L399.614,187.311L400,187.978L398.557,189.599L397.731,190.233L396.808,190.616L395.777,190.766L395.371,190.979L394.969,191.51L394.721,192.032L394.388,193.094L393.992,195.785L393.94,196.135L393.948,196.384L393.912,196.626L393.754,196.939L393.599,197.096L393.189,197.423L393.092,197.608L393.202,198.087L393.604,198.094L394.529,197.723L395.005,197.717L395.524,197.875L395.928,198.237L396.053,198.849L395.562,199.894L394.586,200.129L392.709,200.039L392.498,200.029L391.902,200L390.956,199.956L389.706,199.898L388.195,199.827L386.467,199.745L384.561,199.654L382.521,199.558L380.39,199.458L378.21,199.356L376.022,199.253L373.872,199.151L371.8,199.052L369.852,198.961L368.066,198.876L366.486,198.803L363.064,198.644L358.599,199.894L353.979,200.287L352.547,201.099L354.263,205.681L355.307,208.548L350.959,209.162L345.567,210.798L338.291,212.113L337.366,212.195L336.305,211.951L334.609,212.842L334.261,220.391L332.42,220.509L331.05,221.516L330.735,221.909L330.634,222.442L330.791,224.64L330.74,225.305L330.213,226.2L330.047,226.769L330.134,227.274L330.429,227.536L330.844,227.563L331.288,227.366L332.016,226.675L332.385,226.478L332.819,226.59L333.176,226.971L333.857,228.066L334.3,228.494L335.197,228.936L335.489,229.202L335.729,229.739L335.839,230.254L335.873,230.819L337.218,232.994L335.827,235.225L334.609,236.44L334.783,238.263L334.957,240.084L330.261,242.511L326.087,243.521L322.26,243.723L319.303,244.531L316.868,245.945L314.085,249.576L310.607,252.398L306.954,254.008L304.345,255.417L302.258,257.026L299.475,259.438L296.866,261.246L294.431,263.855L292.692,267.264L290.431,270.868L287.822,274.268L285.387,275.068L283.3,274.268L282.43,271.668L279.299,272.069L276.342,272.669L273.212,272.669L269.559,272.669L266.08,273.069L262.428,274.068L258.949,274.468L256.862,276.466L252.514,274.668L249.731,274.468L247.818,274.668L245.035,275.867L242.774,278.263L239.945,278.1L239.428,278.291L238.878,278.355L238.321,278.334L237.222,278.144L236.058,278.092L235.208,278.47L233.688,280.022L233.307,280.327L232.112,280.95L230.591,282.384L227.956,284.175L225.683,286.351L224.854,286.936L222.05,288.183L220.354,289.343L218.704,290.928L218.294,291.174L217.418,291.568L217.043,291.874L216.189,293.392L215.876,293.715L214.745,294.347L213.626,295.246L210.439,296.982L209.973,297.387L209.695,297.922L209.605,298.685L209.605,299.981L209.605,301.68L209.605,303.376L209.605,305.072L209.605,306.768L209.605,308.463L209.605,310.157L209.605,311.849L209.605,313.54L209.605,315.231L209.605,316.921L209.605,318.61L209.605,320.299L209.605,321.985L209.605,323.67L209.605,325.355L209.605,327.041L207.858,327.041L206.266,327.041Z M206.254,327.041L206.266,327.041L207.858,327.041L209.605,327.041L209.605,329.682L209.605,332.318L209.605,334.954L209.605,337.589L209.607,337.974L209.609,339.065L209.609,340.759L209.613,342.953L209.616,345.548L209.619,348.442L209.623,351.534L209.625,354.722L209.628,357.908L209.632,360.991L209.636,363.869L209.638,366.446L209.641,368.624L209.643,370.302L209.643,371.38L209.644,371.763L209.644,373.016L209.474,373.38L208.987,373.519L206.876,373.519L204.367,373.52L201.86,373.52L199.355,373.52L196.847,373.52L194.34,373.52L191.834,373.52L189.327,373.52L186.821,373.52L184.313,373.52L181.806,373.52L179.301,373.52L176.793,373.52L174.287,373.52L171.779,373.52L169.274,373.52L166.767,373.52L164.259,373.52L161.753,373.52L159.246,373.52L156.74,373.52L154.233,373.52L151.725,373.52L149.22,373.52L146.712,373.52L144.205,373.52L141.699,373.52L139.191,373.52L136.685,373.52L134.177,373.52L131.673,373.52L129.165,373.52L126.658,373.522L126.658,375.616L126.658,377.705L126.658,379.795L126.658,381.884L126.658,383.97L126.658,386.056L126.658,388.141L126.658,390.222L126.658,392.304L126.658,394.387L126.658,396.466L126.658,398.542L126.658,400.618L126.658,402.694L126.658,404.768L126.658,406.84L126.658,408.912L126.658,410.982L126.658,413.052L126.658,415.119L126.658,417.186L126.658,419.25L126.658,421.315L126.658,423.378L126.658,425.44L126.658,427.499L126.658,429.558L126.658,431.617L126.658,433.674L126.658,435.73L126.658,437.786L126.658,439.838L126.658,442.03L126.558,442.957L126.225,443.392L123.69,444.087L118.232,446.713L117.336,446.983L113.143,447.586L111.623,448.113L110.061,449.198L107.38,451.063L104.265,453.223L101.773,454.955L101.298,455.572L99.169,458.589L98.362,460.305L98.034,462.122L98.295,463.846L99.505,467.313L99.83,469.057L100.24,475.786L100.651,482.504L101.354,493.585L101.501,495.902L101.773,500.23L98.127,500.23L97.098,500.232L94.192,500.232L89.673,500.232L83.813,500.233L76.88,500.235L69.909,500.236L69.14,500.236L60.865,500.237L52.322,500.237L43.779,500.24L35.503,500.24L27.765,500.242L20.829,500.244L14.969,500.244L10.453,500.244L7.546,500.246L6.516,500.246L3.629,500.246L3.392,500.467L2.96,502.784L2.482,505.344L1.425,508.398L1.26,509.25L0.677,511.673L0.584,512.466L1.189,515.338L0.903,514.657L0.11,513.456L0,512.793L0.081,512.429L0.308,511.797L0.354,511.421L0.354,510.147L0.457,509.68L0.915,508.305L1.938,500.351L2.17,499.385L2.225,498.991L2.262,497.918L3.845,497.656L9.325,496.585L13.056,496.298L22.766,496.298L26.495,495.775L29.485,495.775L33.714,496.036L37.202,496.585L40.932,497.108L45.161,497.108L48.648,497.369L53.121,497.369L56.365,497.108L58.601,495.775L60.594,493.111L61.335,490.966L62.089,489.083L61.833,487.199L61.59,486.125L62.83,484.789L64.324,482.64L65.819,481.304L66.317,480.228L67.812,479.152L69.549,477.263L70.546,475.925L71.785,474.06L72.04,472.431L72.539,470.275L72.539,466.513L73.037,461.929L73.779,458.95L74.277,456.522L74.775,452.746L76.27,446.24L76.768,444.334L77.764,441.367L79.004,438.636L80,436.725L81.252,435.106L82.99,434.017L85.724,432.929L87.717,431.838L90.208,430.749L92.444,429.924L94.437,428.834L95.19,427.77L96.429,425.854L98.167,422.311L99.163,420.125L100.658,417.377L102.397,415.482L103.474,414.745L104.389,414.12L106.637,412.73L109.371,411.1L111.364,409.736L113.102,408.345L114.596,407.275L116.334,405.614L117.087,404.249L118.084,401.783L119.324,397.92L120.321,393.812L121.317,389.401L122.058,386.656L122.812,383.341L123.808,380.833L124.549,378.08L125.047,376.972L125.047,375.596L125.546,373.649L125.65,373.496L126.299,372.54L128.037,371.999L130.029,371.43L133.165,370.998L134.076,370.511L134.55,368.887L134.915,367.478L136.093,365.202L137.418,363.386L138.183,362.273L139.217,360.346L140.237,358.961L141.999,357.195L143.542,355.808L144.065,354.395L144.065,352.708L142.959,351.346L142.181,348.84L145.39,348.078L148.209,347.233L150.785,346.414L153.872,345.297L156.18,345.297L157.979,345.024L160.555,345.569L163.118,345.842L164.918,346.687L168.004,348.35L170.58,349.467L172.124,349.467L173.776,348.922L175.174,348.132L176.024,348.078L177.313,348.65L179.318,349.767L181.371,349.767L183.424,349.467L184.968,348.078L187.544,345.842L189.597,344.178L191.445,343.113L192.94,342.84L194.617,342.84L196.537,342.785L199.624,343.058L201.677,343.058L204.485,342.677L206.829,342.213L207.851,341.366L207.851,340.246L207.34,338.579L206.781,336.965L206.635,335.488L206.976,333.929L207.34,332.695L207.085,330.722L206.356,328.392L206.219,327.099Z" fill="var(--primary-teal)" />
+                                </svg>
+                                <!-- Bubbles -->
+                                <!-- Tanger -->
+                                <div style="position:absolute; top:14.9%; left:70.1%; width:20px; height:20px; background:rgba(211, 59, 33, 0.8); border:2px solid #d33b21; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:7px; font-weight:bold; cursor:pointer;" title="Tanger: 4.8 Md" onclick="showToast('Région Tanger: 4.8 Md MAD', 'info')">TNG</div>
+                                <!-- Rabat -->
+                                <div style="position:absolute; top:23.7%; left:63.8%; width:30px; height:30px; background:rgba(211, 59, 33, 0.8); border:2px solid #d33b21; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:9px; font-weight:bold; cursor:pointer;" title="Rabat: 8.2 Md" onclick="showToast('Région Rabat: 8.2 Md MAD', 'info')">RAB</div>
+                                <!-- Casablanca -->
+                                <div style="position:absolute; top:25.9%; left:59.2%; width:40px; height:40px; background:rgba(46, 71, 65, 0.8); border:2px solid var(--primary-teal); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:bold; cursor:pointer;" title="Casablanca: 12.5 Md" onclick="showToast('Région Casablanca: 12.5 Md MAD', 'info')">CASA</div>
+                                <!-- Marrakech -->
+                                <div style="position:absolute; top:35.5%; left:56.6%; width:25px; height:25px; background:rgba(46, 71, 65, 0.8); border:2px solid var(--primary-teal); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:8px; font-weight:bold; cursor:pointer;" title="Marrakech: 5.1 Md" onclick="showToast('Région Marrakech: 5.1 Md MAD', 'info')">KCH</div>
+                                <!-- Agadir -->
+                                <div style="position:absolute; top:41.4%; left:46.7%; width:20px; height:20px; background:rgba(46, 71, 65, 0.8); border:2px solid var(--primary-teal); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:6px; font-weight:bold; cursor:pointer;" title="Agadir: 3.2 Md" onclick="showToast('Région Agadir: 3.2 Md MAD', 'info')">AGA</div>
+                                <!-- Laayoune -->
+                                <div style="position:absolute; top:57.0%; left:24.3%; width:15px; height:15px; background:rgba(46, 71, 65, 0.8); border:2px solid var(--primary-teal); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:5px; font-weight:bold; cursor:pointer;" title="Laâyoune: 1.1 Md" onclick="showToast('Région Laâyoune: 1.1 Md MAD', 'info')">LAA</div>
+                                <!-- Dakhla -->
+                                <div style="position:absolute; top:72.8%; left:7.2%; width:12px; height:12px; background:rgba(46, 71, 65, 0.8); border:2px solid var(--primary-teal); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:4px; font-weight:bold; cursor:pointer;" title="Dakhla: 0.5 Md" onclick="showToast('Région Dakhla: 0.5 Md MAD', 'info')">DAK</div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Detailed KPIs -->
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:24px;">
+                        <!-- Sector Distribution -->
+                        <div style="background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                            <h3 style="font-family:'Montserrat', sans-serif; font-size:14px; font-weight:700; color:var(--dark-teal); margin-top:0; margin-bottom:16px;">Répartition par Secteur</h3>
+                            
+                            <div style="margin-bottom:12px;">
+                                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; font-weight:600; color:var(--text-main);">
+                                    <span>Immobilier</span>
+                                    <span>45%</span>
+                                </div>
+                                <div style="width:100%; height:6px; background:var(--light-bg); border-radius:3px; overflow:hidden;">
+                                    <div style="width:45%; height:100%; background:var(--primary-teal); border-radius:3px;"></div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom:12px;">
+                                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; font-weight:600; color:var(--text-main);">
+                                    <span>Industrie & Commerce</span>
+                                    <span>30%</span>
+                                </div>
+                                <div style="width:100%; height:6px; background:var(--light-bg); border-radius:3px; overflow:hidden;">
+                                    <div style="width:30%; height:100%; background:var(--primary-orange); border-radius:3px;"></div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom:12px;">
+                                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; font-weight:600; color:var(--text-main);">
+                                    <span>Agriculture</span>
+                                    <span>15%</span>
+                                </div>
+                                <div style="width:100%; height:6px; background:var(--light-bg); border-radius:3px; overflow:hidden;">
+                                    <div style="width:15%; height:100%; background:#10b981; border-radius:3px;"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; font-weight:600; color:var(--text-main);">
+                                    <span>Particuliers</span>
+                                    <span>10%</span>
+                                </div>
+                                <div style="width:100%; height:6px; background:var(--light-bg); border-radius:3px; overflow:hidden;">
+                                    <div style="width:10%; height:100%; background:var(--slate-500); border-radius:3px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Liquidity & Risk -->
+                        <div style="background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                            <h3 style="font-family:'Montserrat', sans-serif; font-size:14px; font-weight:700; color:var(--dark-teal); margin-top:0; margin-bottom:16px;">Liquidité & Rentabilité</h3>
+                            
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; border-bottom:1px solid var(--sec-bg); margin-bottom:12px;">
+                                <span style="font-size:13px; color:var(--slate-500); font-weight:500;">Ratio Crédits/Dépôts</span>
+                                <span style="font-size:14px; font-weight:700; color:var(--dark-teal);">87.4%</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; border-bottom:1px solid var(--sec-bg); margin-bottom:12px;">
+                                <span style="font-size:13px; color:var(--slate-500); font-weight:500;">Marge Nette d'Intérêt (NIM)</span>
+                                <span style="font-size:14px; font-weight:700; color:var(--primary-teal);">3.12%</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; border-bottom:1px solid var(--sec-bg); margin-bottom:12px;">
+                                <span style="font-size:13px; color:var(--slate-500); font-weight:500;">Coût du Risque (CoR)</span>
+                                <span style="font-size:14px; font-weight:700; color:var(--primary-orange);">0.85%</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:13px; color:var(--slate-500); font-weight:500;">ROE (Retour sur Fonds Propres)</span>
+                                <span style="font-size:14px; font-weight:700; color:#10b981;">14.2%</span>
+                            </div>
+                        </div>
+
+                        <!-- Top Performers -->
+                        <div style="background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+                            <h3 style="font-family:'Montserrat', sans-serif; font-size:14px; font-weight:700; color:var(--dark-teal); margin-top:0; margin-bottom:16px;">Top Agences (Croissance PNB)</h3>
+                            <ul style="list-style:none; padding:0; margin:0;">
+                                <li style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; margin-bottom:10px; border-bottom:1px solid var(--sec-bg);">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="width:24px; height:24px; border-radius:50%; background:var(--light-bg); color:var(--primary-teal); font-weight:700; font-size:10px; display:flex; align-items:center; justify-content:center;">1</div>
+                                        <span style="font-size:13px; font-weight:600; color:var(--dark-teal);">Casa Anfa</span>
+                                    </div>
+                                    <span style="font-size:13px; font-weight:700; color:#10b981;">+12.4%</span>
+                                </li>
+                                <li style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; margin-bottom:10px; border-bottom:1px solid var(--sec-bg);">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="width:24px; height:24px; border-radius:50%; background:var(--light-bg); color:var(--primary-teal); font-weight:700; font-size:10px; display:flex; align-items:center; justify-content:center;">2</div>
+                                        <span style="font-size:13px; font-weight:600; color:var(--dark-teal);">Rabat Agdal</span>
+                                    </div>
+                                    <span style="font-size:13px; font-weight:700; color:#10b981;">+9.8%</span>
+                                </li>
+                                <li style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; margin-bottom:10px; border-bottom:1px solid var(--sec-bg);">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="width:24px; height:24px; border-radius:50%; background:var(--light-bg); color:var(--primary-teal); font-weight:700; font-size:10px; display:flex; align-items:center; justify-content:center;">3</div>
+                                        <span style="font-size:13px; font-weight:600; color:var(--dark-teal);">Tanger Centre</span>
+                                    </div>
+                                    <span style="font-size:13px; font-weight:700; color:#10b981;">+8.5%</span>
+                                </li>
+                                <li style="display:flex; align-items:center; justify-content:space-between;">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="width:24px; height:24px; border-radius:50%; background:var(--light-bg); color:var(--primary-teal); font-weight:700; font-size:10px; display:flex; align-items:center; justify-content:center;">4</div>
+                                        <span style="font-size:13px; font-weight:600; color:var(--dark-teal);">Marrakech Guéliz</span>
+                                    </div>
+                                    <span style="font-size:13px; font-weight:700; color:#10b981;">+7.2%</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Main Charts Row -->
+                    <div style="display:flex; gap:24px; margin-bottom:24px;">
+                        
+                        <!-- Bar Chart -->
+                        <div style="flex:2; background:white; border-radius:12px; border:1px solid var(--sec-bg); box-shadow:0 2px 8px rgba(0,0,0,0.02); overflow:hidden; display:flex; flex-direction:column;">
+                            <div style="padding:20px 24px; border-bottom:1px solid var(--sec-bg); display:flex; justify-content:space-between; align-items:center;">
+                                <h3 style="font-family:'Montserrat', sans-serif; font-size:16px; font-weight:700; color:var(--dark-teal); margin:0;">Évolution du Produit Net Bancaire (M MAD)</h3>
+                                <select style="padding:6px 12px; border:1px solid var(--sec-bg); border-radius:6px; font-size:12px; background:var(--light-bg);"><option>Année 2025</option><option>Année 2026</option></select>
+                            </div>
+                            <div style="flex:1; padding:24px; position:relative; display:flex; align-items:flex-end; gap:16px; justify-content:space-between; height:250px;">
+                                <div style="position:absolute; left:24px; right:24px; top:24px; bottom:24px; border-bottom:1px solid #e2e8f0; display:flex; flex-direction:column; justify-content:space-between;">
+                                    <div style="border-bottom:1px dashed #e2e8f0; width:100%;"></div>
+                                    <div style="border-bottom:1px dashed #e2e8f0; width:100%;"></div>
+                                    <div style="border-bottom:1px dashed #e2e8f0; width:100%;"></div>
+                                    <div style="border-bottom:1px dashed #e2e8f0; width:100%;"></div>
+                                </div>
+                                ${[112, 125, 138, 141, 156, 184, 142, 135, 151, 165, 178, 221].map((val, i) => `
+                                <div style="position:relative; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; z-index:1;">
+                                    <div style="width:60%; background:${i === 11 ? '#d33b21' : 'var(--primary-teal)'}; height:${(val/250)*100}%; border-radius:4px 4px 0 0; transition:height 1s ease-out; opacity:0.9;"></div>
+                                    <span style="font-size:10px; color:var(--slate-500); margin-top:8px;">${['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'][i]}</span>
+                                </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Donut Chart -->
+                        <div style="flex:1; background:white; border-radius:12px; border:1px solid var(--sec-bg); box-shadow:0 2px 8px rgba(0,0,0,0.02); overflow:hidden;">
+                            <div style="padding:20px 24px; border-bottom:1px solid var(--sec-bg);">
+                                <h3 style="font-family:'Montserrat', sans-serif; font-size:16px; font-weight:700; color:var(--dark-teal); margin:0;">Répartition des Crédits</h3>
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:center; padding:24px;">
+                                <div style="position:relative; width:180px; height:180px; margin-bottom:24px;">
+                                    <svg width="180" height="180" viewBox="0 0 100 100" style="transform: rotate(-90deg);">
+                                        <circle cx="50" cy="50" r="35" fill="transparent" stroke="var(--primary-teal)" stroke-width="20" stroke-dasharray="140 220" stroke-dashoffset="0"></circle>
+                                        <circle cx="50" cy="50" r="35" fill="transparent" stroke="#1d2b27" stroke-width="20" stroke-dasharray="45 220" stroke-dashoffset="-140"></circle>
+                                        <circle cx="50" cy="50" r="35" fill="transparent" stroke="#d33b21" stroke-width="20" stroke-dasharray="25 220" stroke-dashoffset="-185"></circle>
+                                        <circle cx="50" cy="50" r="35" fill="transparent" stroke="#e9eceb" stroke-width="20" stroke-dasharray="10 220" stroke-dashoffset="-210"></circle>
+                                    </svg>
+                                    <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                                        <span style="font-size:24px; font-weight:800; color:var(--dark-teal); font-family:'Manrope', sans-serif;">45.8</span>
+                                        <span style="font-size:10px; color:var(--slate-500); text-transform:uppercase; font-weight:600;">Md MAD</span>
+                                    </div>
+                                </div>
+                                <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--slate-700);">
+                                        <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px; height:12px; background:var(--primary-teal); border-radius:2px;"></div> Retail (Immo & Conso)</div>
+                                        <span style="font-weight:700;">64%</span>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--slate-700);">
+                                        <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px; height:12px; background:#1d2b27; border-radius:2px;"></div> Entreprises & PME</div>
+                                        <span style="font-weight:700;">20%</span>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--slate-700);">
+                                        <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px; height:12px; background:#d33b21; border-radius:2px;"></div> Corporate & IB</div>
+                                        <span style="font-weight:700;">12%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCiblage(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+                        <span style="background:var(--light-bg); color:var(--primary-teal); padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">Marketing & Ventes</span>
+                        <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; color:var(--dark-teal); font-weight:800; margin:0;">Ciblage & Campagnes</h2>
+                    </div>
+                    <div style="background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:24px; box-shadow:0 2px 8px rgba(0,0,0,0.02); text-align:center;">
+                        <svg width="64" height="64" fill="none" stroke="var(--slate-300)" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <h3 style="font-family:'Montserrat', sans-serif; font-size:18px; color:var(--dark-teal); margin-bottom:8px;">Outil de ciblage en construction</h3>
+                        <p style="color:var(--slate-500); font-size:14px; max-width:400px; margin:0 auto;">Le module de ciblage client et de génération de leads commerciaux sera bientôt disponible dans cette vue.</p>
+                        <button style="margin-top:24px; background:var(--primary-teal); color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:600; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.1);" onclick="showToast('Bientôt disponible')">Être notifié</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        
+        function renderQualite(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+                        <span style="background:var(--light-bg); color:var(--primary-teal); padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">Services & Qualité</span>
+                        <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; color:var(--dark-teal); font-weight:800; margin:0;">Qualité de Service Clientèle</h2>
+                    </div>
+                    
+                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:24px; margin-bottom:24px;">
+                        <div class="card" style="padding:24px;">
+                            <h3 style="font-size:14px; color:var(--slate-500); margin-bottom:12px;">Réclamations Ouvertes</h3>
+                            
+<div style="font-size:36px; font-weight:800; color:#d33b21;">${APP.userRole === 'DR' ? '42' : APP.userRole === 'CA' ? '12' : '124'}</div>
+                            <div style="font-size:12px; color:var(--slate-500); margin-top:8px;">-15% vs mois dernier</div>
+                        </div>
+                        <div class="card" style="padding:24px;">
+                            <h3 style="font-size:14px; color:var(--slate-500); margin-bottom:12px;">Délai de Résolution (Jours)</h3>
+                            <div style="font-size:36px; font-weight:800; color:var(--primary-teal);">${APP.userRole === 'DR' ? '1.8' : APP.userRole === 'CA' ? '1.2' : '2.4'}</div>
+                            <div style="font-size:12px; color:var(--slate-500); margin-top:8px;">Objectif: < 3 jours</div>
+                        </div>
+                        <div class="card" style="padding:24px;">
+                            <h3 style="font-size:14px; color:var(--slate-500); margin-bottom:12px;">NPS (Net Promoter Score)</h3>
+                            <div style="font-size:36px; font-weight:800; color:var(--primary-teal);">${APP.userRole === 'DR' ? '68' : APP.userRole === 'CA' ? '71' : '64'}</div>
+
+                            <div style="font-size:12px; color:var(--slate-500); margin-top:8px;">+4 points T3</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding:24px;">
+                        <h3 style="font-family:'Montserrat', sans-serif; font-size:16px; font-weight:700; color:var(--dark-teal); margin-bottom:16px;">Top Agences (Satisfaction Client)</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr><th>Code Agence</th><th>Région</th><th>NPS</th><th>Réclamations Traitées</th><th>Délai Moyen</th></tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    ${APP.userRole === 'DR' ? `
+                                        <tr><td>AG-201</td><td>Rabat Agdal</td><td>68 <span style="color:var(--primary-teal);">▲</span></td><td>32</td><td>1.8 Jours</td></tr>
+                                        <tr><td>AG-202</td><td>Rabat Hassan</td><td>65 <span style="color:var(--primary-teal);">▲</span></td><td>28</td><td>2.1 Jours</td></tr>
+                                    ` : APP.userRole === 'CA' ? `
+                                        <tr><td>AG-201</td><td>Rabat Agdal</td><td>68 <span style="color:var(--primary-teal);">▲</span></td><td>32</td><td>1.8 Jours</td></tr>
+                                    ` : `
+                                        <tr><td>AG-104</td><td>Casablanca Centre</td><td>72 <span style="color:var(--primary-teal);">▲</span></td><td>45</td><td>1.2 Jours</td></tr>
+                                        <tr><td>AG-201</td><td>Rabat Agdal</td><td>68 <span style="color:var(--primary-teal);">▲</span></td><td>32</td><td>1.8 Jours</td></tr>
+                                        <tr><td>AG-305</td><td>Marrakech Guéliz</td><td>61 <span style="color:#d33b21;">▼</span></td><td>58</td><td>3.1 Jours</td></tr>
+                                    `}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCommissions(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+                        <span style="background:var(--light-bg); color:var(--primary-teal); padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">Rentabilité</span>
+                        <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; color:var(--dark-teal); font-weight:800; margin:0;">Suivi des Commissions</h2>
+                    </div>
+                    <div style="background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:24px; box-shadow:0 2px 8px rgba(0,0,0,0.02); text-align:center;">
+                        <svg width="64" height="64" fill="none" stroke="var(--slate-300)" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom:16px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 style="font-family:'Montserrat', sans-serif; font-size:18px; color:var(--dark-teal); margin-bottom:8px;">Tableau de bord des commissions</h3>
+                        <p style="color:var(--slate-500); font-size:14px; max-width:400px; margin:0 auto;">Le reporting détaillé des commissions par ligne de métier sera disponible dans la prochaine release.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPowerbi(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:8px; color:var(--primary-teal); font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                                RENTABILITÉ
+                            </div>
+                            <h2 style="font-family:'Montserrat', sans-serif; font-size:32px; color:var(--dark-teal); font-weight:700; margin-bottom:8px;">PNB Commercial • Réseau Saham Bank</h2>
+                            <p style="color:var(--slate-500); max-width:800px; line-height:1.5;">Vision consolidée du Produit Net Bancaire commercial, marges et commissions par réseau, direction régionale et agence.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex; gap:16px; margin-bottom:32px;">
+                        <button onclick="showToast('Rechargement des données Power BI...', 'info')" style="display:flex; gap:8px; align-items:center; background:white; border:1px solid #e2e8f0; border-radius:8px; padding:10px 20px; font-weight:600; color:var(--dark-teal); box-shadow:0 1px 2px rgba(0,0,0,0.05); cursor:pointer;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            Recharger
+                        </button>
+                        <button onclick="showToast('Export du rapport en PDF initié')" style="display:flex; gap:8px; align-items:center; background:var(--primary-teal); border:1px solid var(--primary-teal); border-radius:8px; padding:10px 20px; font-weight:600; color:white; box-shadow:0 1px 2px rgba(46,71,65,0.2); cursor:pointer;">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Exporter
+                        </button>
+                    </div>
+
+                    <div style="background:var(--surface); border-radius:24px; border:1px solid var(--sec-bg); overflow:hidden; box-shadow:0 10px 25px -5px rgba(0,0,0,0.05);">
+                        <div style="background:var(--primary-teal); padding:16px 24px; color:white; display:flex; align-items:center; justify-content:space-between;">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div style="background:#F2C811; color:black; width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:16px; font-family:'Manrope', sans-serif;">P</div>
+                                <span style="font-weight:700; font-size:16px;">Power BI • Rapport embarqué</span>
+                                <span style="display:flex; align-items:center; gap:6px; font-size:12px; color:rgba(255,255,255,0.7); margin-left:16px; font-family:'JetBrains Mono', monospace;">
+                                    <span style="width:6px; height:6px; background:#4CAF50; border-radius:50%; display:inline-block;"></span>
+                                    Tenant Saham Bank • d45dd877...23ce
+                                </span>
+                            </div>
+                            <div style="display:flex; gap:16px;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer; opacity:0.8;"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer; opacity:0.8;"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                            </div>
+                        </div>
+                        
+                        <div style="padding:20px 24px; background:var(--light-bg); border-bottom:1px solid var(--sec-bg); display:grid; grid-template-columns:repeat(5, 1fr); gap:20px; align-items:end;">
+                            <div>
+                                <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Année</label>
+                                <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option><option>2026</option><option>2025</option></select>
+                            </div>
+                            <div>
+                                <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Mois</label>
+                                <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option></select>
+                            </div>
+                            <div>
+                                <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Réseau</label>
+                                <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option></select>
+                            </div>
+                            <div>
+                                <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">DR</label>
+                                <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option></select>
+                            </div>
+                            <div>
+                                <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Agence</label>
+                                <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option></select>
+                            </div>
+                            <div style="grid-column: span 2;">
+                                <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Marché</label>
+                                <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option></select>
+                            </div>
+                            <div style="grid-column: span 2;">
+                                <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Portefeuille</label>
+                                <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option></select>
+                            </div>
+                            <div>
+                                <button style="width:100%; padding:12px; display:flex; justify-content:center; gap:8px; align-items:center; background:white; color:var(--primary-teal); border:1px solid var(--sec-bg); border-radius:8px; font-weight:700; cursor:pointer;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    Réinitialiser
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div style="height:550px; background:#f9fafb; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+                            <div style="position:absolute; inset:0; opacity:0.03; background-image:radial-gradient(circle at 2px 2px, black 1px, transparent 0); background-size:32px 32px;"></div>
+                            <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px; z-index:1;">
+                                <div style="display:flex; gap:6px; align-items:flex-end; height:48px;">
+                                    <div style="width:12px; height:24px; background:#E6C229; border-radius:2px;"></div>
+                                    <div style="width:12px; height:36px; background:#F1D302; border-radius:2px;"></div>
+                                    <div style="width:12px; height:48px; background:#F2B705; border-radius:2px;"></div>
+                                </div>
+                                <span style="font-size:36px; font-weight:300; color:#334155; font-family:'Segoe UI', system-ui, sans-serif;">Power BI</span>
+                            </div>
+                            <p style="color:#64748b; font-size:18px; font-family:'Segoe UI', system-ui, sans-serif; font-weight:400; margin-bottom:32px; z-index:1;">Connectez-vous pour voir ce rapport</p>
+                            <button style="background:var(--primary-teal); color:white; border:none; border-radius:6px; padding:12px 32px; font-size:16px; font-weight:600; font-family:'Segoe UI', system-ui, sans-serif; cursor:pointer; box-shadow:0 4px 12px rgba(46,71,65,0.2); transition:all 0.2s; z-index:1;" onclick="this.innerHTML='Connexion en cours...'; this.style.opacity='0.8'; setTimeout(() => showToast('Authentification SSO réussie'), 1000);">Se connecter</button>
+                        </div>
+                        <div style="background:#e8f4ed; padding:16px; font-size:13px; color:#1e293b; text-align:center; border-top:1px solid var(--sec-bg);">
+                            Rapport sécurisé — authentification SSO au tenant CAM, affiché directement dans cette page. Si l'écran reste bloqué sur la connexion, autorisez les cookies tiers de <strong>app.powerbi.com</strong> dans le navigateur.
+                        </div>
+                    </div>
+                </div>`;
+        }        function renderPortefeuille(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                        <h2 style="font-size:20px; font-weight:700; color:var(--text-main);">Portefeuille Clients (${MOCK.clients.length})</h2>
+                        <div style="display:flex; gap:12px;">
+                            <input type="text" placeholder="Rechercher (Nom, ICE...)" style="padding:10px 16px; border:1px solid var(--sec-bg); border-radius:8px; background:var(--surface); font-size:13px; width:240px;">
+                            <button class="btn btn-primary" onclick="showToast('Filtrage des clients')"><svg width="16" height="16" style="margin-right:8px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg> Filtrer</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Raison Sociale / Nom</th>
+                                        <th>Type</th>
+                                        <th>Agence</th>
+                                        <th>Encours Global</th>
+                                        <th>Score IA</th>
+                                        <th>Statut</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${MOCK.clients.map(c => `
+                                        <tr>
+                                            <td style="font-weight:600; color:var(--text-main);">${c.nom}</td>
+                                            <td><span style="font-size:12px; color:var(--slate-500);">${c.type}</span></td>
+                                            <td>${c.agence}</td>
+                                            <td style="font-family:'JetBrains Mono', monospace; text-align:right;">${formatMAD(c.encours)}</td>
+                                            <td>
+                                                <div style="display:flex; align-items:center; gap:8px;">
+                                                    <div class="progress-bar" style="width:60px;"><div class="progress-fill" style="width:${c.score}%; background:${c.score < 50 ? 'var(--primary-orange)' : 'var(--primary-teal)'};"></div></div>
+                                                    <span style="font-size:12px; font-weight:600; color:${c.score < 50 ? 'var(--primary-orange)' : 'var(--text-main)'}">${c.score}/100</span>
+                                                </div>
+                                            </td>
+                                            <td>${getStatutBadge(c.statut)}</td>
+                                            <td><button class="btn btn-secondary" style="padding:4px 12px; font-size:11px;" onclick="showToast('Ouverture vue 360° pour ${c.nom}')">Vue 360°</button></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Module Engagements
+        function renderEngagements(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <h2 style="font-size:20px; font-weight:700; color:var(--text-main); margin-bottom:24px;">Octrois & Engagements</h2>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; margin-bottom:24px;">
+                        ${buildKPI('Demandes en attente', '24', '', false, '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>')}
+                        ${buildKPI('Dossiers Approuvés (Mois)', '142', '+12%', false, '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>')}
+                        ${buildKPI('Taux d\'Accord', '82%', '', false, '<path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>')}
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="chart-title" style="margin:0;">Comité de Crédit - Dossiers Récents</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr><th>Réf. Dossier</th><th>Client</th><th>Type Crédit</th><th>Montant Demandé</th><th>Score Modèle</th><th>Statut</th><th>Action</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${MOCK.dossiers.filter(d => (APP.userRole === 'DG' || APP.userRole === 'Admin') ? true : (APP.userRole === 'DR' ? d.client.length % 2 === 0 : d.client.length % 2 !== 0)).map(d => `
+                                        <tr>
+                                            <td style="font-family:'JetBrains Mono', monospace; font-size:12px;">${d.ref || d.id}</td>
+                                            <td style="font-weight:600;">${d.client}</td>
+                                            <td>${d.type}</td>
+                                            <td style="font-family:'JetBrains Mono', monospace; text-align:right;">${formatMAD(d.montant)}</td>
+                                            <td>${d.score}/100</td>
+                                            <td>${getStatutBadge(d.statut)}</td>
+                                            <td><button class="btn btn-secondary" style="padding:4px 12px; font-size:11px;">Étudier</button></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Module Risques
+        function renderRisques(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <h2 style="font-size:20px; font-weight:700; color:var(--text-main); margin-bottom:24px;">Analyse des Risques & NPL</h2>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+                        <div class="card">
+                            <h3 class="chart-title">Répartition du Risque par Marché</h3>
+                            <div style="display:flex; flex-direction:column; gap:16px; margin-top:24px;">
+                                <div><div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; font-weight:600;"><span>Immobilier</span><span style="color:var(--primary-orange)">5.2% NPL</span></div><div class="progress-bar"><div class="progress-fill" style="width:75%; background:var(--primary-orange)"></div></div></div>
+                                <div><div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; font-weight:600;"><span>PME</span><span style="color:var(--primary-orange)">4.8% NPL</span></div><div class="progress-bar"><div class="progress-fill" style="width:60%; background:var(--primary-orange)"></div></div></div>
+                                <div><div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; font-weight:600;"><span>Corporate</span><span style="color:var(--slate-500)">2.1% NPL</span></div><div class="progress-bar"><div class="progress-fill" style="width:30%; background:var(--slate-500)"></div></div></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3 class="chart-title">Matrice de Transition (Dégradation Score)</h3>
+                            <p style="font-size:13px; color:var(--slate-500); margin-bottom:16px;">Clients passés de la classe A/B vers C/D ce mois-ci.</p>
+                            <table style="width:100%; text-align:left; font-size:12px; border-collapse:collapse;">
+                                <tr style="border-bottom:1px solid var(--sec-bg);"><th style="padding:8px;">Classe Initiale</th><th style="padding:8px;">Nouvelle Classe</th><th style="padding:8px; text-align:right;">Nombre de Clients</th></tr>
+                                <tr style="border-bottom:1px solid var(--sec-bg);"><td style="padding:8px; font-weight:600; color:var(--primary-teal);">A (Faible Risque)</td><td style="padding:8px; color:var(--primary-orange);">C (Risque Elevé)</td><td style="padding:8px; text-align:right; font-weight:bold;">12</td></tr>
+                                <tr style="border-bottom:1px solid var(--sec-bg);"><td style="padding:8px; font-weight:600; color:var(--text-main);">B (Risque Modéré)</td><td style="padding:8px; color:var(--primary-orange);">D (Défaut Probable)</td><td style="padding:8px; text-align:right; font-weight:bold;">5</td></tr>
+                                <tr><td style="padding:8px; font-weight:600; color:var(--text-main);">B (Risque Modéré)</td><td style="padding:8px; color:var(--primary-orange);">C (Risque Elevé)</td><td style="padding:8px; text-align:right; font-weight:bold;">28</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Module Administration
+
+        function renderAdmin(container, activeTab = 'admin-users') {
+            container.innerHTML = `<div class="fade-in" style="height: 100%; display: flex; flex-direction: column;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                        <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; color:var(--dark-teal); font-weight:700; margin: 0;">CONSOLE ADMIN</h2>
+                        <span style="background: var(--light-bg); color: var(--primary-teal); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600;">${
+                            activeTab === 'admin-users' ? 'Gestion des Utilisateurs' :
+                            activeTab === 'admin-access' ? 'Gestion des Accès' :
+                            activeTab === 'admin-dashboards' ? 'Gestion des Dashboards' :
+                            activeTab === 'admin-embeddings' ? 'Configuration Power BI' :
+                            activeTab === 'admin-filters' ? 'Configuration des Filtres' :
+                            'Ajouter un Dashboard'
+                        }</span>
+                    </div>
+                    
+                    <div style="flex: 1; overflow-y: auto;">
+                        <!-- Utilisateurs -->
+                        <div id="admin-users" class="${activeTab === 'admin-users' ? '' : 'hidden'}">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="chart-title" style="margin:0;">Liste des Utilisateurs</h3>
+                                    <button class="btn btn-primary" onclick="showToast('Ajouter utilisateur')">+ Nouvel Utilisateur</button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table>
+                                        <thead><tr><th>Utilisateur</th><th>Email</th><th>Profil Technique</th><th>Agence / DR</th><th>Statut</th><th>Actions</th></tr></thead>
+                                        <tbody>
+                                            ${MOCK.admins.map(a => `
+                                                <tr>
+                                                    <td style="font-weight:600">${a.nom}</td>
+                                                    <td>${a.email}</td>
+                                                    <td><span style="background:var(--accent-teal-light); color:var(--primary-teal); padding:4px 8px; border-radius:4px; font-size:11px;">${a.profil}</span></td>
+                                                    <td>${a.agence}</td>
+                                                    <td>${getStatutBadge(a.statut)}</td>
+                                                    <td>
+                                                        <button class="icon-btn" onclick="showToast('Modifier utilisateur')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
+                                                    </td>
+                                                </tr>`).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gestion des accès -->
+                        <div id="admin-access" class="${activeTab === 'admin-access' ? '' : 'hidden'}">
+                            <div class="card" style="padding:32px;">
+                                <h3 class="chart-title">Gestion des Accès / Permissions</h3>
+                                <p style="color:var(--slate-500); margin-bottom:24px;">Configurez la visibilité des modules pour chaque profil métier ou accordez des accès exceptionnels.</p>
+                                <div style="background:var(--light-bg); border-radius:8px; padding:24px; text-align:center;">
+                                    <svg width="48" height="48" fill="none" stroke="var(--primary-teal)" stroke-width="2" viewBox="0 0 24 24" style="margin-bottom:16px; opacity:0.5;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <h4 style="font-weight:600; color:var(--dark-teal); margin-bottom:8px;">Matrice des rôles</h4>
+                                    <p style="color:var(--slate-500); font-size:13px; margin-bottom:16px;">Sélectionnez un profil pour modifier ses habilitations sur les rapports et modules.</p>
+                                    <select style="padding:10px 16px; border-radius:8px; border:1px solid var(--sec-bg); font-size:14px; width:250px;">
+                                        <option>Directeur Général</option>
+                                        <option>Directeur de Réseau</option>
+                                        <option>Chargé d'Affaires</option>
+                                        <option>Directeur Risques</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gestion des dashboards -->
+                        <div id="admin-dashboards" class="${activeTab === 'admin-dashboards' ? '' : 'hidden'}">
+                            <div class="card" style="padding:32px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                    <h3 class="chart-title" style="margin: 0;">Dashboards Configurés</h3>
+                                    <button class="btn btn-primary" onclick="location.hash='admin-add-dash'">+ Ajouter Dashboard</button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table>
+                                        <thead><tr><th>Nom du Module</th><th>ID</th><th>Type</th><th>Rôles autorisés</th><th>Actions</th></tr></thead>
+                                        <tbody id="admin-dash-list">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gestion des embeddings -->
+                        <div id="admin-embeddings" class="${activeTab === 'admin-embeddings' ? '' : 'hidden'}">
+                            <div class="card" style="padding:32px;">
+                                <h3 class="chart-title">Configuration Power BI / Embeddings</h3>
+                                <p style="color:var(--slate-500); margin-bottom:24px; line-height:1.6;">Configurez les identifiants Azure AD et le Workspace ID pour l'affichage natif des rapports Power BI dans l'application.</p>
+                                
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:20px;">
+                                    <div>
+                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Tenant ID</label>
+                                        <input type="text" value="b41b72d0-4e9f-4c26-8a69-f949f367c91d" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+                                    </div>
+                                    <div>
+                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Client ID</label>
+                                        <input type="text" value="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+                                    </div>
+                                    <div style="grid-column:1/-1;">
+                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Workspace ID (Production)</label>
+                                        <input type="text" value="wks-saham-prod-001" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="margin-top:24px;" onclick="showToast('Configuration enregistrée')">Sauvegarder Configuration</button>
+                            </div>
+                        </div>
+
+                        <!-- Configuration des filtres -->
+                        <div id="admin-filters" class="${activeTab === 'admin-filters' ? '' : 'hidden'}">
+                            <div class="card" style="padding:32px;">
+                                <h3 class="chart-title">Configuration Globale des Filtres</h3>
+                                <p style="color:var(--slate-500); margin-bottom:24px;">Gérez les filtres par défaut appliqués sur les embeddings via le RLS (Row-Level Security) selon le profil utilisateur connecté.</p>
+                                <div style="padding:16px; border:1px solid var(--sec-bg); border-radius:8px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <div style="font-weight:600; color:var(--dark-teal);">Filtre: Région Automatique</div>
+                                        <div style="font-size:12px; color:var(--slate-500);">Applique le filtre "Région" selon l'affectation du DR.</div>
+                                    </div>
+                                    <div style="width:40px; height:24px; background:var(--primary-teal); border-radius:12px; position:relative;">
+                                        <div style="width:20px; height:20px; background:white; border-radius:50%; position:absolute; top:2px; right:2px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"></div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-secondary" onclick="showToast('Ajouter un filtre global')">+ Ajouter Règle</button>
+                            </div>
+                        </div>
+
+                        <!-- Ajouter un Dashboard -->
+                        <div id="admin-add-dash" class="${activeTab === 'admin-add-dash' ? '' : 'hidden'}">
+                            <div class="card" style="padding:32px;">
+                                <h3 class="chart-title">Créer un Nouveau Module</h3>
+                                <p style="color:var(--slate-500); margin-bottom:24px; line-height:1.6;">Créez dynamiquement un nouveau lien dans le menu de gauche pour intégrer un rapport Power BI ou une page web externe.</p>
+                                
+                                <div style="display:flex; flex-direction:column; gap:20px;">
+                                    <div>
+                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Nom du Module</label>
+                                        <input type="text" id="new-dash-name" placeholder="Ex: Suivi des Réclamations" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+                                    </div>
+                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                                        <div>
+                                            <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Module Parent (Optionnel)</label>
+                                            <select id="new-dash-parent" style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+                                                <option value="">Aucun (Module Principal)</option>
+                                                <option value="dashboard">Pilotage Commercial</option>
+                                                <option value="engagements">Espace Engagements</option>
+                                                <option value="qualite">Qualité de Service Clientèle</option>
+                                                <option value="rentabilite">Rentabilité</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">URL du rapport (Optionnel)</label>
+                                            <input type="text" id="new-dash-url" placeholder="https://app.powerbi.com/reportEmbed?reportId=..." style="width:100%; padding:12px; border:1px solid var(--sec-bg); border-radius:8px; background:white;">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--slate-700); font-size:13px;">Accès (Rôles autorisés)</label>
+                                        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="DG" checked> Direction Générale</label>
+                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="DR" checked> Dir. Réseau</label>
+                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="CA"> Chargé d'Affaires</label>
+                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="AR"> Dir. Risques</label>
+                                            <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" class="new-dash-role" value="Admin" checked> Admin</label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-primary" onclick="createCustomDashboard()">Créer le module</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+            // Populate dashboard list if in that tab
+            if (activeTab === 'admin-dashboards') {
+                setTimeout(() => {
+                    const tbody = document.getElementById('admin-dash-list');
+                    if (tbody) {
+                        let html = '';
+                        APP.modules.forEach(m => {
+                            if (m.isGroup) {
+                                html += `<tr><td colspan="5" style="background:var(--light-bg); font-weight:700; font-size:11px; text-transform:uppercase; color:var(--slate-500);">${m.name}</td></tr>`;
+                                m.subItems.forEach(sub => {
+                                    html += `<tr>
+                                        <td style="padding-left:24px;">${sub.name}</td>
+                                        <td><code style="background:var(--sec-bg); padding:2px 6px; border-radius:4px; font-size:11px;">${sub.id}</code></td>
+                                        <td>${sub.isCustomExt ? 'Externe/Custom' : 'Natif'}</td>
+                                        <td>${(sub.roles || m.roles || []).join(', ')}</td>
+                                        <td><button class="icon-btn" onclick="showToast('Modifier')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button></td>
+                                    </tr>`;
+                                });
+                            } else {
+                                html += `<tr>
+                                    <td>${m.name}</td>
+                                    <td><code style="background:var(--sec-bg); padding:2px 6px; border-radius:4px; font-size:11px;">${m.id}</code></td>
+                                    <td>${m.isCustomExt ? 'Externe/Custom' : 'Natif'}</td>
+                                    <td>${(m.roles || []).join(', ')}</td>
+                                    <td><button class="icon-btn" onclick="showToast('Modifier')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button></td>
+                                </tr>`;
+                            }
+                        });
+                        tbody.innerHTML = html;
+                    }
+                }, 50);
+            }
+        }
+function renderChatbot(container) {
+            container.innerHTML = `
+                <div class="fade-in" style="display:flex; flex-direction:column; height:calc(100vh - 120px); gap:16px;">
+                    <div>
+                        <h2 style="font-size:24px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Assistant IA (Chatbot)</h2>
+                        <p style="color:var(--slate-500); font-size:14px;">Posez vos questions en langage naturel, le chatbot génèrera les requêtes SQL et vous fournira les données.</p>
+                    </div>
+
+                    <div style="flex:1; display:flex; gap:24px; min-height:0;">
+                        <!-- Sidebar: Presets -->
+                        <div class="chat-sidebar" style="padding:16px;">
+                            <h3 style="font-size:12px; text-transform:uppercase; color:var(--slate-500); margin-bottom:12px; letter-spacing:0.5px;">Questions Fréquentes</h3>
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <button class="preset-btn" onclick="document.getElementById('main-chat-input').value=this.innerText; document.getElementById('main-chat-input').focus();">
+                                    Quels sont les clients avec un score de risque > 80 en agence "Casablanca Anfa" ?
+                                </button>
+                                <button class="preset-btn" onclick="document.getElementById('main-chat-input').value=this.innerText; document.getElementById('main-chat-input').focus();">
+                                    Affiche les 5 plus gros encours du segment PME.
+                                </button>
+                                <button class="preset-btn" onclick="document.getElementById('main-chat-input').value=this.innerText; document.getElementById('main-chat-input').focus();">
+                                    Total des engagements par agence pour les crédits de Trésorerie ?
+                                </button>
+                                <button class="preset-btn" onclick="document.getElementById('main-chat-input').value=this.innerText; document.getElementById('main-chat-input').focus();">
+                                    Quel est l'encours global moyen par segment ?
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Main Chat Interface -->
+                        <div class="chat-main">
+                            <div id="main-chat-messages" style="flex:1; padding:24px; overflow-y:auto; display:flex; flex-direction:column; gap:16px;">
+                                <div class="msg msg-bot" style="display:flex; gap:12px; max-width:80%;">
+                                    <div style="width:36px; height:36px; border-radius:10px; background:var(--primary-teal); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                                    </div>
+                                    <div class="bubble">Bonjour, je suis l'IA de Saham. Comment puis-je vous aider à interroger votre base de données aujourd'hui ?</div>
+                                </div>
+                            </div>
+                            <div class="chat-input-area">
+                                <input type="text" id="main-chat-input" placeholder="Ex: Montre les clients à risque..." style="flex:1; border:none; outline:none; font-size:14px; background:transparent;" onkeypress="if(event.key==='Enter') sendMainChat()">
+                                <button class="btn btn-primary" onclick="sendMainChat()" style="padding:8px 24px;">Envoyer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Re-bind the window sendMainChat function so it has context of these DOM elements
+            window.sendMainChat = function() {
+                const input = document.getElementById('main-chat-input');
+                const text = input.value.trim();
+                if(!text) return;
+                
+                const msgs = document.getElementById('main-chat-messages');
+                
+                // Add User Message
+                msgs.innerHTML += `
+                    <div class="msg msg-user" style="display:flex; gap:12px; max-width:80%; align-self:flex-end; flex-direction:row-reverse;">
+                        <div style="width:36px; height:36px; border-radius:10px; background:var(--primary-orange); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">U</div>
+                        <div class="bubble" style="background:var(--primary-orange); color:white; border-radius:16px 16px 0 16px; padding:16px 20px;">${text}</div>
+                    </div>
+                `;
+                input.value = '';
+                msgs.scrollTop = msgs.scrollHeight;
+                
+                // Simulate Bot processing
+                setTimeout(() => {
+                    let mockSQL = "SELECT * FROM clients;";
+                    const startTime = performance.now();
+                    let res = MOCK.clients.slice(0, 5);
+                    let tableHtml = '';
+
+                    const textLower = text.toLowerCase();
+                    if (textLower.includes('casablanca') && textLower.includes('risque')) {
+                        mockSQL = "SELECT * FROM clients WHERE agence = 'Casablanca Anfa' AND score_risque > 80;";
+                        res = MOCK.clients.filter(c => c.agence === 'Casablanca Anfa' && c.score < 50).slice(0, 5);
+                        tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
+                        <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Client</th><th style="padding:6px; text-align:left;">Score</th><th style="padding:6px; text-align:right;">Encours</th></tr>
+                        ${res.map(c=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.nom}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.score}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(c.encours)}</td></tr>`).join('')}
+                    </table>`;
+                    } else if (textLower.includes('gros encours') && textLower.includes('pme')) {
+                        mockSQL = "SELECT * FROM clients WHERE segment = 'PME' ORDER BY encours DESC LIMIT 5;";
+                        res = [...MOCK.clients].filter(c => c.segment === 'PME').sort((a,b) => b.encours - a.encours).slice(0, 5);
+                        tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
+                        <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Client</th><th style="padding:6px; text-align:left;">Segment</th><th style="padding:6px; text-align:right;">Encours</th></tr>
+                        ${res.map(c=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.nom}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.segment}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(c.encours)}</td></tr>`).join('')}
+                    </table>`;
+                    } else if (textLower.includes('total des engagements') || textLower.includes('trésorerie')) {
+                        mockSQL = "SELECT agence, SUM(montant) FROM engagements WHERE type = 'Trésorerie' GROUP BY agence;";
+                        const agences = [...new Set(MOCK.clients.map(c => c.agence))];
+                        res = agences.map(ag => {
+                            const total = MOCK.clients.filter(c => c.agence === ag).reduce((sum, c) => sum + (c.encours * 0.4), 0);
+                            return { agence: ag, total };
+                        }).sort((a,b) => b.total - a.total).slice(0, 5);
+                        tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
+                        <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Agence</th><th style="padding:6px; text-align:right;">Total Engagements (Trésorerie)</th></tr>
+                        ${res.map(a=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${a.agence}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(a.total)}</td></tr>`).join('')}
+                    </table>`;
+                    } else if (textLower.includes('encours global moyen') || textLower.includes('moyen par segment')) {
+                        mockSQL = "SELECT segment, AVG(encours) as avg_encours FROM clients GROUP BY segment;";
+                        const segments = [...new Set(MOCK.clients.map(c => c.segment))];
+                        res = segments.map(seg => {
+                            const clients = MOCK.clients.filter(c => c.segment === seg);
+                            const avg = clients.reduce((sum, c) => sum + c.encours, 0) / clients.length;
+                            return { segment: seg, avg };
+                        }).sort((a,b) => b.avg - a.avg);
+                        tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
+                        <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Segment</th><th style="padding:6px; text-align:right;">Encours Moyen</th></tr>
+                        ${res.map(s=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${s.segment}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(s.avg)}</td></tr>`).join('')}
+                    </table>`;
+                    } else {
+                        tableHtml = `<p style="margin-bottom:8px">Je n'ai pas pu analyser cette requête avec précision. Veuillez essayer une des suggestions ou reformuler.</p>`;
+                    }
+
+                    const timeMs = Math.round(performance.now() - startTime + 45); // fake delay
+                    MOCK.queries.unshift({ date: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR'), user: APP.userRole, question: text, sql: mockSQL, results: res.length, time: timeMs });
+
+
+                    msgs.innerHTML += `
+                        <div class="msg msg-bot" style="display:flex; gap:12px; max-width:95%;">
+                            <div style="width:36px; height:36px; border-radius:10px; background:var(--primary-teal); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                            </div>
+                            <div class="bubble">
+                                <p style="margin-bottom:8px">Voici les résultats trouvés (${res.length} clients).</p>
+                                ${tableHtml}
+                                <div style="margin-top:12px; background:var(--light-bg); border-radius:6px; border:1px solid var(--sec-bg); overflow:hidden;">
+                                    <button class="toggle-btn" style="width:100%; padding:8px 12px; background:#f4f6f5; text-align:left; font-size:12px; font-weight:600; cursor:pointer; border:none; color:var(--text-main); display:flex; align-items:center; gap:6px;" onclick="toggleSql(this)">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                        Voir la requête SQL
+                                    </button>
+                                    <div class="sql-container">
+                                        <div class="sql-code">${syntaxHighlightSQL(mockSQL)}</div>
+                                        <div class="sql-meta">Exécutée en ${timeMs}ms</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    msgs.scrollTop = msgs.scrollHeight;
+                }, 800);
+            }
+        }
+
+
+        function exportDashCSV() {
+            let csv = "Indicateur;Valeur\nProduit Net Bancaire;1.42 Md MAD\nEncours Crédits;45.8 Md MAD\nEncours Dépôts;52.4 Md MAD\nCoût du Risque;0.85%\n";
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'dashboard_export.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Export Dashboard CSV terminé', 'success');
+        }
+
+        function exportQueriesCSV() {
+            let csvContent = "ID;Date;Utilisateur;Question Posée;Statut;Temps (ms);Résultats;Tables Interrogées\n";
+            MOCK.queries.forEach(q => {
+                const row = [
+                    q.id || 'N/A',
+                    q.date,
+                    q.user,
+                    '"' + q.question.replace(/"/g, '""') + '"',
+                    q.status,
+                    q.time,
+                    q.results,
+                    (q.tables || []).join(',')
+                ].join(';');
+                csvContent += row + "\n";
+            });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'queries_log.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Fichier queries_log.csv téléchargé', 'success');
+        }
+
+    
+        function syntaxHighlightSQL(sql) {
+            return sql
+                .replace(/\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|LIMIT|SUM|ASC|DESC)\b/g, '<span class="sql-keyword-blue">$1</span>')
+                .replace(/\b(clients|dossiers)\b/g, '<span class="sql-keyword-purple">$1</span>')
+                .replace(/\b(AND|OR)\b/g, '<span class="sql-keyword-orange">$1</span>')
+                .replace(/([0-9]+|'[^']*')/g, '<span class="sql-value-green">$1</span>');
+        }
+
+        async function sendChatFab() {
+            const input = document.getElementById('chat-input-fab');
+            const text = input.value.trim();
+            if(!text) return;
+            
+            const container = document.getElementById('chat-messages');
+            
+            container.innerHTML += `<div class="chat-msg user">${text}</div>`;
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+            
+            const analyzeId = 'msg-' + Date.now();
+            container.innerHTML += `<div id="${analyzeId}" class="chat-msg bot">Analyse de votre question<span class="typing-dots"><span></span><span></span><span></span></span></div>`;
+            container.scrollTop = container.scrollHeight;
+            
+            await new Promise(r => setTimeout(r, 1200));
+            document.getElementById(analyzeId).style.display = 'none';
+            
+            let sql = "SELECT * FROM clients LIMIT 5;";
+            let nlpResponse = "Voici quelques données :";
+            let tableHtml = "Résultats standards...";
+            let resultsCount = 5;
+            
+            if(text.toLowerCase().includes('score') || text.toLowerCase().includes('risque')) {
+                sql = "SELECT id, nom, score, encours FROM clients WHERE score < 40 ORDER BY score ASC;";
+                const res = MOCK.clients.filter(c=>c.score<40).slice(0,4);
+                resultsCount = res.length;
+                nlpResponse = "J'ai identifié " + resultsCount + " clients présentant un score de risque inférieur à 40. Voici les détails :";
+                tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
+                    <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Client</th><th style="padding:6px; text-align:left;">Score</th><th style="padding:6px; text-align:right;">Encours</th></tr>
+                    ${res.map(c=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.nom}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.score}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(c.encours)}</td></tr>`).join('')}
+                </table>`;
+            } else if(text.toLowerCase().includes('encours') || text.toLowerCase().includes('top')) {
+                sql = "SELECT agence, SUM(encours) as total_encours FROM clients GROUP BY agence ORDER BY total_encours DESC LIMIT 3;";
+                resultsCount = 3;
+                nlpResponse = "Voici le top 3 des agences par total d'encours.";
+                tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
+                    <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Agence</th><th style="padding:6px; text-align:right;">Total Encours</th></tr>
+                    <tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">Casablanca Anfa</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">125,400,000 MAD</td></tr>
+                    <tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">Rabat Agdal</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">98,200,000 MAD</td></tr>
+                    <tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">Marrakech Gueliz</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">87,500,000 MAD</td></tr>
+                </table>`;
+            }
+
+            const highlightedSql = syntaxHighlightSQL(sql);
+            const execTime = Math.floor(Math.random() * 150) + 50;
+
+            MOCK.queries.unshift({
+                question: text,
+                sql: sql,
+                results: resultsCount,
+                time: execTime,
+                date: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR').toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR'),
+                user: APP.userRole || 'Inconnu'
+            });
+
+            container.innerHTML += `
+                <div class="chat-msg bot" style="width: 100%;">
+                    <div style="font-weight:600; margin-bottom:4px; color:var(--dark-teal); font-size:12px;">Requête générée :</div>
+                    <div class="chat-sql-block">${highlightedSql}</div>
+                    <div style="margin-top:12px;">${nlpResponse}</div>
+                    ${tableHtml}
+                    <div style="text-align:right; font-size:10px; color:var(--slate-500); margin-top:8px;">Exécuté en ${execTime}ms</div>
+                </div>`;
+                
+            container.scrollTop = container.scrollHeight;
+        }
+
+    
+        // --- NEW SAHAM AI CHATBOT LOGIC ---
+        let isChatFullscreen = false;
+        function toggleSahamChatFullscreen() {
+            isChatFullscreen = !isChatFullscreen;
+            const panel = document.getElementById('saham-chat-panel');
+            const fsBtn = document.getElementById('saham-chat-fs-btn');
+            if (isChatFullscreen) {
+                panel.classList.add('fullscreen');
+                fsBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 14h6m0 0v6m0-6l-7 7m17-11h-6m0 0V4m0 6l7-7M4 10h6m0 0V4m0 6l-7-7m17 11h-6m0 0v6m0-6l7 7"></path></svg>';
+                fsBtn.title = "Réduire";
+            } else {
+                panel.classList.remove('fullscreen');
+                fsBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>';
+                fsBtn.title = "Plein écran";
+            }
+        }
+        
+        function toggleSahamChat() {
+            document.getElementById('saham-chat-panel').classList.toggle('active');
+            if (document.getElementById('saham-chat-panel').classList.contains('active')) {
+                document.getElementById('saham-chat-input').focus();
+            }
+        }
+
+        function fillSahamChat(btn) {
+            const input = document.getElementById('saham-chat-input');
+            input.value = btn.innerText;
+            input.focus();
+        }
+
+        async function handleSahamChatSubmit() {
+            const input = document.getElementById('saham-chat-input');
+            const btn = document.getElementById('saham-chat-btn');
+            const text = input.value.trim();
+            if(!text) return;
+
+            // Hide chips
+            const chips = document.getElementById('saham-chips');
+            if (chips) chips.style.display = 'none';
+
+            input.value = '';
+            input.disabled = true;
+            btn.disabled = true;
+
+            const msgs = document.getElementById('saham-chat-messages');
+
+            // Add user message
+            msgs.innerHTML += `
+                <div class="saham-msg user">
+                    <div class="bubble">${text}</div>
+                </div>
+            `;
+            msgs.scrollTop = msgs.scrollHeight;
+
+            // Step 1: Compréhension
+            const step1Id = 'msg-' + Date.now() + '-1';
+            msgs.innerHTML += `
+                <div id="${step1Id}" class="saham-msg bot">
+                    <div class="bubble">
+                        <div class="saham-msg-icon">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            Analyse de votre question<span class="typing-dots"><span></span><span></span><span></span></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            msgs.scrollTop = msgs.scrollHeight;
+            await new Promise(r => setTimeout(r, 500));
+
+            // Determine query info
+            let sql = "SELECT * FROM clients LIMIT 5;";
+            let nlpResponse = "Voici les données trouvées pour votre requête.";
+            let execTime = Math.floor(Math.random() * 295) + 45; // 45-340ms
+            let tableRows = "";
+            let numRows = 5;
+            let tablesUsed = ['clients'];
+            let oob = false; // out of bounds
+
+            const q = text.toLowerCase();
+            if (q.includes('score de risque critique') || q.includes('< 30')) {
+                sql = "SELECT id, nom, score, encours FROM clients WHERE score < 30 ORDER BY score ASC LIMIT 5;";
+                nlpResponse = "J'ai trouvé plusieurs clients avec un score de risque critique (inférieur à 30). Voici les 5 plus critiques :";
+                tableRows = `
+                    <tr><td>El Fassi Nadia</td><td>12</td><td style="text-align:right">1,200,000</td></tr>
+                    <tr><td>Bennani Omar</td><td>18</td><td style="text-align:right">450,000</td></tr>
+                    <tr><td>Amrani Khadija</td><td>22</td><td style="text-align:right">3,500,000</td></tr>
+                    <tr><td>Tazi Mehdi</td><td>25</td><td style="text-align:right">85,000</td></tr>
+                    <tr><td>Zniber Laila</td><td>28</td><td style="text-align:right">920,000</td></tr>
+                `;
+                numRows = 14;
+            } else if (q.includes('taux npl')) {
+                sql = "SELECT agence, npl_ratio FROM agences_perf ORDER BY npl_ratio DESC LIMIT 3;";
+                nlpResponse = "Voici les agences présentant le taux de créances douteuses (NPL) le plus élevé :";
+                tableRows = `
+                    <tr><td>Casablanca Anfa</td><td style="text-align:right">4.2%</td></tr>
+                    <tr><td>Tanger Marina</td><td style="text-align:right">3.8%</td></tr>
+                    <tr><td>Fès Ville Nouvelle</td><td style="text-align:right">3.5%</td></tr>
+                `;
+                tablesUsed = ['agences_perf', 'credits'];
+                numRows = 8;
+            } else if (q.includes('dossiers crédit en surveillance')) {
+                sql = "SELECT id, type, montant, agence FROM dossiers WHERE statut = 'Surveillance' AND extract(month from date_maj) = extract(month from current_date);";
+                nlpResponse = "Il y a actuellement 8 dossiers de crédit placés sous surveillance stricte ce mois-ci.";
+                tableRows = `
+                    <tr><td>D-8821</td><td>Crédit Invest.</td><td style="text-align:right">4,500,000</td></tr>
+                    <tr><td>D-9012</td><td>Trésorerie</td><td style="text-align:right">850,000</td></tr>
+                    <tr><td>D-8845</td><td>Leasing</td><td style="text-align:right">1,200,000</td></tr>
+                    <tr><td>D-9100</td><td>Escompte</td><td style="text-align:right">340,000</td></tr>
+                    <tr><td>D-8999</td><td>Trésorerie</td><td style="text-align:right">2,100,000</td></tr>
+                `;
+                tablesUsed = ['dossiers', 'clients'];
+                numRows = 8;
+            } else if (q.includes('expositions crédit par segment')) {
+                sql = "SELECT segment, sum(encours) as total_encours FROM clients GROUP BY segment ORDER BY total_encours DESC LIMIT 5;";
+                nlpResponse = "Voici la répartition des expositions de crédit pour les différents segments de la banque :";
+                tableRows = `
+                    <tr><td>Corporate</td><td style="text-align:right">4.2 MMDH</td></tr>
+                    <tr><td>PME</td><td style="text-align:right">2.8 MMDH</td></tr>
+                    <tr><td>Retail</td><td style="text-align:right">1.5 MMDH</td></tr>
+                    <tr><td>Premium</td><td style="text-align:right">0.9 MMDH</td></tr>
+                    <tr><td>Agricole</td><td style="text-align:right">0.6 MMDH</td></tr>
+                `;
+                numRows = 5;
+            } else if (q.includes('pnb ce trimestre')) {
+                sql = "SELECT mois, pnb_realise, pnb_objectif FROM performances WHERE trimestre = 'Q3' ORDER BY mois ASC;";
+                nlpResponse = "L'évolution du Produit Net Bancaire ce trimestre montre une croissance soutenue par rapport aux objectifs :";
+                tableRows = `
+                    <tr><td>Juillet</td><td style="text-align:right">145 M</td><td style="text-align:right; color:#6b7d78">140 M</td></tr>
+                    <tr><td>Août</td><td style="text-align:right">152 M</td><td style="text-align:right; color:#6b7d78">148 M</td></tr>
+                    <tr><td>Septembre</td><td style="text-align:right">168 M</td><td style="text-align:right; color:#6b7d78">155 M</td></tr>
+                `;
+                tablesUsed = ['performances'];
+                numRows = 3;
+            } else if (q.includes('churn prévu par agence')) {
+                sql = "SELECT agence, predicted_churn_rate FROM churn_predictions WHERE quarter = 'Q3-2026' ORDER BY predicted_churn_rate DESC LIMIT 3;";
+                nlpResponse = "Selon notre modèle prédictif, voici les 3 agences avec le taux d'attrition estimé le plus élevé pour le trimestre en cours :";
+                tableRows = `
+                    <tr><td>Agadir Centre</td><td style="text-align:right; color:#C8102E">8.4%</td></tr>
+                    <tr><td>Rabat Hassan</td><td style="text-align:right; color:#C8102E">7.2%</td></tr>
+                    <tr><td>Casablanca Maarif</td><td style="text-align:right; color:#C8102E">6.5%</td></tr>
+                `;
+                tablesUsed = ['churn_predictions', 'clients'];
+                numRows = 8;
+            } else if (q.includes('transactions suspectes')) {
+                sql = "SELECT id_trx, montant, motif_alerte FROM transactions WHERE alerte_aml = true AND date_trx >= NOW() - INTERVAL '48 hours';";
+                nlpResponse = "Le système LCB-FT a remonté 4 transactions suspectes au cours des dernières 48 heures :";
+                tableRows = `
+                    <tr><td>TRX-9981</td><td style="text-align:right">850,000</td><td>Montant inusuel</td></tr>
+                    <tr><td>TRX-1024</td><td style="text-align:right">45,000</td><td>Fractionnement</td></tr>
+                    <tr><td>TRX-3092</td><td style="text-align:right">120,000</td><td>Origine risquée</td></tr>
+                    <tr><td>TRX-8812</td><td style="text-align:right">2,400,000</td><td>Dépôt cash massif</td></tr>
+                `;
+                tablesUsed = ['transactions', 'alertes_aml'];
+                numRows = 4;
+            } else if (q.includes('comparatif encours vs objectifs')) {
+                sql = "SELECT dr, sum(encours) as realise, sum(objectif) as cible FROM agences_perf GROUP BY dr;";
+                nlpResponse = "Voici la consolidation des encours réalisés face aux objectifs par Direction Régionale :";
+                tableRows = `
+                    <tr><td>DR Centre</td><td style="text-align:right">5.2 MMDH</td><td style="text-align:right; color:#6b7d78">5.0 MMDH</td></tr>
+                    <tr><td>DR Nord</td><td style="text-align:right">2.1 MMDH</td><td style="text-align:right; color:#6b7d78">2.4 MMDH</td></tr>
+                    <tr><td>DR Sud</td><td style="text-align:right">1.8 MMDH</td><td style="text-align:right; color:#6b7d78">1.5 MMDH</td></tr>
+                `;
+                tablesUsed = ['agences_perf'];
+                numRows = 3;
+            } else if (q.includes('pme éligibles à une offre')) {
+                sql = "SELECT nom, encours, score_appetence FROM clients WHERE segment = 'PME' AND eligibilite_credit = true ORDER BY score_appetence DESC LIMIT 5;";
+                nlpResponse = "J'ai trouvé 142 PME éligibles à une offre de crédit de trésorerie avec un fort score d'appétence. Voici le Top 5 :";
+                tableRows = `
+                    <tr><td>TechSolutions SARL</td><td style="text-align:right">450 K</td><td style="text-align:right; color:#4ade80">92%</td></tr>
+                    <tr><td>BatiMaroc SA</td><td style="text-align:right">1.2 M</td><td style="text-align:right; color:#4ade80">88%</td></tr>
+                    <tr><td>AgriNord Coop</td><td style="text-align:right">850 K</td><td style="text-align:right; color:#4ade80">85%</td></tr>
+                    <tr><td>LogisTrans</td><td style="text-align:right">2.1 M</td><td style="text-align:right; color:#4ade80">82%</td></tr>
+                    <tr><td>MedPharma</td><td style="text-align:right">3.5 M</td><td style="text-align:right; color:#4ade80">79%</td></tr>
+                `;
+                tablesUsed = ['clients', 'scoring_marketing'];
+                numRows = 142;
+            } else if (q.includes('portefeuille à risque casablanca vs marrakech')) {
+                sql = "SELECT ville, sum(encours_npl) as risque_total FROM clients WHERE ville IN ('Casablanca', 'Marrakech') GROUP BY ville;";
+                nlpResponse = "Comparaison directe du portefeuille à risque entre les deux métropoles :";
+                tableRows = `
+                    <tr><td>Casablanca</td><td style="text-align:right">184,500,000 MAD</td></tr>
+                    <tr><td>Marrakech</td><td style="text-align:right">42,800,000 MAD</td></tr>
+                `;
+                numRows = 2;
+            } else if (q.includes('météo') || q.includes('football') || q.includes('blague') || q.includes('qui es')) {
+                oob = true;
+                nlpResponse = "Cette question dépasse le périmètre des données disponibles. Je suis optimisé pour analyser les données clients, crédits, transactions et performances des agences Saham Bank.";
+            } else {
+                // Generic fallback for any other query
+                tableRows = `
+                    <tr><td>Donnée 1</td><td style="text-align:right">85,000</td></tr>
+                    <tr><td>Donnée 2</td><td style="text-align:right">42,000</td></tr>
+                    <tr><td>Donnée 3</td><td style="text-align:right">12,500</td></tr>
+                `;
+                sql = "SELECT * FROM clients WHERE " + (text.split(' ')[0] || 'donnees') + " IS NOT NULL LIMIT 5;";
+            }
+
+            if (!oob) {
+                // Step 2: Génération SQL
+                document.getElementById(step1Id).style.display = 'none';
+                const step2Id = 'msg-' + Date.now() + '-2';
+                
+                const highlight = sql
+                    .replace(/\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|LIMIT|SUM|ASC|DESC|AND|OR|IN|INTERVAL)\b/g, '<span class="sql-syntax-purple">$1</span>')
+                    .replace(/\b(clients|dossiers|agences_perf|performances|churn_predictions|transactions|alertes_aml|scoring_marketing)\b/g, '<span class="sql-syntax-cyan">$1</span>')
+                    .replace(/([0-9]+|'[^']*')/g, '<span class="sql-syntax-green">$1</span>')
+                    .replace(/([A-Z_a-z0-9]+.[A-Z_a-z0-9]+)/g, '<span class="sql-syntax-blue">$1</span>');
+
+                msgs.innerHTML += `
+                    <div id="${step2Id}" class="saham-msg bot">
+                        <div class="bubble">
+                            <div class="saham-sql-block">
+                                <div class="saham-sql-header">
+                                    <span>Requête SQL générée</span>
+                                    <span class="saham-sql-badge">PostgreSQL</span>
+                                </div>
+                                <div class="saham-sql-content">${highlight}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                msgs.scrollTop = msgs.scrollHeight;
+                await new Promise(r => setTimeout(r, 800));
+
+                // Log Query
+                MOCK.queries.unshift({
+                    question: text,
+                    sql: sql,
+                    results: numRows,
+                    time: execTime,
+                    date: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR'),
+                    user: APP.userRole || 'Inconnu'
+                });
+                if (document.getElementById('queries-tbody')) {
+                    // Update table if it's currently rendered
+                    if (window.renderAdmin) {
+                        const queriesHtml = MOCK.queries.map(q => `
+                            <tr>
+                                <td style="font-size:12px; color:var(--slate-500);">${q.date}</td>
+                                <td><span style="background:var(--accent-teal-light); color:var(--primary-teal); padding:4px 8px; border-radius:4px; font-size:11px; font-weight:600;">${q.user}</span></td>
+                                <td style="max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${q.question.replace(/"/g, '&quot;')}">${q.question}</td>
+                                <td style="max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--slate-500);" title="${q.sql.replace(/"/g, '&quot;')}">${q.sql}</td>
+                                <td style="font-weight:600;">${q.results} lignes</td>
+                                <td style="font-family:'JetBrains Mono', monospace; font-size:12px;">${q.time} ms</td>
+                            </tr>
+                        `).join('');
+                        document.getElementById('queries-tbody').innerHTML = queriesHtml;
+                    }
+                }
+
+                // Step 3: Exécution
+                const step3Id = 'msg-' + Date.now() + '-3';
+                msgs.innerHTML += `
+                    <div id="${step3Id}" class="saham-msg bot">
+                        <div class="bubble" style="padding:0; border:none; background:transparent; box-shadow:none;">
+                            <div class="saham-exec-banner">
+                                <div class="saham-spinner"></div>
+                                Exécution sur la base de données... (${execTime}ms estimé)
+                            </div>
+                        </div>
+                    </div>
+                `;
+                msgs.scrollTop = msgs.scrollHeight;
+                await new Promise(r => setTimeout(r, 400));
+
+                // Step 4: Réponse Finale
+                document.getElementById(step3Id).style.display = 'none';
+                
+                const tableStr = tableRows ? `
+                    <table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:#f4f6f5; border-radius:6px; overflow:hidden;">
+                        ${tableRows}
+                    </table>
+                ` : "";
+
+                const sourcesHtml = `
+                    <div class="saham-rag-sources">
+                        <div class="saham-rag-title" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'flex' : 'none'">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Sources de données utilisées (${tablesUsed.length})
+                        </div>
+                        <div class="saham-rag-content" style="display:none;">
+                            ${tablesUsed.map(t => `<div style="display:flex; justify-content:space-between;"><span>Table : <strong>${t}</strong></span><span>~1.2M lignes analysées</span></div>`).join('')}
+                            <div style="display:flex; justify-content:space-between; margin-top:4px; font-style:italic;"><span>Période couverte</span><span>Temps réel</span></div>
+                        </div>
+                    </div>
+                `;
+
+                msgs.innerHTML += `
+                    <div class="saham-msg bot">
+                        <div class="bubble">
+                            ${sourcesHtml}
+                            <p>${nlpResponse}</p>
+                            ${tableStr}
+                            <button class="saham-btn-module" onclick="showToast('Ouverture du module concerné...')">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                Voir dans le module
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // OOB Response
+                document.getElementById(step1Id).style.display = 'none';
+                msgs.innerHTML += `
+                    <div class="saham-msg bot">
+                        <div class="bubble">
+                            <p>${nlpResponse}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            msgs.scrollTop = msgs.scrollHeight;
+
+            input.disabled = false;
+            btn.disabled = false;
+            input.focus();
+        }
+
