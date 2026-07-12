@@ -7,7 +7,7 @@ import {defineConfig} from 'vite';
 const copyLogoPlugin = () => ({
   name: 'copy-root-logo',
   buildStart() {
-    const rootLogo = path.resolve(__dirname, 'logo_saham.png');
+    const rootLogo = path.resolve(__dirname, 'assets', 'images', 'logo_saham.png');
     const publicLogo = path.resolve(__dirname, 'public', 'logo_saham.png');
     if (fs.existsSync(rootLogo)) {
       if (!fs.existsSync(path.resolve(__dirname, 'public'))) {
@@ -19,7 +19,7 @@ const copyLogoPlugin = () => ({
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
       if (req.url === '/logo_saham.png') {
-        const rootLogo = path.resolve(__dirname, 'logo_saham.png');
+        const rootLogo = path.resolve(__dirname, 'assets', 'images', 'logo_saham.png');
         if (fs.existsSync(rootLogo)) {
           res.setHeader('Content-Type', 'image/png');
           res.end(fs.readFileSync(rootLogo));
