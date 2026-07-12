@@ -21,8 +21,9 @@ Le site sera accessible sur http://localhost:3000
 
 ```
 POC_SAHAM/
+├── index.html       # Fichier d'entrée principal
 ├── config/          # Configuration (package.json, vite.config.ts, etc.)
-├── src/             # Code source principal (index.html, scripts)
+├── src/             # Code source principal (scripts)
 ├── patches/         # Scripts de patch/fix organisés par catégorie
 ├── data/            # Données géographiques (GeoJSON, SVG)
 ├── assets/          # Images et assets statiques
