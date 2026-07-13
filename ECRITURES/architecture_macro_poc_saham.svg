@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
+  <title id="title">POC_SAHAM - Architecture macro ingestion et retransmission</title>
+  <desc id="desc">Schéma macro du projet POC_SAHAM montrant les sources, l’ingestion applicative, la transformation, l’exposition et les consommateurs.</desc>
+
+  <defs>
+    <style>
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .h2 { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #0b1324; }
+      .txt { font: 400 15px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
+      .small { font: 400 13px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .box { rx: 16; ry: 16; stroke-width: 2; }
+      .arrow { stroke: #334155; stroke-width: 3; fill: none; marker-end: url(#arrowHead); }
+      .dashed { stroke-dasharray: 7 7; }
+    </style>
+
+    <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155" />
+    </marker>
+
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#eef2ff" />
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="980" fill="url(#bg)" />
+
+  <text x="60" y="65" class="title">POC_SAHAM — Vue Macro Ingestion &amp; Retransmission Data</text>
+  <text x="60" y="95" class="subtitle">Repository: gitabdelhub/POC_SAHAM • Couche actuelle orientée application front (Vite/JS)</text>
+
+  <!-- Main swimlane container -->
+  <rect x="300" y="150" width="1020" height="700" class="box" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="340" y="185" class="h2">Cœur du Portail POC_SAHAM</text>
+
+  <!-- Sources -->
+  <rect x="60" y="240" width="200" height="180" class="box" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="85" y="275" class="h2">SOURCES</text>
+  <text x="80" y="305" class="txt">• APIs métiers</text>
+  <text x="80" y="330" class="txt">• Fichiers statiques</text>
+  <text x="80" y="355" class="txt">  (data/, assets/)</text>
+  <text x="80" y="380" class="txt">• Saisie utilisateur</text>
+
+  <!-- Ingestion applicative -->
+  <rect x="360" y="230" width="380" height="220" class="box" fill="#fef3c7" stroke="#d97706"/>
+  <text x="390" y="265" class="h2">INGESTION APPLICATIVE (Front)</text>
+  <text x="390" y="300" class="txt">Fichiers clés:</text>
+  <text x="410" y="325" class="txt">• src/script_0.js</text>
+  <text x="410" y="348" class="txt">• src/script_logic.js</text>
+  <text x="410" y="371" class="txt">• src/scripts.js</text>
+  <text x="410" y="394" class="txt">• src/script_1.js</text>
+  <text x="390" y="425" class="small">Chargement, parsing, mapping, pré-agrégation</text>
+
+  <!-- Transformation -->
+  <rect x="800" y="230" width="460" height="220" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="830" y="265" class="h2">TRANSFORMATION / MODELE INTERNE</text>
+  <text x="830" y="300" class="txt">• Normalisation objets métier</text>
+  <text x="830" y="325" class="txt">• Calcul KPIs &amp; agrégations</text>
+  <text x="830" y="350" class="txt">• Filtrage par périmètre/hiérarchie</text>
+  <text x="830" y="375" class="txt">• Préparation datasets UI</text>
+  <text x="830" y="410" class="small">Modules: pilotage, engagements, qualité, rentabilité</text>
+
+  <!-- Serving -->
+  <rect x="360" y="510" width="430" height="260" class="box" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="390" y="545" class="h2">RETRANSMISSION / EXPOSITION</text>
+  <text x="390" y="580" class="txt">• Dashboards et vues interactives</text>
+  <text x="390" y="605" class="txt">• Restitution par rôle (DG, DR, CA, AR)</text>
+  <text x="390" y="630" class="txt">• Espace administration</text>
+  <text x="390" y="655" class="txt">• Export/consultation (selon implémentation)</text>
+  <text x="390" y="690" class="small">Runtime front: rendu direct de la donnée transformée</text>
+
+  <!-- AI assistant -->
+  <rect x="850" y="510" width="410" height="260" class="box" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="880" y="545" class="h2">ASSISTANT IA / ANALYTICS</text>
+  <text x="880" y="580" class="txt">• Intégration Gemini (@google/genai)</text>
+  <text x="880" y="605" class="txt">• Cas d’usage: Text-to-SQL / Q&amp;A analytique</text>
+  <text x="880" y="630" class="txt">• Configuration via .env</text>
+  <text x="880" y="655" class="txt">• Interaction avec les données exposées</text>
+  <text x="880" y="690" class="small">Complément conversationnel à la restitution BI interne</text>
+
+  <!-- Consumers -->
+  <rect x="1370" y="340" width="190" height="280" class="box" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="1395" y="375" class="h2">CONSOMMATEURS</text>
+  <text x="1395" y="410" class="txt">• DG</text>
+  <text x="1395" y="435" class="txt">• DR</text>
+  <text x="1395" y="460" class="txt">• CA</text>
+  <text x="1395" y="485" class="txt">• AR</text>
+  <text x="1395" y="510" class="txt">• Admin</text>
+
+  <!-- Flows -->
+  <path d="M260 330 L360 330" class="arrow"/>
+  <path d="M740 330 L800 330" class="arrow"/>
+  <path d="M1030 450 L1030 510" class="arrow"/>
+  <path d="M800 640 L790 640" class="arrow"/>
+  <path d="M1260 640 L1370 520" class="arrow"/>
+  <path d="M790 600 L1370 410" class="arrow dashed"/>
+
+  <!-- Legend -->
+  <rect x="60" y="850" width="1500" height="90" class="box" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="85" y="885" class="h2">Légende</text>
+  <text x="190" y="885" class="txt">Flux principal: Sources → Ingestion applicative → Transformation → Exposition → Consommateurs</text>
+  <text x="190" y="912" class="small">Note: le dépôt ne montre pas de pipeline lakehouse natif (Bronze/Silver/Gold). L’ETL est principalement implémenté côté scripts applicatifs.</text>
+</svg>
