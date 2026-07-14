@@ -1,0 +1,131 @@
+# Architecture IA/RAG - Saham Bank Analytics Portal
+
+```mermaid
+graph TB
+    subgraph "User Interface"
+        A[User Query<br/>Langage Naturel]
+    end
+    
+    subgraph "Query Processing"
+        B[LangChain<br/>Orchestrator]
+        C[Query Analysis<br/>Intent Detection]
+        D[Entity Extraction<br/>NER]
+    end
+    
+    subgraph "Retrieval Layer"
+        E[Query Embedding<br/>Sentence Transformers]
+        F[Vector Search<br/>pgvector]
+        G[Knowledge Base<br/>Documentation]
+        H[Schema Context<br/>Database Schema]
+        I[Business Rules<br/>Règles Métier]
+    end
+    
+    subgraph "Generation Layer"
+        J[Context Assembly<br/>Prompt Construction]
+        K[LLM Inference<br/>Llama 3 8B]
+        L[Response Generation<br/>SQL + Explication]
+    end
+    
+    subgraph "Execution Layer"
+        M[SQL Validation<br/>Syntax Check]
+        N[Query Execution<br/>PostgreSQL]
+        O[Result Processing<br/>Formatting]
+    end
+    
+    subgraph "Response Layer"
+        P[Visualization<br/>Charts/Tables]
+        Q[Natural Language<br/>Explanation]
+        R[Follow-up<br/>Suggestions]
+    end
+    
+    subgraph "Feedback Loop"
+        S[User Feedback]
+        T[Quality Metrics]
+        U[Fine-tuning<br/>Optional]
+    end
+    
+    A --> B
+    B --> C
+    B --> D
+    C --> E
+    D --> E
+    E --> F
+    F --> G
+    F --> H
+    F --> I
+    G --> J
+    H --> J
+    I --> J
+    J --> K
+    K --> L
+    L --> M
+    M --> N
+    N --> O
+    O --> P
+    O --> Q
+    Q --> R
+    P --> S
+    Q --> S
+    S --> T
+    T --> U
+    U --> B
+    
+    style A fill:#e1f5ff
+    style B fill:#fff4e6
+    style C fill:#fff4e6
+    style D fill:#fff4e6
+    style E fill:#e8f5e9
+    style F fill:#e8f5e9
+    style G fill:#e8f5e9
+    style H fill:#e8f5e9
+    style I fill:#e8f5e9
+    style J fill:#f3e5f5
+    style K fill:#f3e5f5
+    style L fill:#f3e5f5
+    style M fill:#fce4ec
+    style N fill:#fce4ec
+    style O fill:#fce4ec
+    style P fill:#fff9c4
+    style Q fill:#fff9c4
+    style R fill:#fff9c4
+    style S fill:#e0e0e0
+    style T fill:#e0e0e0
+    style U fill:#e0e0e0
+```
+
+## Description du Processus RAG
+
+### 1. User Interface
+- **User Query** : Question en langage naturel de l'utilisateur
+
+### 2. Query Processing
+- **LangChain Orchestrator** : Orchestration du flux
+- **Query Analysis** : Détection de l'intention de la requête
+- **Entity Extraction** : Extraction des entités (NER)
+
+### 3. Retrieval Layer
+- **Query Embedding** : Conversion de la requête en vecteurs
+- **Vector Search** : Recherche similaire dans pgvector
+- **Knowledge Base** : Documentation métier
+- **Schema Context** : Contexte du schéma de base de données
+- **Business Rules** : Règles métier spécifiques
+
+### 4. Generation Layer
+- **Context Assembly** : Assemblage du contexte pour le prompt
+- **LLM Inference** : Inférence avec Llama 3
+- **Response Generation** : Génération SQL + explication
+
+### 5. Execution Layer
+- **SQL Validation** : Validation de la syntaxe SQL
+- **Query Execution** : Exécution sur PostgreSQL
+- **Result Processing** : Formatage des résultats
+
+### 6. Response Layer
+- **Visualization** : Graphiques et tableaux
+- **Natural Language** : Explication en langage naturel
+- **Follow-up** : Suggestions de questions de suivi
+
+### 7. Feedback Loop
+- **User Feedback** : Feedback utilisateur
+- **Quality Metrics** : Métriques de qualité
+- **Fine-tuning** : Fine-tuning optionnel du modèle

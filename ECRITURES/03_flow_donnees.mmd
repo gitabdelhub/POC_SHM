@@ -1,0 +1,124 @@
+# Flow de Données - Saham Bank Analytics Portal
+
+```mermaid
+graph LR
+    subgraph "Sources de Données"
+        A[Core Banking<br/>Système]
+        B[CRM<br/>Salesforce]
+        C[ERP<br/>SAP]
+        D[External APIs<br/>Open Banking]
+        E[Files<br/>CSV/Excel]
+    end
+    
+    subgraph "Ingestion Layer"
+        F[Airbyte<br/>ELT]
+        G[Custom Connectors]
+        H[Validation<br/>Great Expectations]
+    end
+    
+    subgraph "Transformation Layer"
+        I[dbt<br/>Transformations]
+        J[Data Quality<br/>Checks]
+        K[Business Logic<br/>Rules]
+    end
+    
+    subgraph "Storage Layer"
+        L[PostgreSQL<br/>Data Warehouse]
+        M[pgvector<br/>Vector Index]
+        N[Redis<br/>Cache]
+        O[ClickHouse<br/>OLAP]
+    end
+    
+    subgraph "Analytics Layer"
+        P[Analytics Engine]
+        Q[AI Service<br/>LangChain]
+        R[LLM<br/>Llama 3]
+    end
+    
+    subgraph "Presentation Layer"
+        S[Dashboard]
+        T[Reports]
+        U[Assistant IA<br/>SahamAI]
+    end
+    
+    A --> F
+    B --> F
+    C --> F
+    D --> G
+    E --> G
+    F --> H
+    G --> H
+    H --> I
+    I --> J
+    J --> K
+    K --> L
+    K --> M
+    L --> N
+    L --> O
+    L --> P
+    M --> Q
+    Q --> R
+    P --> S
+    P --> T
+    Q --> U
+    N --> P
+    N --> Q
+    O --> P
+    
+    style A fill:#e1f5ff
+    style B fill:#e1f5ff
+    style C fill:#e1f5ff
+    style D fill:#e1f5ff
+    style E fill:#e1f5ff
+    style F fill:#fff4e6
+    style G fill:#fff4e6
+    style H fill:#fff4e6
+    style I fill:#e8f5e9
+    style J fill:#e8f5e9
+    style K fill:#e8f5e9
+    style L fill:#f3e5f5
+    style M fill:#f3e5f5
+    style N fill:#f3e5f5
+    style O fill:#f3e5f5
+    style P fill:#fce4ec
+    style Q fill:#fce4ec
+    style R fill:#fce4ec
+    style S fill:#fff9c4
+    style T fill:#fff9c4
+    style U fill:#fff9c4
+```
+
+## Description du Flow
+
+### 1. Sources de Données
+- **Core Banking** : Système bancaire principal
+- **CRM** : Gestion de la relation client
+- **ERP** : Système de gestion
+- **External APIs** : APIs externes (Open Banking)
+- **Files** : Fichiers plats (CSV, Excel)
+
+### 2. Ingestion Layer
+- **Airbyte** : Outil ELT open-source
+- **Custom Connectors** : Connecteurs personnalisés
+- **Validation** : Validation de la qualité des données
+
+### 3. Transformation Layer
+- **dbt** : Transformations SQL
+- **Data Quality** : Vérifications de qualité
+- **Business Logic** : Règles métier
+
+### 4. Storage Layer
+- **PostgreSQL** : Data warehouse principal
+- **pgvector** : Index vectoriel pour IA
+- **Redis** : Cache en mémoire
+- **ClickHouse** : Analytics OLAP
+
+### 5. Analytics Layer
+- **Analytics Engine** : Moteur d'analytics
+- **AI Service** : Service d'intelligence artificielle
+- **LLM** : Modèle de langage
+
+### 6. Presentation Layer
+- **Dashboard** : Tableaux de bord
+- **Reports** : Rapports
+- **Assistant IA** : Assistant conversationnel
