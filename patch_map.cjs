@@ -1,55 +1,53 @@
 const fs = require('fs');
-let html = fs.readFileSync('index.html', 'utf-8');
+let html = fs.readFileSync('index.html', 'utf8');
 
-// 1. Update CSS
-const cssSearch = `
-        .fullscreen-active .chart-content {
-            flex: 1 !important;
-            min-height: 0 !important;
-        }
-`.trim();
-const cssReplace = `
-        .fullscreen-active .chart-content {
-            flex: 1 !important;
-            min-height: 0 !important;
-            height: auto !important;
-        }
-        .fullscreen-active {
-            padding: 20px !important;
-            box-sizing: border-box !important;
-        }
-`.trim();
+const regex = /<svg width="100%" height="100%" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet" style="opacity:1;">.*?<\/svg>/s;
+const pathData = fs.readFileSync('mar_svg_merged.txt', 'utf8').trim();
 
-if (!html.includes('height: auto !important;')) {
-    // Actually I didn't add .fullscreen-active .chart-content in my original patch! 
-    // Let me just append to the style block.
-    html = html.replace('</style>', `
-        .fullscreen-active { padding: 20px !important; box-sizing: border-box !important; }
-        .fullscreen-active .chart-content {
-            flex: 1 !important;
-            min-height: 0 !important;
-            height: 100% !important;
-        }
-    </style>`);
+const newSvg = `<svg width="100%" height="100%" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet" style="opacity:1; background-color: #f3f4f4;">
+                                    <path d="${pathData}" fill="#b0b8b4" stroke="none" />
+                                    <!-- Bubbles -->
+                                    <g style="cursor:pointer;" onclick="showToast('Région Tanger: 4.8 Md MAD', 'info')" transform="translate(281.5, 93.7)">
+                                        <title>Tanger: 4.8 Md</title>
+                                        <circle cx="0" cy="0" r="14" fill="#cc4a3d" stroke="none" />
+                                        <text x="0" y="3" font-family="'Montserrat', sans-serif" font-size="7" font-weight="bold" fill="white" text-anchor="middle">TNG</text>
+                                    </g>
+                                    <g style="cursor:pointer;" onclick="showToast('Région Rabat: 10.6 Md MAD', 'info')" transform="translate(255.9, 147.0)">
+                                        <title>Rabat: 10.6 Md</title>
+                                        <circle cx="0" cy="0" r="18" fill="#cc4a3d" stroke="none" />
+                                        <text x="0" y="3" font-family="'Montserrat', sans-serif" font-size="8" font-weight="bold" fill="white" text-anchor="middle">RAB</text>
+                                    </g>
+                                    <g style="cursor:pointer;" onclick="showToast('Région Casablanca: 22.4 Md MAD', 'info')" transform="translate(237.3, 160.6)">
+                                        <title>Casablanca: 22.4 Md</title>
+                                        <circle cx="0" cy="0" r="24" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
+                                        <text x="0" y="4" font-family="'Montserrat', sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">CASA</text>
+                                    </g>
+                                    <g style="cursor:pointer;" onclick="showToast('Région Marrakech: 6.5 Md MAD', 'info')" transform="translate(226.8, 218.6)">
+                                        <title>Marrakech: 6.5 Md</title>
+                                        <circle cx="0" cy="0" r="15" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
+                                        <text x="0" y="3" font-family="'Montserrat', sans-serif" font-size="7" font-weight="bold" fill="white" text-anchor="middle">KCH</text>
+                                    </g>
+                                    <g style="cursor:pointer;" onclick="showToast('Région Agadir: 3.2 Md MAD', 'info')" transform="translate(186.8, 254.2)">
+                                        <title>Agadir: 3.2 Md</title>
+                                        <circle cx="0" cy="0" r="12" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
+                                        <text x="0" y="2.5" font-family="'Montserrat', sans-serif" font-size="6" font-weight="bold" fill="white" text-anchor="middle">AGA</text>
+                                    </g>
+                                    <g style="cursor:pointer;" onclick="showToast('Région Laâyoune: 1.1 Md MAD', 'info')" transform="translate(96.2, 348.8)">
+                                        <title>Laâyoune: 1.1 Md</title>
+                                        <circle cx="0" cy="0" r="9" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
+                                        <text x="0" y="2.5" font-family="'Montserrat', sans-serif" font-size="5" font-weight="bold" fill="white" text-anchor="middle">LAA</text>
+                                    </g>
+                                    <g style="cursor:pointer;" onclick="showToast('Région Dakhla: 0.5 Md MAD', 'info')" transform="translate(27.2, 444.6)">
+                                        <title>Dakhla: 0.5 Md</title>
+                                        <circle cx="0" cy="0" r="7" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
+                                        <text x="0" y="2" font-family="'Montserrat', sans-serif" font-size="4" font-weight="bold" fill="white" text-anchor="middle">DAK</text>
+                                    </g>
+                                </svg>`;
+
+if (regex.test(html)) {
+    html = html.replace(regex, newSvg);
+    fs.writeFileSync('index.html', html, 'utf8');
+    console.log("SVG map replaced!");
+} else {
+    console.log("Could not find the SVG block!");
 }
-
-// 2. Patch the Bubble Map
-const mapSearch = `
-                    <div style="margin-bottom:24px; background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-                        <h3 style="font-family:'Montserrat', sans-serif; font-size:16px; font-weight:700; color:var(--dark-teal); margin-top:0; margin-bottom:16px;">Cartographie Commerciale (Bubble Map)</h3>
-                        <div style="position:relative; width:100%; height:400px; background:var(--light-bg); border-radius:8px; border:1px solid #e2e8f0; overflow:hidden; display: flex; justify-content: center; align-items: center;">
-`.trim();
-
-const mapReplace = `
-                    <div class="fullscreen-capable" style="display:flex; flex-direction:column; margin-bottom:24px; background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                            <h3 style="font-family:'Montserrat', sans-serif; font-size:16px; font-weight:700; color:var(--dark-teal); margin-top:0; margin-bottom:16px;">Cartographie Commerciale (Bubble Map)</h3>
-                            <button class="btn-fullscreen" onclick="toggleFullscreen(this)"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg></button>
-                        </div>
-                        <div class="chart-content" style="position:relative; width:100%; height:400px; background:var(--light-bg); border-radius:8px; border:1px solid #e2e8f0; overflow:hidden; display: flex; justify-content: center; align-items: center;">
-`.trim();
-
-html = html.replace(mapSearch, mapReplace);
-
-fs.writeFileSync('index.html', html);
-console.log('Map patched');
