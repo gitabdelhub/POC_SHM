@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 650" width="100%" height="100%" style="background:#f4f6f5;font-family:'Segoe UI',system-ui,sans-serif;">
+
+<defs>
+  <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+    <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.08"/>
+  </filter>
+  <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 Z" fill="#6b7d78"/>
+  </marker>
+  <linearGradient id="dim-grad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#2e4741"/>
+    <stop offset="100%" stop-color="#1a2a26"/>
+  </linearGradient>
+  <linearGradient id="fact-grad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#d33b21"/>
+    <stop offset="100%" stop-color="#a02020"/>
+  </linearGradient>
+</defs>
+
+<text x="480" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#1d2b27">Modele Dimensionnel Gold — Star Schema</text>
+<line x1="195" y1="70" x2="365" y2="212" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<line x1="795" y1="70" x2="365" y2="212" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<line x1="475" y1="70" x2="665" y2="212" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<line x1="215" y1="410" x2="665" y2="212" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<line x1="795" y1="70" x2="665" y2="212" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<line x1="795" y1="70" x2="365" y2="472" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<line x1="195" y1="70" x2="365" y2="472" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<line x1="475" y1="70" x2="665" y2="472" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<line x1="195" y1="70" x2="665" y2="472" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+<line x1="795" y1="70" x2="665" y2="472" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+
+<!-- Dimensions -->
+<g filter="url(#shadow)">
+  <rect x="100" y="40" width="190" height="150" rx="6" fill="white" stroke="#2e4741" stroke-width="1"/>
+  <rect x="100" y="40" width="190" height="28" rx="6" fill="url(#dim-grad)"/>
+  <rect x="100" y="62" width="190" height="6" fill="url(#dim-grad)"/>
+  <text x="195.0" y="59" text-anchor="middle" font-size="11" font-weight="700" fill="white">dim_date</text>
+</g>
+<text x="110" y="84" font-size="10" fill="#1d2b27" font-weight="700">date_id PK 🔑</text>
+<text x="110" y="100" font-size="10" fill="#3b504a" font-weight="400">annee</text>
+<text x="110" y="116" font-size="10" fill="#3b504a" font-weight="400">mois</text>
+<text x="110" y="132" font-size="10" fill="#3b504a" font-weight="400">mois_libelle</text>
+<text x="110" y="148" font-size="10" fill="#3b504a" font-weight="400">trimestre</text>
+<text x="110" y="164" font-size="10" fill="#3b504a" font-weight="400">semestre</text>
+<text x="110" y="180" font-size="10" fill="#3b504a" font-weight="400">annee_mois</text>
+<g filter="url(#shadow)">
+  <rect x="380" y="40" width="190" height="230" rx="6" fill="white" stroke="#2e4741" stroke-width="1"/>
+  <rect x="380" y="40" width="190" height="28" rx="6" fill="url(#dim-grad)"/>
+  <rect x="380" y="62" width="190" height="6" fill="url(#dim-grad)"/>
+  <text x="475.0" y="59" text-anchor="middle" font-size="11" font-weight="700" fill="white">dim_client</text>
+</g>
+<text x="390" y="84" font-size="10" fill="#1d2b27" font-weight="700">client_id PK 🔑</text>
+<text x="390" y="100" font-size="10" fill="#3b504a" font-weight="400">nom</text>
+<text x="390" y="116" font-size="10" fill="#3b504a" font-weight="400">segment</text>
+<text x="390" y="132" font-size="10" fill="#3b504a" font-weight="400">age</text>
+<text x="390" y="148" font-size="10" fill="#3b504a" font-weight="400">date_naissance</text>
+<text x="390" y="164" font-size="10" fill="#3b504a" font-weight="400">email</text>
+<text x="390" y="180" font-size="10" fill="#3b504a" font-weight="400">telephone</text>
+<text x="390" y="196" font-size="10" fill="#6b7d78" font-weight="400">agence_id FK 🔗</text>
+<text x="390" y="212" font-size="10" fill="#3b504a" font-weight="400">ville</text>
+<text x="390" y="228" font-size="10" fill="#3b504a" font-weight="400">encours_actuel</text>
+<text x="390" y="244" font-size="10" fill="#3b504a" font-weight="400">score_actuel</text>
+<text x="390" y="260" font-size="10" fill="#3b504a" font-weight="400">statut_actuel</text>
+<g filter="url(#shadow)">
+  <rect x="700" y="40" width="190" height="182" rx="6" fill="white" stroke="#2e4741" stroke-width="1"/>
+  <rect x="700" y="40" width="190" height="28" rx="6" fill="url(#dim-grad)"/>
+  <rect x="700" y="62" width="190" height="6" fill="url(#dim-grad)"/>
+  <text x="795.0" y="59" text-anchor="middle" font-size="11" font-weight="700" fill="white">dim_agence</text>
+</g>
+<text x="710" y="84" font-size="10" fill="#1d2b27" font-weight="700">agence_id PK 🔑</text>
+<text x="710" y="100" font-size="10" fill="#3b504a" font-weight="400">nom</text>
+<text x="710" y="116" font-size="10" fill="#3b504a" font-weight="400">ville</text>
+<text x="710" y="132" font-size="10" fill="#3b504a" font-weight="400">region</text>
+<text x="710" y="148" font-size="10" fill="#3b504a" font-weight="400">directeur</text>
+<text x="710" y="164" font-size="10" fill="#3b504a" font-weight="400">directeur_regional</text>
+<text x="710" y="180" font-size="10" fill="#3b504a" font-weight="400">telephone</text>
+<text x="710" y="196" font-size="10" fill="#3b504a" font-weight="400">email</text>
+<text x="710" y="212" font-size="10" fill="#3b504a" font-weight="400">date_ouverture</text>
+<g filter="url(#shadow)">
+  <rect x="120" y="380" width="190" height="86" rx="6" fill="white" stroke="#2e4741" stroke-width="1"/>
+  <rect x="120" y="380" width="190" height="28" rx="6" fill="url(#dim-grad)"/>
+  <rect x="120" y="402" width="190" height="6" fill="url(#dim-grad)"/>
+  <text x="215.0" y="399" text-anchor="middle" font-size="11" font-weight="700" fill="white">dim_type_credit</text>
+</g>
+<text x="130" y="424" font-size="10" fill="#1d2b27" font-weight="700">type_credit_id PK 🔑</text>
+<text x="130" y="440" font-size="10" fill="#3b504a" font-weight="400">libelle</text>
+<text x="130" y="456" font-size="10" fill="#3b504a" font-weight="400">famille</text>
+<g filter="url(#shadow)">
+  <rect x="380" y="380" width="190" height="118" rx="6" fill="white" stroke="#2e4741" stroke-width="1"/>
+  <rect x="380" y="380" width="190" height="28" rx="6" fill="url(#dim-grad)"/>
+  <rect x="380" y="402" width="190" height="6" fill="url(#dim-grad)"/>
+  <text x="475.0" y="399" text-anchor="middle" font-size="11" font-weight="700" fill="white">dim_utilisateur</text>
+</g>
+<text x="390" y="424" font-size="10" fill="#1d2b27" font-weight="700">user_id PK 🔑</text>
+<text x="390" y="440" font-size="10" fill="#3b504a" font-weight="400">nom</text>
+<text x="390" y="456" font-size="10" fill="#3b504a" font-weight="400">email</text>
+<text x="390" y="472" font-size="10" fill="#3b504a" font-weight="400">role</text>
+<text x="390" y="488" font-size="10" fill="#3b504a" font-weight="400">is_active</text>
+
+<!-- Fact tables -->
+<g filter="url(#shadow)">
+  <rect x="270" y="200" width="190" height="198" rx="6" fill="white" stroke="#d33b21" stroke-width="1"/>
+  <rect x="270" y="200" width="190" height="28" rx="6" fill="url(#fact-grad)"/>
+  <rect x="270" y="222" width="190" height="6" fill="url(#fact-grad)"/>
+  <text x="365.0" y="219" text-anchor="middle" font-size="11" font-weight="700" fill="white">fact_performance</text>
+</g>
+<text x="280" y="244" font-size="10" fill="#8B0000" font-weight="700">performance_id PK 🔑</text>
+<text x="280" y="260" font-size="10" fill="#a04030" font-weight="400">agence_id FK 🔗</text>
+<text x="280" y="276" font-size="10" fill="#a04030" font-weight="400">date_id FK 🔗</text>
+<text x="280" y="292" font-size="10" fill="#6b2d1a" font-weight="400">pnb</text>
+<text x="280" y="308" font-size="10" fill="#6b2d1a" font-weight="400">encours_credits</text>
+<text x="280" y="324" font-size="10" fill="#6b2d1a" font-weight="400">encours_depots</text>
+<text x="280" y="340" font-size="10" fill="#6b2d1a" font-weight="400">npl_ratio</text>
+<text x="280" y="356" font-size="10" fill="#6b2d1a" font-weight="400">nim</text>
+<text x="280" y="372" font-size="10" fill="#6b2d1a" font-weight="400">ratio_credits_depots</text>
+<text x="280" y="388" font-size="10" fill="#6b2d1a" font-weight="400">ratio_realisation</text>
+<g filter="url(#shadow)">
+  <rect x="570" y="200" width="190" height="198" rx="6" fill="white" stroke="#d33b21" stroke-width="1"/>
+  <rect x="570" y="200" width="190" height="28" rx="6" fill="url(#fact-grad)"/>
+  <rect x="570" y="222" width="190" height="6" fill="url(#fact-grad)"/>
+  <text x="665.0" y="219" text-anchor="middle" font-size="11" font-weight="700" fill="white">fact_engagement</text>
+</g>
+<text x="580" y="244" font-size="10" fill="#8B0000" font-weight="700">engagement_id PK 🔑</text>
+<text x="580" y="260" font-size="10" fill="#a04030" font-weight="400">client_id FK 🔗</text>
+<text x="580" y="276" font-size="10" fill="#a04030" font-weight="400">type_credit_id FK 🔗</text>
+<text x="580" y="292" font-size="10" fill="#a04030" font-weight="400">agence_id FK 🔗</text>
+<text x="580" y="308" font-size="10" fill="#6b2d1a" font-weight="400">montant</text>
+<text x="580" y="324" font-size="10" fill="#6b2d1a" font-weight="400">duree_mois</text>
+<text x="580" y="340" font-size="10" fill="#6b2d1a" font-weight="400">taux</text>
+<text x="580" y="356" font-size="10" fill="#6b2d1a" font-weight="400">score</text>
+<text x="580" y="372" font-size="10" fill="#6b2d1a" font-weight="400">statut</text>
+<text x="580" y="388" font-size="10" fill="#6b2d1a" font-weight="400">annee_mois_depot</text>
+<g filter="url(#shadow)">
+  <rect x="270" y="460" width="190" height="166" rx="6" fill="white" stroke="#d33b21" stroke-width="1"/>
+  <rect x="270" y="460" width="190" height="28" rx="6" fill="url(#fact-grad)"/>
+  <rect x="270" y="482" width="190" height="6" fill="url(#fact-grad)"/>
+  <text x="365.0" y="479" text-anchor="middle" font-size="11" font-weight="700" fill="white">fact_qualite</text>
+</g>
+<text x="280" y="504" font-size="10" fill="#8B0000" font-weight="700">qualite_id PK 🔑</text>
+<text x="280" y="520" font-size="10" fill="#a04030" font-weight="400">agence_id FK 🔗</text>
+<text x="280" y="536" font-size="10" fill="#a04030" font-weight="400">date_id FK 🔗</text>
+<text x="280" y="552" font-size="10" fill="#6b2d1a" font-weight="400">nps</text>
+<text x="280" y="568" font-size="10" fill="#6b2d1a" font-weight="400">reclamations_ouvertes</text>
+<text x="280" y="584" font-size="10" fill="#6b2d1a" font-weight="400">reclamations_traitees</text>
+<text x="280" y="600" font-size="10" fill="#6b2d1a" font-weight="400">delai_resolution_moyen</text>
+<text x="280" y="616" font-size="10" fill="#6b2d1a" font-weight="400">traitement_rate</text>
+<g filter="url(#shadow)">
+  <rect x="570" y="460" width="190" height="182" rx="6" fill="white" stroke="#d33b21" stroke-width="1"/>
+  <rect x="570" y="460" width="190" height="28" rx="6" fill="url(#fact-grad)"/>
+  <rect x="570" y="482" width="190" height="6" fill="url(#fact-grad)"/>
+  <text x="665.0" y="479" text-anchor="middle" font-size="11" font-weight="700" fill="white">fact_risque</text>
+</g>
+<text x="580" y="504" font-size="10" fill="#8B0000" font-weight="700">risque_id PK 🔑</text>
+<text x="580" y="520" font-size="10" fill="#a04030" font-weight="400">client_id FK 🔗</text>
+<text x="580" y="536" font-size="10" fill="#a04030" font-weight="400">date_id FK 🔗</text>
+<text x="580" y="552" font-size="10" fill="#6b2d1a" font-weight="400">score_risque</text>
+<text x="580" y="568" font-size="10" fill="#6b2d1a" font-weight="400">classe_risque</text>
+<text x="580" y="584" font-size="10" fill="#6b2d1a" font-weight="400">classe_libelle</text>
+<text x="580" y="600" font-size="10" fill="#6b2d1a" font-weight="400">npl_flag</text>
+<text x="580" y="616" font-size="10" fill="#6b2d1a" font-weight="400">transition_from</text>
+<text x="580" y="632" font-size="10" fill="#6b2d1a" font-weight="400">transition_to</text>
+<text x="480" y="177" text-anchor="middle" font-size="11" font-weight="600" fill="#2e4741" letter-spacing="2">DIMENSIONS</text>
+<text x="480" y="355" text-anchor="middle" font-size="11" font-weight="600" fill="#d33b21" letter-spacing="2">FAITS</text>
+
+<g transform="translate(20, 610)">
+  <text x="0" y="0" font-size="11" font-weight="700" fill="#1d2b27">Legende :</text>
+  <rect x="80" y="-10" width="12" height="12" rx="2" fill="#2e4741"/>
+  <text x="98" y="0" font-size="10" fill="#3b504a">Dimension</text>
+  <rect x="180" y="-10" width="12" height="12" rx="2" fill="#d33b21"/>
+  <text x="198" y="0" font-size="10" fill="#d33b21">Fact Table</text>
+  <line x1="280" y1="-4" x2="310" y2="-4" stroke="#6b7d78" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="318" y="0" font-size="10" fill="#6b7d78">Relation</text>
+  <text x="400" y="0" font-size="10" fill="#1d2b27" font-weight="700">PK = Cle primaire</text>
+  <text x="520" y="0" font-size="10" fill="#6b7d78" font-weight="700">FK = Cle etrangere</text>
+</g>
+
+</svg>

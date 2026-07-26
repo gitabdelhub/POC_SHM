@@ -1,0 +1,9 @@
+id,email,nom,role,is_active,hashed_password
+USR-00001,youssef.balafrej@sahambank.ma,Youssef Balafrej,ADMIN,true,a_remplacer_par_bcrypt
+USR-00002,hind.jai@sahambank.ma,Hind Jai,DR,true,a_remplacer_par_bcrypt
+USR-00003,hicham.benjelloun@sahambank.ma,Hicham Benjelloun,DG,true,a_remplacer_par_bcrypt
+USR-00004,abdellah.bennani@sahambank.ma,Abdellah Bennani,DR,true,a_remplacer_par_bcrypt
+USR-00005,asmaa.hakim@sahambank.ma,Asmaa Hakim,ADMIN,true,a_remplacer_par_bcrypt
+USR-00006,hicham.ouazzani@sahambank.ma,Hicham Ouazzani,AR,true,a_remplacer_par_bcrypt
+USR-00007,khadija.guedira@sahambank.ma,Khadija Guedira,DG,true,a_remplacer_par_bcrypt
+USR-00008,amine.berrada@sahambank.ma,Amine Berrada,DR,true,a_remplacer_par_bcrypt

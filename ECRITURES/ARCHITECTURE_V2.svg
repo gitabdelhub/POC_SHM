@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" width="100%" height="100%" style="background:#f4f6f5;font-family:'Segoe UI',system-ui,sans-serif;">
+
+<defs>
+  <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+    <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.08"/>
+  </filter>
+  <marker id="arrow-down" viewBox="0 0 10 10" refX="5" refY="10" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L5,10 L10,0 Z" fill="#6b7d78"/>
+  </marker>
+  <marker id="arrow-right" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,0 L10,5 L0,10 Z" fill="#6b7d78"/>
+  </marker>
+</defs>
+
+<text x="480" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#1d2b27">Architecture Haut Niveau — Saham Bank Analytics Portal</text>
+<rect x="30" y="60" width="900" height="80" rx="10" fill="none" stroke="#bac5c2" stroke-width="1.5" stroke-dasharray="6,3"/>
+<text x="45" y="76" font-size="9" font-weight="700" fill="#6b7d78" letter-spacing="1">COUCHE 1 — SOURCES</text>
+<rect x="45" y="85" width="155" height="42" rx="6" fill="#2e4741" filter="url(#shadow)"/>
+<text x="122" y="102" text-anchor="middle" font-size="10" font-weight="600" fill="white">CSV Fichiers</text>
+<rect x="220" y="85" width="155" height="42" rx="6" fill="#3b504a" filter="url(#shadow)"/>
+<text x="297" y="102" text-anchor="middle" font-size="10" font-weight="600" fill="white">API Bancaires</text>
+<rect x="395" y="85" width="155" height="42" rx="6" fill="#1a2a26" filter="url(#shadow)"/>
+<text x="472" y="102" text-anchor="middle" font-size="10" font-weight="600" fill="white">Power BI</text>
+<rect x="570" y="85" width="155" height="42" rx="6" fill="#d33b21" filter="url(#shadow)"/>
+<text x="647" y="102" text-anchor="middle" font-size="10" font-weight="600" fill="white">Chatbot IA</text>
+<text x="647" y="117" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">(Ext.)</text>
+<rect x="745" y="85" width="155" height="42" rx="6" fill="#6b7d78" filter="url(#shadow)"/>
+<text x="822" y="102" text-anchor="middle" font-size="10" font-weight="600" fill="white">Fichiers</text>
+<text x="822" y="117" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.8)">Manuels</text>
+<line x1="480" y1="140" x2="480" y2="150" stroke="#6b7d78" stroke-width="2" marker-end="url(#arrow-down)"/>
+<rect x="30" y="155" width="900" height="80" rx="10" fill="#e0e7e5" stroke="#2e4741" stroke-width="1.5"/>
+<text x="45" y="171" font-size="9" font-weight="700" fill="#2e4741" letter-spacing="1">COUCHE 2 — BRONZE (Raw Data / PostgreSQL)</text>
+<rect x="45" y="183" width="135" height="38" rx="4" fill="white" stroke="#2e4741" stroke-width="1"/>
+<text x="112" y="199" text-anchor="middle" font-size="8" font-weight="600" fill="#2e4741">bronze_agences</text>
+<text x="112" y="212" text-anchor="middle" font-size="7" fill="#6b7d78">UPSERT idempotent</text>
+<rect x="193" y="183" width="135" height="38" rx="4" fill="white" stroke="#2e4741" stroke-width="1"/>
+<text x="260" y="199" text-anchor="middle" font-size="8" font-weight="600" fill="#2e4741">bronze_clients</text>
+<text x="260" y="212" text-anchor="middle" font-size="7" fill="#6b7d78">UPSERT idempotent</text>
+<rect x="341" y="183" width="135" height="38" rx="4" fill="white" stroke="#2e4741" stroke-width="1"/>
+<text x="408" y="199" text-anchor="middle" font-size="8" font-weight="600" fill="#2e4741">bronze_engagements</text>
+<text x="408" y="212" text-anchor="middle" font-size="7" fill="#6b7d78">UPSERT idempotent</text>
+<rect x="489" y="183" width="135" height="38" rx="4" fill="white" stroke="#2e4741" stroke-width="1"/>
+<text x="556" y="199" text-anchor="middle" font-size="8" font-weight="600" fill="#2e4741">bronze_performances</text>
+<text x="556" y="212" text-anchor="middle" font-size="7" fill="#6b7d78">UPSERT idempotent</text>
+<rect x="637" y="183" width="135" height="38" rx="4" fill="white" stroke="#2e4741" stroke-width="1"/>
+<text x="704" y="199" text-anchor="middle" font-size="8" font-weight="600" fill="#2e4741">bronze_qualite</text>
+<text x="704" y="212" text-anchor="middle" font-size="7" fill="#6b7d78">UPSERT idempotent</text>
+<rect x="785" y="183" width="135" height="38" rx="4" fill="white" stroke="#2e4741" stroke-width="1"/>
+<text x="852" y="199" text-anchor="middle" font-size="8" font-weight="600" fill="#2e4741">bronze_risques</text>
+<text x="852" y="212" text-anchor="middle" font-size="7" fill="#6b7d78">UPSERT idempotent</text>
+<line x1="480" y1="235" x2="480" y2="245" stroke="#6b7d78" stroke-width="2" marker-end="url(#arrow-down)"/>
+<rect x="30" y="250" width="900" height="80" rx="10" fill="#fbeae7" stroke="#d33b21" stroke-width="1.5"/>
+<text x="45" y="266" font-size="9" font-weight="700" fill="#d33b21" letter-spacing="1">COUCHE 3 — SILVER (Validation + Nettoyage / PostgreSQL)</text>
+<rect x="45" y="278" width="135" height="38" rx="4" fill="white" stroke="#d33b21" stroke-width="1"/>
+<text x="112" y="294" text-anchor="middle" font-size="8" font-weight="600" fill="#d33b21">silver_agences</text>
+<text x="112" y="307" text-anchor="middle" font-size="7" fill="#6b7d78">Valid. + Dedup</text>
+<rect x="193" y="278" width="135" height="38" rx="4" fill="white" stroke="#d33b21" stroke-width="1"/>
+<text x="260" y="294" text-anchor="middle" font-size="8" font-weight="600" fill="#d33b21">silver_clients</text>
+<text x="260" y="307" text-anchor="middle" font-size="7" fill="#6b7d78">Valid. + Dedup</text>
+<rect x="341" y="278" width="135" height="38" rx="4" fill="white" stroke="#d33b21" stroke-width="1"/>
+<text x="408" y="294" text-anchor="middle" font-size="8" font-weight="600" fill="#d33b21">silver_engagements</text>
+<text x="408" y="307" text-anchor="middle" font-size="7" fill="#6b7d78">Valid. + Dedup</text>
+<rect x="489" y="278" width="135" height="38" rx="4" fill="white" stroke="#d33b21" stroke-width="1"/>
+<text x="556" y="294" text-anchor="middle" font-size="8" font-weight="600" fill="#d33b21">silver_performances</text>
+<text x="556" y="307" text-anchor="middle" font-size="7" fill="#6b7d78">Valid. + Dedup</text>
+<rect x="637" y="278" width="135" height="38" rx="4" fill="white" stroke="#d33b21" stroke-width="1"/>
+<text x="704" y="294" text-anchor="middle" font-size="8" font-weight="600" fill="#d33b21">silver_qualite</text>
+<text x="704" y="307" text-anchor="middle" font-size="7" fill="#6b7d78">Valid. + Dedup</text>
+<rect x="785" y="278" width="135" height="38" rx="4" fill="white" stroke="#d33b21" stroke-width="1"/>
+<text x="852" y="294" text-anchor="middle" font-size="8" font-weight="600" fill="#d33b21">silver_risques</text>
+<text x="852" y="307" text-anchor="middle" font-size="7" fill="#6b7d78">Valid. + Dedup</text>
+<line x1="480" y1="330" x2="480" y2="340" stroke="#6b7d78" stroke-width="2" marker-end="url(#arrow-down)"/>
+<rect x="30" y="345" width="900" height="120" rx="10" fill="#e8f4ed" stroke="#10b981" stroke-width="1.5"/>
+<text x="45" y="361" font-size="9" font-weight="700" fill="#10b981" letter-spacing="1">COUCHE 4 — GOLD (Modele Dimensionnel Star Schema / PostgreSQL)</text>
+<rect x="45" y="373" width="155" height="35" rx="4" fill="white" stroke="#10b981" stroke-width="1.5"/>
+<text x="122" y="389" text-anchor="middle" font-size="8" font-weight="700" fill="#10b981">dim_date</text>
+<text x="122" y="400" text-anchor="middle" font-size="7" fill="#6b7d78">Dimension</text>
+<rect x="220" y="373" width="155" height="35" rx="4" fill="white" stroke="#10b981" stroke-width="1.5"/>
+<text x="297" y="389" text-anchor="middle" font-size="8" font-weight="700" fill="#10b981">dim_client</text>
+<text x="297" y="400" text-anchor="middle" font-size="7" fill="#6b7d78">Dimension</text>
+<rect x="395" y="373" width="155" height="35" rx="4" fill="white" stroke="#10b981" stroke-width="1.5"/>
+<text x="472" y="389" text-anchor="middle" font-size="8" font-weight="700" fill="#10b981">dim_agence</text>
+<text x="472" y="400" text-anchor="middle" font-size="7" fill="#6b7d78">Dimension</text>
+<rect x="570" y="373" width="155" height="35" rx="4" fill="white" stroke="#10b981" stroke-width="1.5"/>
+<text x="647" y="389" text-anchor="middle" font-size="8" font-weight="700" fill="#10b981">dim_type_credit</text>
+<text x="647" y="400" text-anchor="middle" font-size="7" fill="#6b7d78">Dimension</text>
+<rect x="745" y="373" width="155" height="35" rx="4" fill="white" stroke="#10b981" stroke-width="1.5"/>
+<text x="822" y="389" text-anchor="middle" font-size="8" font-weight="700" fill="#10b981">dim_utilisateur</text>
+<text x="822" y="400" text-anchor="middle" font-size="7" fill="#6b7d78">Dimension</text>
+<rect x="120" y="418" width="165" height="35" rx="4" fill="white" stroke="#d33b21" stroke-width="1.5"/>
+<text x="202" y="434" text-anchor="middle" font-size="8" font-weight="700" fill="#d33b21">fact_engagement</text>
+<text x="202" y="445" text-anchor="middle" font-size="7" fill="#6b7d78">Fact Table</text>
+<rect x="305" y="418" width="165" height="35" rx="4" fill="white" stroke="#d33b21" stroke-width="1.5"/>
+<text x="387" y="434" text-anchor="middle" font-size="8" font-weight="700" fill="#d33b21">fact_performance</text>
+<text x="387" y="445" text-anchor="middle" font-size="7" fill="#6b7d78">Fact Table</text>
+<rect x="490" y="418" width="165" height="35" rx="4" fill="white" stroke="#d33b21" stroke-width="1.5"/>
+<text x="572" y="434" text-anchor="middle" font-size="8" font-weight="700" fill="#d33b21">fact_qualite</text>
+<text x="572" y="445" text-anchor="middle" font-size="7" fill="#6b7d78">Fact Table</text>
+<rect x="675" y="418" width="165" height="35" rx="4" fill="white" stroke="#d33b21" stroke-width="1.5"/>
+<text x="757" y="434" text-anchor="middle" font-size="8" font-weight="700" fill="#d33b21">fact_risque</text>
+<text x="757" y="445" text-anchor="middle" font-size="7" fill="#6b7d78">Fact Table</text>
+<line x1="480" y1="465" x2="480" y2="480" stroke="#6b7d78" stroke-width="2" marker-end="url(#arrow-down)"/>
+<rect x="30" y="485" width="900" height="80" rx="10" fill="none" stroke="#bac5c2" stroke-width="1.5" stroke-dasharray="6,3"/>
+<text x="45" y="501" font-size="9" font-weight="700" fill="#6b7d78" letter-spacing="1">COUCHE 5 — PRESENTATION</text>
+<rect x="100" y="515" width="220" height="38" rx="6" fill="#2e4741" filter="url(#shadow)"/>
+<text x="210" y="533" text-anchor="middle" font-size="10" font-weight="700" fill="white">FastAPI REST API</text>
+<text x="210" y="545" text-anchor="middle" font-size="8" fill="#bac5c2">GET /api/v1/gold/*</text>
+<rect x="580" y="515" width="220" height="38" rx="6" fill="#d33b21" filter="url(#shadow)"/>
+<text x="690" y="533" text-anchor="middle" font-size="10" font-weight="700" fill="white">Frontend React SPA</text>
+<text x="690" y="545" text-anchor="middle" font-size="8" fill="#fbeae7">Consomme API Gold</text>
+<line x1="320" y1="534" x2="580" y2="534" stroke="#6b7d78" stroke-width="2" marker-end="url(#arrow-right)"/>
+<rect x="45" y="590" width="160" height="38" rx="6" fill="#3b504a" filter="url(#shadow)"/>
+<text x="125" y="606" text-anchor="middle" font-size="10" font-weight="600" fill="white">Docker</text>
+<text x="125" y="620" text-anchor="middle" font-size="8" fill="#bac5c2">PostgreSQL + API</text>
+<rect x="235" y="590" width="160" height="38" rx="6" fill="#3b504a" filter="url(#shadow)"/>
+<text x="315" y="606" text-anchor="middle" font-size="10" font-weight="600" fill="white">Airflow</text>
+<text x="315" y="620" text-anchor="middle" font-size="8" fill="#bac5c2">Orchestration ETL</text>
+<rect x="425" y="590" width="160" height="38" rx="6" fill="#3b504a" filter="url(#shadow)"/>
+<text x="505" y="606" text-anchor="middle" font-size="10" font-weight="600" fill="white">GitHub CI/CD</text>
+<text x="505" y="620" text-anchor="middle" font-size="8" fill="#bac5c2">Tests + Deploiement</text>
+<rect x="650" y="590" width="200" height="38" rx="6" fill="#1a2a26" filter="url(#shadow)"/>
+<text x="750" y="606" text-anchor="middle" font-size="10" font-weight="600" fill="#C9A84C">Chatbot IA (Equipe externe)</text>
+<text x="750" y="620" text-anchor="middle" font-size="8" fill="#bac5c2">Se connecte au Warehouse Gold</text>
+<text x="45" y="655" font-size="9" fill="#6b7d78">Note : Toutes les couches (Bronze, Silver, Gold) utilisent UPSERT (ON CONFLICT DO UPDATE) pour garantir l idempotency.</text>
+</svg>

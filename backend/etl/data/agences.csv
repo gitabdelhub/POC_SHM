@@ -1,0 +1,11 @@
+id,nom,ville,region,directeur,telephone,email
+AG-001,Agence Casablanca Centre,Casablanca,Casablanca-Settat,Zineb Slaoui,0066131551,agcas@sahambank.ma
+AG-002,Agence Rabat Principale,Rabat,Rabat-Sale-Kenitra,Youssef Balafrej,0063915347,agrab@sahambank.ma
+AG-003,Agence Marrakech Centre,Marrakech,Marrakech-Safi,Imane Guedira,0071906942,agmar@sahambank.ma
+AG-004,Agence Fes Principale,Fes,Fes-Meknes,Hassan Balafrej,0063176883,agfes@sahambank.ma
+AG-005,Agence Tanger Centre,Tanger,Tanger-Tetouan-Al Hoceima,Meryem Idrissi,0070734746,agtan@sahambank.ma
+AG-006,Agence Agadir Principale,Agadir,Souss-Massa,Nadia Benjelloun,0066781871,agaga@sahambank.ma
+AG-007,Agence Oujda Centre,Oujda,L'Oriental,Leila El Amrani,0062546786,agouj@sahambank.ma
+AG-008,Agence Meknes Principale,Meknes,Fes-Meknes,Rachid Erraji,0071213961,agmek@sahambank.ma
+AG-009,Agence Kenitra Centre,Kenitra,Rabat-Sale-Kenitra,Soukaina Fassi-Fihri,0069517040,agken@sahambank.ma
+AG-010,Agence Tetouan Principale,Tetouan,Tanger-Tetouan-Al Hoceima,Fatima Guedira,0070658333,agtet@sahambank.ma

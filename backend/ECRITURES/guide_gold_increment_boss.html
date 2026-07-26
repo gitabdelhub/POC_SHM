@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Guide Gold Layer - Formation Data Engineering</title>
+<style>
+body { font-family: 'Segoe UI', sans-serif; max-width: 1000px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; color: #222; line-height: 1.6; }
+h1 { color: #d33b21; border-bottom: 3px solid #d33b21; padding-bottom: 10px; }
+h2 { color: #2e4741; margin-top: 40px; }
+h3 { color: #333; }
+pre { background: #1e1e2e; color: #d4d4d4; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 14px; }
+code { background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+pre code { background: none; padding: 0; }
+.note { background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px 16px; margin: 16px 0; border-radius: 4px; }
+.warn { background: #f8d7da; border-left: 4px solid #d33b21; padding: 12px 16px; margin: 16px 0; border-radius: 4px; }
+.good { background: #d4edda; border-left: 4px solid #28a745; padding: 12px 16px; margin: 16px 0; border-radius: 4px; }
+table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+th { background: #2e4741; color: white; }
+.schema-box { background: white; border: 2px solid #2e4741; border-radius: 8px; padding: 16px; margin: 16px 0; }
+.arrow { text-align: center; font-size: 24px; color: #d33b21; }
+</style>
+</head>
+<body>
+
+<h1>Formation Gold Layer</h1>
+<p><strong>Objectif :</strong> Comprendre et coder un pipeline Gold production-grade, de A à Z, sans que je fasse le travail à ta place.</p>
+
+<h2>1. Pourquoi une couche Gold ?</h2>
+
+<p>Tu as déjà :</p>
+<ul>
+  <li><strong>Bronze</strong> = données brutes, telles qu'arrivées du CSV</li>
+  <li><strong>Silver</strong> = données nettoyées et validées (avec <code>is_valid</code>)</li>
+</ul>
+
+<p><strong>Gold</strong> sert à :</p>
+<ul>
+  <li><strong>Structurer</strong> les données en modèle dimensionnel (star schema)</li>
+  <li><strong>Nourrir l'API</strong> FastAPI pour que les endpoints retournent de vraies données</li>
+  <li><strong>Pré-calculer</strong> les KPIs pour le dashboard</li>
+  <li><strong>Garantir l'idempotence</strong> : on peut relancer le pipeline sans doublon</li>
+</ul>
+
+<div class="schema-box">
+<strong>Architecture complète :</strong><br><br>
+<pre>
+CSV  ──►  Bronze  ──►  Silver  ──►  Gold  ──►  API  ──►  Frontend
+(brut)    (brut)     (nettoyé)    (modèle     (FastAPI)  (React)
+                                    dim/fact)
+</pre>
+</div>
+
+<h2>2. Le modèle Gold (Star Schema)</h2>
+
+<table>
+  <tr><th>Table</th><th>Type</th><th>Rôle</th></tr>
+  <tr><td><code>dim_agences</code></td><td>Dimension</td><td>Référentiel des agences (stable, UPSERT)</td></tr>
+  <tr><td><code>dim_clients</code></td><td>Dimension</td><td>Référentiel des clients (stable, UPSERT)</td></tr>
+  <tr><td><code>dim_date</code></td><td>Dimension</td><td>Calendrier (généré une fois)</td></tr>
+  <tr><td><code>fact_engagements</code></td><td>Fait</td><td>Transactions de crédit (volumineuse, UPSERT)</td></tr>
+  <tr><td><code>agg_kpis_agence</code></td><td>Agrégat</td><td>KPIs pré-calculés par agence (full refresh)</td></tr>
+</table>
+
+<div class="good">
+<strong>Point clé :</strong> Les <strong>dimensions</strong> et la <strong>fact</strong> utilisent UPSERT car elles peuvent contenir des données existantes qu'on met à jour. Les <strong>agrégats</strong> sont en full refresh car ils sont petits et rapides à recalculer.
+</div>
+
+<h2>3. Qu'est-ce que UPSERT et pourquoi ?</h2>
+
+<p><strong>UPSERT = UPDATE + INSERT</strong>. En PostgreSQL :</p>
+
+<pre><code>INSERT INTO dim_clients (id, nom, segment, encours, score, statut)
+VALUES ('CLI-10001', 'Hassan Ouazzani', 'Particuliers', 525523.36, 66, 'Actif')
+ON CONFLICT (id) DO UPDATE SET
+    nom = EXCLUDED.nom,
+    segment = EXCLUDED.segment,
+    encours = EXCLUDED.encours,
+    score = EXCLUDED.score,
+    statut = EXCLUDED.statut;</code></pre>
+
+<div class="note">
+<strong>Explication :</strong><br>
+- Si <code>CLI-10001</code> n'existe pas → INSERT<br>
+- Si <code>CLI-10001</code> existe déjà → UPDATE (on remplace les valeurs)<br>
+- <code>EXCLUDED</code> = la ligne qu'on essaie d'insérer<br>
+- Résultat : zéro doublon, même si on lance le pipeline 100 fois
+</div>
+
+<p><strong>Avantages :</strong></p>
+<ul>
+  <li>Idempotence garantie</li>
+  <li>Prêt pour de l'incrémental</li>
+  <li>Pattern standard en production</li>
+  <li>Compatible avec tous les moteurs SQL (MERGE dans SQL Server, MERGE INTO dans Databricks)</li>
+</ul>
+
+<h2>4. Plan d'attaque : les fichiers à créer</h2>
+
+<div class="schema-box">
+<pre>
+etl/
+├── gold/
+│   ├── __init__.py              ← vide, rend le dossier importable
+│   ├── transform_gold.py        ← TON JOB : transforme silver → gold
+│   ├── load_gold.py             ← TON JOB : UPSERT dans PostgreSQL
+│   └── queries_gold.sql         ← Référence des requêtes UPSERT
+├── run_gold.py                  ← TON JOB : script de test
+└── run_full_pipeline.py         ← TON JOB : Bronze + Silver + Gold en un clic
+</pre>
+</div>
+
+<h2>5. Détail de transform_gold.py (tu codes ça)</h2>
+
+<p><strong>Ce que fait ce fichier :</strong></p>
+<ul>
+  <li>Lire les données <code>silver_*</code></li>
+  <li>Filtrer les lignes valides uniquement (<code>is_valid = true</code>)</li>
+  <li>Restructurer pour le star schema (dimensions + fait)</li>
+  <li>Générer les agrégats</li>
+  <li>Retourner un dict avec toutes les tables Gold</li>
+</ul>
+
+<div class="warn">
+<strong>À NE PAS FAIRE :</strong><br>
+- Ne pas recréer les colonnes de validation (is_valid, error_message) dans les tables Gold<br>
+- La Gold ne contient que des données <strong>propres</strong> et <strong>structurées</strong>
+</div>
+
+<pre><code># Structure attendue de GoldTransformer :
+
+class GoldTransformer:
+    def transform_agences(self, silver_agences: list) -> list:
+        # 1. Ne garder que les agences valides (is_valid = True)
+        # 2. Retourner uniquement les colonnes utiles pour dim_agences
+        #    (id, nom, ville, region, directeur, telephone, email)
+        pass
+
+    def transform_clients(self, silver_clients: list) -> list:
+        # 1. Ne garder que les clients valides
+        # 2. Retourner (id, nom, segment, encours, score, statut, email, telephone)
+        pass
+
+    def transform_engagements(self, silver_engagements: list) -> list:
+        # 1. Ne garder que les engagements valides
+        # 2. Retourner (ref, client_id, client_nom, type_credit,
+        #               montant, duree, taux, score, statut, date_depot, agence_id)
+        pass
+
+    def transform_all(self, silver_data: dict) -> dict:
+        # Appelle les 3 méthodes ci-dessus
+        # Retourne {
+        #   "agences": [...],
+        #   "clients": [...],
+        #   "engagements": [...]
+        # }
+        pass</code></pre>
+
+<h2>6. Détail de load_gold.py (tu codes ça)</h2>
+
+<p><strong>Ce que fait ce fichier :</strong></p>
+<ul>
+  <li>Crée les tables Gold si elles n'existent pas</li>
+  <li>Insère les données avec UPSERT</li>
+  <li>Les agrégats en full refresh (TRUNCATE + INSERT)</li>
+  <li>Optionnel : créer la table <code>dim_date</code> avec une année de dates</li>
+</ul>
+
+<h3>6.1 Création des tables</h3>
+
+<pre><code>-- dim_agences
+CREATE TABLE IF NOT EXISTS dim_agences (
+    id VARCHAR(50) PRIMARY KEY,
+    nom VARCHAR(100),
+    ville VARCHAR(50),
+    region VARCHAR(50),
+    directeur VARCHAR(100),
+    telephone VARCHAR(20),
+    email VARCHAR(100),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- dim_clients
+CREATE TABLE IF NOT EXISTS dim_clients (
+    id VARCHAR(50) PRIMARY KEY,
+    nom VARCHAR(100),
+    segment VARCHAR(50),
+    encours DECIMAL(15,2) DEFAULT 0,
+    score INTEGER,
+    statut VARCHAR(50),
+    email VARCHAR(100),
+    telephone VARCHAR(20),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- fact_engagements
+CREATE TABLE IF NOT EXISTS fact_engagements (
+    ref VARCHAR(50) PRIMARY KEY,
+    client_id VARCHAR(50),
+    client_nom VARCHAR(100),
+    type_credit VARCHAR(50),
+    montant DECIMAL(15,2),
+    duree INTEGER,
+    taux DECIMAL(5,2),
+    score INTEGER,
+    statut VARCHAR(50),
+    date_depot TIMESTAMP,
+    agence_id VARCHAR(50),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- agg_kpis_agence
+CREATE TABLE IF NOT EXISTS agg_kpis_agence (
+    agence_id VARCHAR(50),
+    agence_nom VARCHAR(100),
+    mois VARCHAR(7),
+    nb_engagements INTEGER,
+    encours_total DECIMAL(15,2),
+    montant_moyen DECIMAL(15,2),
+    score_moyen DECIMAL(5,2),
+    PRIMARY KEY (agence_id, mois)
+);
+</code></pre>
+
+<h3>6.2 La requête UPSERT (la plus importante)</h3>
+
+<pre><code>INSERT INTO dim_agences (id, nom, ville, region, directeur, telephone, email, updated_at)
+VALUES (:id, :nom, :ville, :region, :directeur, :telephone, :email, NOW())
+ON CONFLICT (id) DO UPDATE SET
+    nom = EXCLUDED.nom,
+    ville = EXCLUDED.ville,
+    region = EXCLUDED.region,
+    directeur = EXCLUDED.directeur,
+    telephone = EXCLUDED.telephone,
+    email = EXCLUDED.email,
+    updated_at = NOW();</code></pre>
+
+<p><strong>Même pattern</strong> pour <code>dim_clients</code> et <code>fact_engagements</code>.</p>
+
+<h3>6.3 Agrégats : full refresh</h3>
+
+<pre><code>-- Étape 1 : vider
+TRUNCATE TABLE agg_kpis_agence;
+
+-- Étape 2 : insérer les nouveaux calculs
+INSERT INTO agg_kpis_agence (agence_id, agence_nom, mois, nb_engagements, encours_total, montant_moyen, score_moyen)
+SELECT
+    f.agence_id,
+    a.nom,
+    TO_CHAR(f.date_depot, 'YYYY-MM'),
+    COUNT(*),
+    SUM(f.montant),
+    AVG(f.montant),
+    AVG(f.score)
+FROM fact_engagements f
+JOIN dim_agences a ON f.agence_id = a.id
+GROUP BY f.agence_id, a.nom, TO_CHAR(f.date_depot, 'YYYY-MM');</code></pre>
+
+<h2>7. Structure de run_gold.py</h2>
+
+<pre><code># 1. Lire silver_data depuis les tables silver PostgreSQL
+# 2. Transformer avec GoldTransformer
+# 3. Charger avec GoldLoader
+# 4. Afficher les statistiques</code></pre>
+
+<h2>8. Pourquoi ce pattern est "client-ready" ?</h2>
+
+<table>
+  <tr><th>Critère</th><th>Ce qu'on fait</th><th>Ce qu'on évite</th></tr>
+  <tr>
+    <td>Idempotence</td>
+    <td>UPSERT → 0 doublon après 100 runs</td>
+    <td>INSERT simple → doublons après 2 runs</td>
+  </tr>
+  <tr>
+    <td>Performance</td>
+    <td>Agg pré-calculées → requêtes 5ms</td>
+    <td>Calcul à chaud → 500ms par page</td>
+  </tr>
+  <tr>
+    <td>Qualité</td>
+    <td>Silver filtre les invalides</td>
+    <td>Données sales dans l'API</td>
+  </tr>
+  <tr>
+    <td>Réutilisable</td>
+    <td>Pattern UPSERT compatible tout moteur SQL</td>
+    <td>Locké sur une techno</td>
+  </tr>
+  <tr>
+    <td>Maintenable</td>
+    <td>Fichiers séparés (transform / load)</td>
+    <td>Tout dans un seul script</td>
+  </tr>
+</table>
+
+<h2>9. Ta mission (si tu l'acceptes)</h2>
+
+<div class="good">
+<strong>Tu vas coder :</strong><br><br>
+1. <code>etl/gold/__init__.py</code> — fichier vide<br>
+2. <code>etl/gold/transform_gold.py</code> — classe GoldTransformer<br>
+3. <code>etl/gold/load_gold.py</code> — classe GoldLoader avec UPSERT<br>
+4. <code>etl/run_gold.py</code> — script de test<br><br>
+
+<strong>Je vais faire :</strong><br>
+- Valider chaque ligne que tu écris<br>
+- Expliquer pourquoi on fait comme ça<br>
+- Répondre à toutes tes questions<br>
+- Ne PAS écrire le code à ta place<br><br>
+
+<strong>Prêt ?</strong> Commence par créer <code>etl/gold/__init__.py</code> (fichier vide).
+</div>
+
+</body>
+</html>
