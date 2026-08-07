@@ -15,3 +15,8 @@ backend/saham_bank.db
 .pytest_cache/
 .coverage
 backend/.coverage
+
+# Documents personnels (lecture seule, hors repo)
+ALL_IN_ONE.md
+ECRITURES/
+backend/ECRITURES/
