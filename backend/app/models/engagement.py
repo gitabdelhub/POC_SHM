@@ -17,11 +17,14 @@ Pourquoi ce modèle ?
 - Intègre avec RLS (Row Level Security)
 """
 
-from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, Enum as SQLEnum
+import enum
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+
 from app.database import Base
-import enum
 
 
 class CreditType(enum.Enum):

@@ -1,10 +1,12 @@
-import bcrypt
-from jose import JWTError, jwt
+import base64
+import hashlib
+import secrets
 from datetime import datetime, timedelta
 from typing import Optional
-import hashlib
-import base64
-import secrets
+
+import bcrypt
+from jose import JWTError, jwt
+
 from app.config import settings
 
 SECRET_KEY = settings.SECRET_KEY

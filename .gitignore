@@ -11,3 +11,5 @@ backend/app.log
 backend/__pycache__/
 __pycache__/
 *.pyc
+backend/saham_bank.db
+.pytest_cache/

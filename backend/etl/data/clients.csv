@@ -1,501 +1,501 @@
 id,nom,segment,agence_id,encours,score,statut,email,telephone
-CLI-10001,Ahmed Guedira,Particuliers,AG-008,361696.68,73,Actif,client1@email.com,0064334655
-CLI-10002,Abdellah Kabbaj,Particuliers,AG-008,366671.82,82,Actif,client2@email.com,0072931985
-CLI-10003,Ahmed Alaoui,Particuliers,AG-003,258019.27,68,Actif,client3@email.com,0062285193
-CLI-10004,Hicham Erraji,Particuliers,AG-001,270162.16,60,Actif,client4@email.com,0068448389
-CLI-10005,Amina Erraji,Professionnels,AG-001,320012.07,53,A risque,client5@email.com,0070687142
-CLI-10006,Hicham Sbihi,Particuliers,AG-002,601600.7,56,A risque,client6@email.com,0066239581
-CLI-10007,Said Mouline,Particuliers,AG-007,25629.81,67,Actif,client7@email.com,0064573110
-CLI-10008,Hicham Benjelloun,PME,AG-006,772643.54,,A risque,client8@email.com,0069125538
-CLI-10009,Mehdi Slaoui,Grandes Entreprises,AG-004,4585190.78,92,Actif,client9@email.com,0061886242
-CLI-10010,Hicham Slaoui,Bancassurance,AG-005,1995522.58,76,Actif,client10@email.com,0067414842
-CLI-10011,Karim Ouazzani,Particuliers,AG-004,435524.72,59,A risque,client11@email.com,0063977497
-CLI-10012,Khalid Sbihi,Particuliers,AG-001,542738.83,74,Actif,,0062471835
-CLI-10013,Amina Berrada,VIP,AG-006,647448.35,71,Actif,client13@email.com,0064137632
-CLI-10014,Ahmed Lamrani,Particuliers,AG-004,602518.43,,Actif,client14@email.com,0063616121
-CLI-10015,Hicham Benjelloun,Particuliers,AG-001,721588.09,63,Actif,client15@email.com,0063338329
-CLI-10016,Said Balafrej,PME,AG-002,1626999.99,70,Actif,client16@email.com,0061878666
-CLI-10017,Youssef Hakim,Particuliers,AG-001,798404.84,46,A risque,client17@email.com,0071171140
-CLI-10018,Fatima Bennani,Particuliers,AG-005,395124.68,93,Actif,client18@email.com,0064756738
-CLI-10019,Zineb El Fassi,Professionnels,AG-005,624894.75,80,Actif,client19@email.com,0064881369
-CLI-10020,Omar Fikri,Professionnels,AG-005,1005391.71,59,A risque,client20@email.com,0062317317
-CLI-10021,Hicham Bennani,Professionnels,AG-006,718992.31,74,Actif,client21@email.com,0068982744
-CLI-10022,Salma Jai,Particuliers,AG-004,609192.26,81,Actif,client22@email.com,0069192185
-CLI-10023,Rachid Lamrani,Particuliers,AG-002,631420.04,60,Actif,client23@email.com,0070123443
-CLI-10024,Driss Benjelloun,PME,AG-002,6614613.74,54,A risque,client24@email.com,0063614934
-CLI-10025,Leila Bencheikh,Particuliers,AG-009,502946.18,69,Actif,client25@email.com,0065452815
-CLI-10026,Asmaa Tazi,PME,AG-002,1257416.16,43,A risque,client26@email.com,0061427474
-CLI-10027,Leila Lamrani,PME,AG-010,5050713.97,57,A risque,client27@email.com,0062385949
-CLI-10028,Mehdi Zniber,Particuliers,AG-003,56252.31,28,Defaut,client28@email.com,0070256078
-CLI-10029,Zineb Alaoui,Particuliers,AG-007,231803.56,61,Actif,client29@email.com,0069499239
-CLI-10030,Hassan Sbihi,Particuliers,AG-009,327903.61,64,Actif,client30@email.com,0062339871
-CLI-10031,Nadia Jai,Particuliers,AG-001,399311.37,50,A risque,client31@email.com,0065266636
-CLI-10032,Hassan Alaoui,Particuliers,AG-008,124492.99,40,A risque,client32@email.com,0068372521
-CLI-10033,Said Guedira,Particuliers,AG-005,134183.83,61,Actif,client33@email.com,0070316613
-CLI-10034,Youssef El Fassi,Particuliers,AG-010,281227.49,84,Actif,client34@email.com,0067881039
-CLI-10035,Hassan El Amrani,PME,AG-005,4064982.74,65,Actif,client35@email.com,0072842196
-CLI-10036,Hind Alaoui,Particuliers,AG-008,338369.99,48,A risque,client36@email.com,0061232648
-CLI-10037,Samira El Fassi,Particuliers,AG-009,297340.41,80,Actif,client37@email.com,0069222362
-CLI-10038,Leila Bennani,PME,AG-005,6654274.37,47,A risque,client38@email.com,0070454137
-CLI-10039,Hicham Alaoui,Particuliers,AG-005,355522.95,71,Actif,client39@email.com,0063114450
-CLI-10040,Abdellah Alaoui,PME,AG-010,3641183.37,92,Actif,client40@email.com,0067959089
-CLI-10041,Rachid Sbihi,Particuliers,AG-004,493922.38,84,Actif,client41@email.com,0067743091
-CLI-10042,Amina Idrissi,PME,AG-008,1237272.88,70,Actif,client42@email.com,0072874227
-CLI-10043,Nadia Jai,Particuliers,AG-006,641787.8,68,Actif,client43@email.com,0070287989
-CLI-10044,Mehdi Slaoui,Particuliers,AG-003,441671.22,52,A risque,client44@email.com,0071957439
-CLI-10045,Hind Zniber,PME,AG-009,3057335.22,25,Defaut,client45@email.com,0065721714
-CLI-10046,Khadija Fikri,Particuliers,AG-009,639333.93,70,Actif,client46@email.com,0069832564
-CLI-10047,Zineb Hakim,Particuliers,AG-002,69571.52,45,A risque,,0061528189
-CLI-10048,Amina Alaoui,Particuliers,AG-001,22477.89,54,A risque,client48@email.com,0061275896
-CLI-10049,Mehdi Bennani,Particuliers,AG-002,508771.8,66,Actif,client49@email.com,0069486091
-CLI-10050,Amina Idrissi,Particuliers,AG-007,240235.06,78,Actif,client50@email.com,0072901111
-CLI-10051,Driss El Amrani,Particuliers,AG-008,780913.47,71,Actif,client51@email.com,0065399215
-CLI-10052,Leila Zniber,Particuliers,AG-002,709965.04,75,Actif,client52@email.com,0063301392
-CLI-10053,Nadia Fassi-Fihri,Grandes Entreprises,AG-003,20881287.86,53,A risque,client53@email.com,0066879669
-CLI-10054,Khadija Benjelloun,Grandes Entreprises,AG-003,8748650.43,59,A risque,client54@email.com,0062318830
-CLI-10055,Salma Slaoui,Particuliers,AG-002,310886.97,44,A risque,client55@email.com,0065352485
-CLI-10056,Hind Ouazzani,Professionnels,AG-007,397010.95,63,Actif,client56@email.com,0065339490
-CLI-10057,Rachid Bennani,Particuliers,AG-003,628563.67,42,A risque,client57@email.com,0068217253
-CLI-10058,Khalid Alaoui,PME,AG-010,2923639.89,66,Actif,client58@email.com,0071907347
-CLI-10059,Fatima Bennani,Particuliers,AG-005,508840.77,64,Actif,client59@email.com,0068448632
-CLI-10060,Rachid Ouazzani,Grandes Entreprises,AG-005,20177515.98,71,Actif,client60@email.com,0067471631
-CLI-10061,Samira El Fassi,PME,AG-003,1139786.18,73,Actif,client61@email.com,0062605869
-CLI-10062,Meryem Kabbaj,PME,AG-006,7349443.75,77,Actif,client62@email.com,0061244139
-CLI-10063,Said Jai,PME,AG-008,932887.85,60,Actif,client63@email.com,0068756999
-CLI-10064,Amine Bennani,PME,AG-004,3287052.66,63,Inconnu,client64@email.com,0061871674
-CLI-10065,Fatima Bencheikh,Professionnels,AG-002,1339200.29,61,Actif,,0067648128
-CLI-10066,Driss Hakim,Particuliers,AG-002,278369.68,45,A risque,client66@email.com,0065877064
-CLI-10067,Hind Guedira,PME,AG-001,7725177.65,57,A risque,client67@email.com,0066123826
-CLI-10068,Youssef El Fassi,PME,AG-008,7649137.55,45,A risque,client68@email.com,0065639958
-CLI-10069,Noureddine El Amrani,Particuliers,AG-004,672637.25,62,Actif,client69@email.com,0067571699
-CLI-10070,Driss Tazi,Professionnels,AG-003,340461.6,86,Actif,client70@email.com,0069256114
-CLI-10071,Khadija Balafrej,PME,AG-008,4814679.59,78,Actif,client71@email.com,0069885763
-CLI-10072,Hicham Berrada,Particuliers,AG-001,226842.12,80,Actif,client72@email.com,0065596619
-CLI-10073,Leila Idrissi,Bancassurance,AG-001,2118925.53,85,Actif,client73@email.com,0063759682
-CLI-10074,Youssef Berrada,PME,AG-008,3547230.26,96,Actif,client74@email.com,0071912241
-CLI-10075,Asmaa Lamrani,Particuliers,AG-008,145605.28,61,Actif,client75@email.com,0067299848
-CLI-10076,Khadija El Amrani,Particuliers,AG-002,633542.62,31,Defaut,client76@email.com,0067564711
-CLI-10077,Amine Guedira,Grandes Entreprises,AG-007,15308682.06,66,Actif,client77@email.com,0064573250
-CLI-10078,Abdellah Fikri,Particuliers,AG-005,213462.95,59,A risque,client78@email.com,0061119322
-CLI-10079,Asmaa Sbihi,PME,AG-004,6884948.84,41,A risque,client79@email.com,0070592249
-CLI-10080,Ahmed Bennani,Grandes Entreprises,AG-004,20011914.67,70,Actif,client80@email.com,0063658580
-CLI-10081,Hicham Sbihi,PME,AG-003,2914992.86,58,A risque,client81@email.com,0070357019
-CLI-10082,Driss Mouline,PME,AG-008,4215977.57,59,A risque,client82@email.com,0064522869
-CLI-10083,Noureddine Jai,Particuliers,AG-001,548629.31,31,Defaut,client83@email.com,0069874747
-CLI-10084,Fatima Fassi-Fihri,PME,AG-007,3188648.63,45,A risque,client84@email.com,0068103327
-CLI-10085,Soukaina Jai,PME,AG-009,3700840.89,,Actif,client85@email.com,0061849292
-CLI-10086,Hind Berrada,PME,AG-008,930860.23,51,A risque,client86@email.com,0061391150
-CLI-10087,Rachid Bencheikh,Bancassurance,AG-008,881059.47,60,Actif,client87@email.com,0071993837
-CLI-10088,Amina Jai,Particuliers,AG-008,275876.51,89,Actif,,0069472169
-CLI-10089,Rachid Fikri,PME,AG-007,5549279.65,63,Actif,client89@email.com,0068879649
-CLI-10090,Mehdi Fassi-Fihri,Bancassurance,AG-008,149317.99,93,Actif,client90@email.com,0067965279
-CLI-10091,Khalid Mouline,Particuliers,AG-007,422438.8,79,Actif,client91@email.com,
-CLI-10092,Amina Berrada,PME,AG-004,7228103.86,19,Defaut,client92@email.com,0072223773
-CLI-10093,Samira Hakim,PME,AG-003,,74,Actif,client93@email.com,0065919384
-CLI-10094,Mohamed Bennani,PME,AG-009,2169371.53,61,Actif,client94@email.com,0064421210
-CLI-10095,Amina Tazi,Particuliers,AG-008,63495.92,54,A risque,client95@email.com,0064347172
-CLI-10096,Youssef Mouline,PME,AG-006,297030.85,32,Defaut,client96@email.com,0061917246
-CLI-10097,Omar Hakim,PME,AG-006,433313.75,45,A risque,client97@email.com,0062703193
-CLI-10098,Omar Lamrani,PME,AG-001,4583954.28,47,A risque,client98@email.com,0071515319
-CLI-10099,Amina Alaoui,Particuliers,AG-009,528814.06,93,Actif,client99@email.com,0068974822
-CLI-10100,Samira Guedira,Particuliers,AG-006,650268.64,66,Actif,client100@email.com,0068416486
-CLI-10101,Mehdi Alaoui,PME,AG-008,7208970.03,47,A risque,client101@email.com,0061524659
-CLI-10102,Hind Tazi,Particuliers,AG-007,101405.9,70,Actif,client102@email.com,0063829023
-CLI-10103,Asmaa Mouline,Particuliers,AG-005,168304.36,89,Actif,client103@email.com,0069489231
-CLI-10104,Soukaina Fikri,Particuliers,AG-010,195905.1,71,Actif,client104@email.com,0071711714
-CLI-10105,Khadija Fassi-Fihri,Particuliers,AG-005,219843.84,43,A risque,client105@email.com,0072303221
-CLI-10106,Salma Jai,Particuliers,AG-006,422558.5,34,Defaut,client106@email.com,0064195054
-CLI-10107,Hind Lamrani,Particuliers,AG-010,661650.58,54,A risque,client107@email.com,0062461981
-CLI-10108,Asmaa Sbihi,Bancassurance,AG-001,2000236.04,85,Actif,client108@email.com,0071739555
-CLI-10109,Imane Kabbaj,Particuliers,AG-004,315462.82,72,Actif,client109@email.com,0068278371
-CLI-10110,Nadia Balafrej,Bancassurance,AG-007,1737766.63,58,A risque,client110@email.com,0070685779
-CLI-10111,Khadija Bennani,Particuliers,AG-008,677260.83,64,Actif,client111@email.com,0070424863
-CLI-10112,Nadia Sbihi,Professionnels,AG-004,147103.09,62,Actif,client112@email.com,0061258090
-CLI-10113,Amine Zniber,Particuliers,AG-005,214946.43,59,A risque,client113@email.com,0063258024
-CLI-10114,Asmaa Ouazzani,Professionnels,AG-010,282400.89,62,Actif,client114@email.com,0067549113
-CLI-10115,Leila Tazi,Particuliers,AG-001,337918.93,62,Actif,client115@email.com,0062905291
-CLI-10116,Said Hakim,,AG-005,145485.69,86,Actif,client116@email.com,0070497784
-CLI-10117,Nadia Zniber,Particuliers,AG-010,403693.46,63,Actif,,0065451170
-CLI-10118,Omar El Fassi,PME,AG-007,2135984.2,54,A risque,client118@email.com,0070304374
-CLI-10119,Said Ouazzani,Bancassurance,AG-005,2487302.97,54,A risque,client119@email.com,0062573599
-CLI-10120,Zineb El Fassi,Particuliers,AG-004,738090.02,62,Actif,client120@email.com,0061898015
-CLI-10121,Hind Mouline,PME,AG-010,6438196.57,37,A risque,client121@email.com,0066391566
-CLI-10122,Mehdi Lamrani,PME,AG-004,4164519.8,77,Actif,client122@email.com,0066601757
-CLI-10123,Mohamed El Amrani,PME,AG-005,4131776.02,40,A risque,client123@email.com,0069781749
-CLI-10124,Driss Sbihi,PME,AG-007,,71,Actif,client124@email.com,0071635771
-CLI-10125,Ahmed El Fassi,PME,AG-003,5154311.72,,Defaut,client125@email.com,0064591689
-CLI-10126,Omar Bennani,Particuliers,AG-006,85865.27,66,Actif,client126@email.com,0063738596
-CLI-10127,Hassan Hakim,Particuliers,AG-010,759600.02,55,A risque,client127@email.com,0064735238
-CLI-10128,Amine Lamrani,Grandes Entreprises,AG-008,8926445.03,82,Actif,client128@email.com,0061331896
-CLI-10129,Nadia El Amrani,Particuliers,AG-004,49876.3,53,A risque,client129@email.com,0063796734
-CLI-10130,Leila Bencheikh,Particuliers,AG-007,175735.79,55,A risque,client130@email.com,0062746522
-CLI-10131,Ahmed Kabbaj,Professionnels,AG-003,841066.39,60,Actif,client131@email.com,0066778080
-CLI-10132,Hind El Amrani,Professionnels,AG-008,751806.09,34,Defaut,pas_un_email,0064584981
-CLI-10133,Khadija El Amrani,Particuliers,AG-007,451527.11,97,Actif,client133@email.com,0069954676
-CLI-10134,Noureddine El Fassi,Particuliers,AG-008,281878.6,49,A risque,client134@email.com,0063487382
-CLI-10135,Hassan Zniber,Professionnels,AG-001,,82,Actif,client135@email.com,0072358640
-CLI-10136,Imane El Amrani,PME,AG-005,999999999,60,Actif,client136@email.com,0062624044
-CLI-10137,Mohamed Guedira,PME,AG-007,5386077.59,21,Defaut,client137@email.com,0061435630
-CLI-10138,Rachid Ouazzani,Particuliers,AG-001,37583.66,71,Actif,client138@email.com,0065268345
-CLI-10139,Mehdi Guedira,Particuliers,AG-002,99631.57,48,A risque,client139@email.com,0066932718
-CLI-10140,Asmaa Zniber,Particuliers,AG-007,,42,A risque,client140@email.com,0072981963
-CLI-10141,Amina Tazi,Professionnels,AG-002,141314.95,47,A risque,client141@email.com,0071727673
-CLI-10142,Omar Zniber,Particuliers,AG-010,999999999,47,A risque,client142@email.com,0065476355
-CLI-10143,Hicham Bencheikh,Particuliers,AG-005,218284.54,40,A risque,client143@email.com,0066396345
-CLI-10144,Salma Tazi,Particuliers,AG-002,317231.4,45,A risque,client144@email.com,0066855663
-CLI-10145,Asmaa Hakim,Grandes Entreprises,AG-004,35236756.06,56,A risque,client145@email.com,0063335769
-CLI-10146,Amine Sbihi,Particuliers,AG-008,279626.49,76,Actif,client146@email.com,0071354117
-CLI-10147,Said Bencheikh,Particuliers,AG-009,722165.75,63,Actif,client147@email.com,0072639528
-CLI-10148,Asmaa Mouline,PME,AG-004,4384090.06,0,Defaut,client148@email.com,0067429612
-CLI-10149,Mohamed Idrissi,Grandes Entreprises,AG-004,23024284.86,74,Actif,client149@email.com,0067931635
-CLI-10150,Karim Balafrej,Particuliers,AG-003,621567.07,91,Actif,client150@email.com,0063903579
-CLI-10151,Hind Slaoui,,AG-010,728399.95,81,Actif,client151@email.com,0061146664
-CLI-10152,Karim Zniber,Particuliers,AG-010,438142.12,76,Actif,client152@email.com,0062149771
-CLI-10153,Abdellah El Fassi,Particuliers,AG-008,252332.51,57,A risque,client153@email.com,0072201711
-CLI-10154,Zineb Jai,Particuliers,AG-007,510116.57,52,A risque,client154@email.com,0061226335
-CLI-10155,Karim El Fassi,PME,AG-010,4833020.28,42,A risque,client155@email.com,0071686853
-CLI-10156,Hassan Alaoui,Bancassurance,AG-008,2536372.65,70,Actif,client156@email.com,0067174472
-CLI-10157,Mohamed Idrissi,Particuliers,AG-007,764021.78,94,Actif,client157@email.com,0062724539
-CLI-10158,Salma Slaoui,PME,AG-010,6664913.83,68,Actif,client158@email.com,0061305229
-CLI-10159,Khalid Hakim,Particuliers,AG-010,275880.13,41,A risque,client159@email.com,0065861168
-CLI-10160,Leila Bencheikh,Particuliers,AG-003,487127.04,60,Actif,client160@email.com,0066444669
-CLI-10161,Karim El Amrani,Particuliers,AG-002,787166.7,77,Actif,client161@email.com,0062186991
-CLI-10162,Khalid Bencheikh,Particuliers,AG-006,411902.14,70,,client162@email.com,0067244767
-CLI-10163,Khalid Fikri,Bancassurance,AG-007,2729820.75,42,A risque,client163@email.com,0062193685
-CLI-10164,Salma Mouline,Professionnels,AG-007,112057.8,57,A risque,client164@email.com,0069754612
-CLI-10165,Hassan Zniber,PME,AG-005,4424169.71,20,Defaut,client165@email.com,0069773375
-CLI-10166,Zineb Zniber,Particuliers,AG-008,548396.73,32,Defaut,client166@email.com,0062575335
-CLI-10167,Khadija Idrissi,Bancassurance,AG-003,1975584.64,60,Actif,client167@email.com,0067137275
-CLI-10168,Khalid El Amrani,Particuliers,AG-004,365037.39,64,Actif,client168@email.com,0072967621
-CLI-10169,Amina El Amrani,Particuliers,AG-006,176623.98,81,Actif,client169@email.com,0068411822
-CLI-10170,Meryem Fassi-Fihri,PME,AG-002,2163100.14,81,Inconnu,client170@email.com,0065821998
-CLI-10171,Amina Jai,PME,AG-002,1473048.63,64,Actif,client171@email.com,0061485293
-CLI-10172,Amina Fassi-Fihri,Particuliers,AG-003,266001.0,100,Actif,client172@email.com,
-CLI-10173,Khalid El Fassi,Particuliers,AG-002,154999.98,38,A risque,client173@email.com,0070994788
-CLI-10174,Amine Slaoui,Particuliers,AG-008,426301.83,49,A risque,client174@email.com,0072603965
-CLI-10175,Said Fikri,Particuliers,AG-010,567238.57,56,A risque,client175@email.com,0061393266
-CLI-10176,Mohamed Benjelloun,PME,AG-006,6590516.99,37,A risque,client176@email.com,0068948735
-CLI-10177,Soukaina Bencheikh,Particuliers,AG-002,249172.85,72,Actif,client177@email.com,0064555344
-CLI-10178,Noureddine El Fassi,Professionnels,AG-004,710694.58,66,Actif,client178@email.com,0070244818
-CLI-10179,Asmaa Balafrej,PME,AG-007,3556883.25,50,A risque,client179@email.com,0062789761
-CLI-10180,Rachid El Amrani,Particuliers,AG-005,792978.19,93,Actif,client180@email.com,0069872076
-CLI-10181,Amine Hakim,Particuliers,AG-004,245845.58,70,Actif,client181@email.com,0069271496
-CLI-10182,Nadia Bennani,Particuliers,AG-006,619287.19,45,A risque,client182@email.com,0069627796
-CLI-10183,Hicham Mouline,Particuliers,AG-006,163565.16,63,Actif,client183@email.com,0066924133
-CLI-10184,Noureddine Balafrej,Particuliers,AG-006,168750.66,52,A risque,client184@email.com,0067606881
-CLI-10185,Abdellah Jai,PME,AG-008,1507569.07,67,Actif,client185@email.com,0071285394
-CLI-10186,Fatima Idrissi,Grandes Entreprises,AG-005,33129084.84,57,A risque,client186@email.com,0069831131
-CLI-10187,Said Erraji,PME,AG-010,5597716.97,32,Defaut,client187@email.com,0069269224
-CLI-10188,Soukaina Sbihi,Particuliers,AG-007,153607.1,71,Actif,client188@email.com,0062921199
-CLI-10189,Karim Tazi,PME,AG-008,7780363.33,60,Actif,client189@email.com,0072342074
-CLI-10190,Mehdi Zniber,Grandes Entreprises,AG-006,33501971.92,90,Actif,client190@email.com,0067872352
-CLI-10191,Nadia Benjelloun,Particuliers,AG-007,643549.63,72,Actif,client191@email.com,0063746229
-CLI-10192,Ahmed Ouazzani,Particuliers,AG-009,463819.44,52,A risque,client192@email.com,0070303981
-CLI-10193,Meryem Idrissi,Particuliers,AG-010,657783.23,40,A risque,,0067948322
-CLI-10194,Leila Kabbaj,PME,AG-001,1997881.77,69,Actif,client194@email.com,0063207985
-CLI-10195,Hind Idrissi,Particuliers,AG-006,131306.98,40,A risque,client195@email.com,0069233863
-CLI-10196,Youssef Erraji,Particuliers,AG-009,142368.67,37,A risque,client196@email.com,0071433993
-CLI-10197,Leila Idrissi,Particuliers,AG-003,341686.58,69,Actif,client197@email.com,0064535921
-CLI-10198,Samira El Fassi,VIP,AG-004,1591750.54,70,Actif,client198@email.com,0063578937
-CLI-10199,Abdellah Lamrani,Particuliers,AG-001,694355.69,63,Actif,client199@email.com,0072939983
-CLI-10200,Khalid Guedira,Professionnels,AG-009,1340262.31,72,Actif,client200@email.com,0070176966
-CLI-10201,Youssef Idrissi,PME,AG-009,4209917.93,58,A risque,client201@email.com,0065827370
-CLI-10202,Khadija El Amrani,PME,AG-010,1758932.89,57,A risque,client202@email.com,0072302052
-CLI-10203,Imane Lamrani,PME,AG-004,7716828.76,47,A risque,client203@email.com,0066561844
-CLI-10204,Khadija Slaoui,Grandes Entreprises,AG-003,13862399.45,85,Actif,client204@email.com,0067286922
-CLI-10205,Hicham Fassi-Fihri,PME,AG-006,1304805.24,45,A risque,client205@email.com,0061814462
-CLI-10206,Imane Fikri,Professionnels,AG-003,610267.18,50,A risque,client206@email.com,0064658538
-CLI-10207,Hind Tazi,Particuliers,AG-010,533654.06,88,Actif,client207@email.com,0065766589
-CLI-10208,Zineb Erraji,Particuliers,AG-004,733562.77,54,A risque,client208@email.com,0063273248
-CLI-10209,Fatima Benjelloun,PME,AG-002,745298.31,66,Actif,client209@email.com,0062575972
-CLI-10210,Khadija Jai,Particuliers,AG-010,769491.94,63,Actif,client210@email.com,0066629620
-CLI-10211,Said Idrissi,Particuliers,AG-007,144517.05,78,Actif,client211@email.com,0065731283
-CLI-10212,Mohamed Lamrani,Grandes Entreprises,AG-002,39268311.55,97,Actif,client212@email.com,0071179443
-CLI-10213,Hicham Bennani,PME,AG-008,1266299.51,48,A risque,client213@email.com,0069478866
-CLI-10214,Zineb Balafrej,PME,AG-005,3001982.13,84,Actif,client214@email.com,0061633971
-CLI-10215,Soukaina Fassi-Fihri,Professionnels,AG-005,1327276.83,63,Actif,client215@email.com,0064314514
-CLI-10216,Amine Kabbaj,Particuliers,AG-010,419990.54,31,Defaut,client216@email.com,0071193038
-CLI-10217,Leila Alaoui,Particuliers,AG-008,226925.1,37,A risque,client217@email.com,0069357280
-CLI-10218,Leila Kabbaj,Particuliers,AG-004,523297.34,48,A risque,client218@email.com,0069317347
-CLI-10219,Amine Sbihi,Particuliers,AG-004,169373.2,47,A risque,client219@email.com,0068257843
-CLI-10220,Samira Slaoui,PME,AG-001,7031118.14,66,Actif,client220@email.com,0070217978
-CLI-10221,Noureddine Hakim,Particuliers,AG-006,426679.48,59,A risque,client221@email.com,0070808832
-CLI-10222,Rachid Ouazzani,Professionnels,AG-008,626570.61,69,Actif,client222@email.com,0063222973
-CLI-10223,Khalid Bennani,Particuliers,AG-010,310069.43,52,A risque,client223@email.com,0063222161
-CLI-10224,Soukaina Berrada,Particuliers,AG-009,401370.67,69,Actif,client224@email.com,0070214289
-CLI-10225,Asmaa Fikri,PME,AG-007,970738.07,60,Actif,client225@email.com,0069293850
-CLI-10226,Noureddine El Amrani,PME,AG-009,2342152.11,73,Actif,client226@email.com,0067763140
-CLI-10227,Salma Jai,Particuliers,AG-002,523764.21,70,Actif,client227@email.com,0070649961
-CLI-10228,Amina Tazi,PME,AG-008,6632375.57,36,A risque,client228@email.com,0061648010
-CLI-10229,Hassan Alaoui,PME,AG-004,999999999,25,Defaut,client229@email.com,0069777747
-CLI-10230,Youssef El Amrani,PME,AG-003,,52,A risque,client230@email.com,0070249451
-CLI-10231,Amina Ouazzani,Bancassurance,AG-005,2784719.94,83,Actif,client231@email.com,0061854147
-CLI-10232,Driss Slaoui,PME,AG-007,7173569.39,66,Actif,client232@email.com,0064434037
-CLI-10233,Mohamed Hakim,Grandes Entreprises,AG-001,,66,Actif,client233@email.com,0066733157
-CLI-10234,Amina Hakim,PME,AG-009,7024857.34,52,A risque,client234@email.com,0064628562
-CLI-10235,Youssef Sbihi,Grandes Entreprises,AG-006,39533870.79,60,Actif,client235@email.com,0070837295
-CLI-10236,Soukaina Berrada,Particuliers,AG-006,93902.54,59,A risque,client236@email.com,0063148745
-CLI-10237,Ahmed El Fassi,Particuliers,AG-004,82516.65,77,Actif,client237@email.com,0063688745
-CLI-10238,Hind Fassi-Fihri,Particuliers,AG-002,572210.15,41,A risque,client238@email.com,0072196141
-CLI-10239,Driss Slaoui,PME,AG-010,2262598.89,42,A risque,client239@email.com,0071116085
-CLI-10240,Meryem Hakim,Particuliers,AG-005,,41,A risque,client240@email.com,0062625960
-CLI-10241,Meryem Kabbaj,Particuliers,AG-002,387854.79,80,Actif,client241@email.com,0068191529
-CLI-10242,Said Guedira,Grandes Entreprises,AG-010,19626152.56,68,Actif,client242@email.com,0061782760
-CLI-10243,Zineb El Amrani,Particuliers,AG-007,634049.26,24,Defaut,client243@email.com,0061953282
-CLI-10244,Asmaa Benjelloun,Particuliers,AG-005,556742.19,39,A risque,client244@email.com,0064287494
-CLI-10245,Khadija Slaoui,Particuliers,AG-002,535000.74,58,A risque,client245@email.com,0061297329
-CLI-10246,Khadija Sbihi,PME,AG-008,6593142.92,42,A risque,client246@email.com,0065113816
-CLI-10247,Khadija El Amrani,Particuliers,AG-004,477728.84,81,Actif,client247@email.com,0062369580
-CLI-10248,Soukaina Benjelloun,Grandes Entreprises,AG-004,5390849.98,62,Actif,client248@email.com,0068354319
-CLI-10249,Amine Lamrani,PME,AG-003,658187.91,64,Actif,client249@email.com,0071784287
-CLI-10250,Amine El Fassi,Grandes Entreprises,AG-001,27490034.42,65,,client250@email.com,0071471195
-CLI-10251,Said Erraji,Professionnels,AG-007,439207.86,81,Actif,client251@email.com,0069755299
-CLI-10252,Said Bencheikh,Particuliers,AG-007,740216.08,67,Actif,client252@email.com,0066607189
-CLI-10253,Leila Lamrani,Particuliers,AG-007,722085.28,80,Actif,client253@email.com,0065673090
-CLI-10254,Khalid Zniber,PME,AG-003,5043810.25,60,Actif,client254@email.com,0070408088
-CLI-10255,Imane Alaoui,PME,AG-002,4077811.54,45,A risque,client255@email.com,0065712117
-CLI-10256,Leila Hakim,Particuliers,AG-010,569029.75,75,Actif,client256@email.com,0063392137
-CLI-10257,Nadia Guedira,Particuliers,AG-007,224938.91,64,Actif,client257@email.com,0072379391
-CLI-10258,Driss El Amrani,Particuliers,AG-008,261666.66,47,A risque,client258@email.com,0069341684
-CLI-10259,Zineb Balafrej,Particuliers,AG-002,200240.94,67,Actif,client259@email.com,0069222834
-CLI-10260,Zineb Guedira,PME,AG-004,1601375.45,25,Defaut,client260@email.com,0062259259
-CLI-10261,Fatima Guedira,PME,AG-008,3418538.5,35,A risque,client261@email.com,0065478419
-CLI-10262,Asmaa Fassi-Fihri,Particuliers,AG-007,247111.36,38,A risque,client262@email.com,0067245583
-CLI-10263,Mohamed Idrissi,Grandes Entreprises,AG-001,6243775.07,64,Actif,client263@email.com,0071987717
-CLI-10264,Karim Mouline,Particuliers,AG-003,170303.18,52,A risque,client264@email.com,0072686444
-CLI-10265,Driss Slaoui,Professionnels,AG-002,194554.03,91,Actif,client265@email.com,0061511495
-CLI-10266,Asmaa Hakim,Particuliers,AG-005,203963.83,64,Actif,client266@email.com,0065454875
-CLI-10267,Hassan Erraji,PME,AG-010,3269438.53,37,A risque,client267@email.com,0068931664
-CLI-10268,Mehdi Hakim,PME,AG-010,7865365.09,58,A risque,client268@email.com,0063988966
-CLI-10269,Omar Jai,Particuliers,AG-008,549408.05,51,A risque,client269@email.com,0062147733
-CLI-10270,Ahmed Balafrej,Particuliers,AG-007,229377.46,42,A risque,client270@email.com,0072484431
-CLI-10271,Mehdi Kabbaj,Particuliers,AG-010,144646.57,34,Defaut,client271@email.com,0072471997
-CLI-10272,Youssef Hakim,Grandes Entreprises,AG-008,32798955.64,69,Actif,client272@email.com,0069318738
-CLI-10273,Mehdi Sbihi,Particuliers,AG-001,427014.9,48,A risque,client273@email.com,0069748050
-CLI-10274,Hind Benjelloun,Particuliers,AG-004,683377.0,67,Actif,client274@email.com,0071706953
-CLI-10275,Omar Zniber,PME,AG-008,5183759.93,40,A risque,client275@email.com,0067126127
-CLI-10276,Abdellah Alaoui,Particuliers,AG-010,25412.71,49,A risque,client276@email.com,0064749420
-CLI-10277,Amine El Fassi,Particuliers,AG-007,245715.74,56,A risque,client277@email.com,0063522987
-CLI-10278,Hassan Ouazzani,Particuliers,AG-001,124162.91,71,Actif,client278@email.com,0068886421
-CLI-10279,Meryem Zniber,Particuliers,AG-006,671578.14,76,Actif,client279@email.com,0070851415
-CLI-10280,Rachid El Fassi,Particuliers,AG-003,178599.34,54,A risque,client280@email.com,0065997427
-CLI-10281,Mohamed El Fassi,Particuliers,AG-004,382813.48,46,A risque,client281@email.com,0061509712
-CLI-10282,Youssef Balafrej,Bancassurance,AG-006,1916695.43,67,Actif,client282@email.com,0069926043
-CLI-10283,Meryem Jai,Particuliers,AG-008,729664.48,59,A risque,client283@email.com,0068714136
-CLI-10284,Mehdi Mouline,Particuliers,AG-001,566528.95,63,Actif,client284@email.com,0065958933
-CLI-10285,Samira Zniber,Particuliers,AG-001,30255.86,86,Actif,client285@email.com,0069154135
-CLI-10286,Omar El Amrani,Particuliers,AG-003,523577.46,47,A risque,client286@email.com,0063435348
-CLI-10287,Rachid Bennani,Particuliers,AG-009,564113.43,67,Actif,client287@email.com,0066913746
-CLI-10288,Zineb Kabbaj,Particuliers,AG-009,526987.72,12,Defaut,,0069839750
-CLI-10289,Asmaa Erraji,Particuliers,AG-008,59296.43,60,Actif,client289@email.com,0064443523
-CLI-10290,Mohamed Ouazzani,Particuliers,AG-006,677915.16,41,A risque,client290@email.com,0066499891
-CLI-10291,Karim Erraji,PME,AG-005,5436451.44,21,Defaut,client291@email.com,0067387129
-CLI-10292,Hassan Erraji,Particuliers,AG-005,223264.31,92,Actif,client292@email.com,0071892150
-CLI-10293,Soukaina Slaoui,Particuliers,AG-009,73953.21,72,Actif,client293@email.com,0061389119
-CLI-10294,Amine Alaoui,PME,AG-006,6016425.38,91,,client294@email.com,0068544195
-CLI-10295,Zineb Berrada,Particuliers,AG-010,33406.32,63,Actif,client295@email.com,0071546486
-CLI-10296,Hicham Tazi,Bancassurance,AG-004,652610.64,39,A risque,client296@email.com,0064932995
-CLI-10297,Zineb Mouline,Particuliers,AG-009,376050.74,76,Actif,client297@email.com,0062399871
-CLI-10298,Youssef Fikri,Particuliers,AG-005,582670.94,72,Actif,client298@email.com,0071578086
-CLI-10299,Hicham Hakim,Particuliers,AG-010,314841.05,43,A risque,client299@email.com,0068634249
-CLI-10300,Salma Benjelloun,PME,AG-008,7130496.12,76,Actif,client300@email.com,0063807618
-CLI-10301,Rachid Mouline,Particuliers,AG-009,415876.45,40,A risque,client301@email.com,0067264565
-CLI-10302,Hassan Alaoui,Professionnels,AG-002,150290.96,61,Actif,client302@email.com,0070963492
-CLI-10303,Driss El Amrani,PME,AG-002,1554832.13,59,A risque,client303@email.com,0069237478
-CLI-10304,Nadia Idrissi,Particuliers,AG-009,584288.57,78,Actif,client304@email.com,0072791773
-CLI-10305,Khalid Fikri,Particuliers,AG-006,122825.16,68,Actif,client305@email.com,0061226197
-CLI-10306,Mohamed Berrada,Particuliers,AG-008,256061.89,,Actif,client306@email.com,0070554560
-CLI-10307,Khalid Fassi-Fihri,Professionnels,AG-001,263624.33,59,A risque,client307@email.com,0067757217
-CLI-10308,Hicham Mouline,PME,AG-006,2112745.81,68,Actif,client308@email.com,0069499955
-CLI-10309,Ahmed Zniber,Particuliers,AG-007,130568.03,68,Actif,client309@email.com,0064555841
-CLI-10310,Mehdi Erraji,Particuliers,AG-009,230340.79,85,Actif,client310@email.com,0062945976
-CLI-10311,Samira El Fassi,PME,AG-001,2231349.27,59,A risque,client311@email.com,0066256330
-CLI-10312,Abdellah Benjelloun,Bancassurance,AG-005,1303901.74,99,Actif,client312@email.com,0072357479
-CLI-10313,Noureddine Erraji,Particuliers,AG-005,445894.36,81,Actif,client313@email.com,0072298792
-CLI-10314,Samira Tazi,PME,AG-003,6948647.1,65,Actif,client314@email.com,0068644759
-CLI-10315,Khalid Guedira,PME,AG-002,6140902.13,33,Defaut,client315@email.com,0069348975
-CLI-10316,Samira El Amrani,Particuliers,AG-005,713346.38,30,Defaut,client316@email.com,0064225026
-CLI-10317,Leila Balafrej,Particuliers,AG-009,700156.72,57,A risque,client317@email.com,0071521091
-CLI-10318,Leila Mouline,Particuliers,AG-001,144329.53,52,A risque,client318@email.com,0062874770
-CLI-10319,Salma Idrissi,Particuliers,AG-008,65871.41,49,A risque,pas_un_email,0067648512
-CLI-10320,Youssef Fassi-Fihri,Bancassurance,AG-009,734317.35,62,Actif,client320@email.com,0063459885
-CLI-10321,Salma Ouazzani,PME,AG-007,4225659.09,48,A risque,client321@email.com,0066589924
-CLI-10322,Noureddine Sbihi,Grandes Entreprises,AG-009,13341925.27,89,Actif,client322@email.com,0065917710
-CLI-10323,Hicham Tazi,Particuliers,AG-006,784342.67,17,Defaut,client323@email.com,0065322637
-CLI-10324,Meryem Kabbaj,Particuliers,AG-006,88205.37,66,Actif,client324@email.com,0072631361
-CLI-10325,Zineb Fikri,Bancassurance,AG-008,2703861.51,74,Actif,client325@email.com,0070374831
-CLI-10326,Karim Sbihi,Particuliers,AG-006,387578.55,66,Actif,client326@email.com,0072787610
-CLI-10327,Nadia Erraji,Particuliers,AG-002,325709.17,80,Actif,client327@email.com,
-CLI-10328,Hicham Zniber,PME,AG-001,4486489.69,33,Defaut,,0066798430
-CLI-10329,Asmaa Tazi,Particuliers,AG-008,37308.16,54,A risque,client329@email.com,0063595334
-CLI-10330,Hicham Benjelloun,,AG-006,517014.28,68,Actif,client330@email.com,0064529724
-CLI-10331,Amine Tazi,PME,AG-003,3446796.46,,A risque,client331@email.com,0064226767
-CLI-10332,Asmaa Tazi,PME,AG-008,3653480.2,38,A risque,client332@email.com,0072465023
-CLI-10333,Youssef El Amrani,Particuliers,AG-003,738745.27,59,A risque,client333@email.com,0062975347
-CLI-10334,Khadija Idrissi,PME,AG-005,3437485.67,47,A risque,client334@email.com,0072446786
-CLI-10335,Salma Alaoui,Particuliers,AG-009,418921.69,59,A risque,client335@email.com,0064159891
-CLI-10336,Zineb Erraji,PME,AG-007,1499392.15,64,Actif,client336@email.com,0068817818
-CLI-10337,Driss Benjelloun,PME,AG-009,3297157.89,40,A risque,client337@email.com,0066914086
-CLI-10338,Khalid Fikri,PME,AG-002,279989.27,15,Defaut,client338@email.com,0064765295
-CLI-10339,Soukaina Erraji,Professionnels,AG-003,91393.47,56,A risque,client339@email.com,0069608541
-CLI-10340,Hassan Jai,PME,AG-007,6044401.73,21,Defaut,client340@email.com,
-CLI-10341,Abdellah Erraji,Particuliers,AG-009,437511.91,56,A risque,client341@email.com,0064208642
-CLI-10342,Hicham Sbihi,Particuliers,AG-004,487132.32,66,Actif,client342@email.com,0068471351
-CLI-10343,Asmaa Guedira,Particuliers,AG-004,121212.07,65,Actif,client343@email.com,0072816360
-CLI-10344,Khadija Sbihi,Particuliers,AG-007,452737.56,71,Actif,client344@email.com,0064624737
-CLI-10345,Meryem Fassi-Fihri,PME,AG-010,4425718.54,37,A risque,client345@email.com,0069897372
-CLI-10346,Youssef Benjelloun,Particuliers,AG-005,141721.48,59,A risque,client346@email.com,0069155556
-CLI-10347,Youssef Benjelloun,PME,AG-006,3831713.0,66,Actif,client347@email.com,0061797297
-CLI-10348,Abdellah El Amrani,Grandes Entreprises,AG-003,31047622.21,88,Actif,client348@email.com,0069228392
-CLI-10349,Asmaa Balafrej,PME,AG-009,808924.18,21,Defaut,client349@email.com,0066369743
-CLI-10350,Hind Hakim,PME,AG-003,5203033.04,39,A risque,client350@email.com,0065595478
-CLI-10351,Youssef Zniber,Particuliers,AG-001,117241.89,45,A risque,client351@email.com,0061357198
-CLI-10352,Said Bennani,Particuliers,AG-007,793019.81,54,A risque,client352@email.com,0067883931
-CLI-10353,Abdellah El Amrani,PME,AG-007,2497797.18,35,A risque,client353@email.com,0067603154
-CLI-10354,Rachid Zniber,Professionnels,AG-006,1454957.61,98,Actif,client354@email.com,0062718757
-CLI-10355,Omar Lamrani,Particuliers,AG-007,185877.93,32,Defaut,client355@email.com,0062569525
-CLI-10356,Meryem Slaoui,Particuliers,AG-004,356427.38,48,A risque,client356@email.com,0063762854
-CLI-10357,Imane Ouazzani,PME,AG-008,7346140.03,46,A risque,client357@email.com,0062445786
-CLI-10358,Salma Sbihi,Particuliers,AG-004,275368.39,55,A risque,client358@email.com,0072814137
-CLI-10359,Youssef Idrissi,PME,AG-010,3733555.87,87,Actif,client359@email.com,0066825659
-CLI-10360,Samira Hakim,Particuliers,AG-002,433277.84,51,A risque,client360@email.com,0062846932
-CLI-10361,Abdellah Kabbaj,PME,AG-004,7227725.86,55,A risque,client361@email.com,0067741228
-CLI-10362,Soukaina Ouazzani,Professionnels,AG-006,873394.79,55,A risque,client362@email.com,0065603774
-CLI-10363,Hicham Benjelloun,Particuliers,AG-002,761515.51,31,Defaut,client363@email.com,0062439518
-CLI-10364,Fatima Slaoui,Particuliers,AG-001,759194.1,46,A risque,client364@email.com,0067531447
-CLI-10365,Hind Benjelloun,Particuliers,AG-003,370377.82,33,Defaut,client365@email.com,0064959915
-CLI-10366,Youssef Hakim,Particuliers,AG-004,756244.24,76,Actif,client366@email.com,0062207742
-CLI-10367,Khadija Fikri,PME,AG-008,3242521.53,100,Actif,client367@email.com,0064767869
-CLI-10368,Zineb Hakim,Particuliers,AG-010,413953.29,75,Actif,client368@email.com,0068369648
-CLI-10369,Youssef Ouazzani,Particuliers,AG-009,518340.53,40,A risque,client369@email.com,0071712948
-CLI-10370,Leila Idrissi,Particuliers,AG-006,777717.16,56,A risque,client370@email.com,0070931214
-CLI-10371,Meryem Guedira,Professionnels,AG-005,1481234.0,65,Actif,client371@email.com,0067592062
-CLI-10372,Hicham Ouazzani,Particuliers,AG-001,574340.12,71,Actif,client372@email.com,0071948862
-CLI-10373,Amina Fassi-Fihri,Particuliers,AG-006,145247.85,46,A risque,client373@email.com,0062869721
-CLI-10374,Karim El Amrani,PME,AG-003,6581022.17,76,Actif,client374@email.com,0064622715
-CLI-10375,Amine Bennani,Particuliers,AG-005,589457.67,57,A risque,client375@email.com,0067929129
-CLI-10376,Amine Zniber,Particuliers,AG-001,682607.61,,A risque,client376@email.com,0070583750
-CLI-10377,Amina Berrada,PME,AG-002,3875103.94,49,A risque,client377@email.com,0071953019
-CLI-10378,Ahmed Berrada,Particuliers,AG-010,199480.47,89,Actif,client378@email.com,0071481367
-CLI-10379,Noureddine Zniber,Particuliers,AG-004,663899.03,54,A risque,client379@email.com,0067218937
-CLI-10380,Amine Alaoui,PME,AG-001,5625794.81,53,A risque,client380@email.com,0065759992
-CLI-10381,Fatima El Fassi,PME,AG-006,3716947.31,46,A risque,client381@email.com,0062382532
-CLI-10382,Samira Hakim,Particuliers,AG-005,544665.49,69,Actif,client382@email.com,0071134746
-CLI-10383,Youssef Jai,Particuliers,AG-001,363181.89,64,Actif,client383@email.com,0064311694
-CLI-10384,Mohamed Lamrani,Particuliers,AG-008,440817.58,56,A risque,client384@email.com,0067309343
-CLI-10385,Youssef Benjelloun,Professionnels,AG-005,1495859.95,42,A risque,client385@email.com,0070351334
-CLI-10386,Amina Hakim,Particuliers,AG-005,744962.23,84,Actif,client386@email.com,0070866126
-CLI-10387,Mehdi Mouline,Particuliers,AG-003,80807.61,58,A risque,client387@email.com,0063791297
-CLI-10388,Noureddine Tazi,Particuliers,AG-003,423064.62,66,Actif,client388@email.com,0063666115
-CLI-10389,Khadija Erraji,Professionnels,AG-006,925927.56,100,Actif,client389@email.com,0065259955
-CLI-10390,Nadia Balafrej,PME,AG-002,6601936.11,44,A risque,client390@email.com,0072919744
-CLI-10391,Mohamed Fikri,Particuliers,AG-003,620359.41,52,A risque,client391@email.com,0061858324
-CLI-10392,Hicham Fassi-Fihri,Particuliers,AG-002,70925.5,77,Actif,client392@email.com,0062348259
-CLI-10393,Mehdi Slaoui,PME,AG-007,3184296.48,38,A risque,client393@email.com,0066388846
-CLI-10394,Omar Zniber,Particuliers,AG-009,354186.78,100,Actif,client394@email.com,0068877285
-CLI-10395,Driss Guedira,PME,AG-006,5085381.54,69,Actif,client395@email.com,0069995114
-CLI-10396,Hicham Sbihi,Particuliers,AG-005,712177.81,44,A risque,client396@email.com,0065348843
-CLI-10397,Amina Sbihi,Particuliers,AG-005,240353.45,56,A risque,client397@email.com,0065136913
-CLI-10398,Youssef Fikri,PME,AG-002,2000547.0,44,A risque,client398@email.com,0070882853
-CLI-10399,Hassan Lamrani,PME,AG-001,3251880.23,71,Actif,client399@email.com,0066717265
-CLI-10400,Mehdi Alaoui,Bancassurance,AG-007,2159846.47,55,A risque,client400@email.com,0068732685
-CLI-10401,Mohamed Balafrej,Particuliers,AG-008,400934.86,26,Defaut,client401@email.com,0068178899
-CLI-10402,Salma Mouline,Professionnels,AG-003,549434.53,100,Actif,client402@email.com,0072292419
-CLI-10403,Ahmed Benjelloun,Particuliers,AG-005,785370.18,58,A risque,client403@email.com,0064376847
-CLI-10404,Karim Ouazzani,Professionnels,AG-003,98961.15,92,Actif,client404@email.com,0061242127
-CLI-10405,Omar Bencheikh,PME,AG-002,4397542.05,11,Defaut,client405@email.com,0069469542
-CLI-10406,Zineb Sbihi,Particuliers,AG-002,723196.36,54,A risque,client406@email.com,0061718163
-CLI-10407,Imane El Fassi,Particuliers,AG-006,135079.45,89,Actif,client407@email.com,0064368828
-CLI-10408,Omar Ouazzani,PME,AG-004,6514048.64,56,A risque,client408@email.com,0062652548
-CLI-10409,Ahmed Balafrej,Professionnels,AG-010,706871.12,85,Actif,client409@email.com,0063396727
-CLI-10410,Khadija Ouazzani,PME,AG-010,6773724.97,62,Actif,client410@email.com,0070763855
-CLI-10411,Hind Jai,Grandes Entreprises,AG-006,16505122.96,78,Actif,client411@email.com,0072177566
-CLI-10412,Khadija Sbihi,Particuliers,AG-003,175328.91,4,Defaut,client412@email.com,0066532988
-CLI-10413,Khalid El Amrani,Particuliers,AG-008,261177.76,44,A risque,client413@email.com,0072503791
-CLI-10414,Zineb Idrissi,Particuliers,AG-003,773822.3,61,Actif,client414@email.com,0065558772
-CLI-10415,Driss Hakim,Grandes Entreprises,AG-007,28194356.92,85,Actif,client415@email.com,0061974141
-CLI-10416,Amina Lamrani,PME,AG-004,1724106.8,48,A risque,client416@email.com,0069333689
-CLI-10417,Mohamed El Fassi,Particuliers,AG-003,634325.65,39,A risque,client417@email.com,0069653074
-CLI-10418,Khalid El Fassi,Particuliers,AG-006,605687.64,33,Defaut,client418@email.com,0061887610
-CLI-10419,Mehdi El Fassi,Particuliers,AG-009,252101.61,51,A risque,client419@email.com,0067206222
-CLI-10420,Amine Erraji,Professionnels,AG-007,306676.49,61,Actif,client420@email.com,0069997038
-CLI-10421,Youssef Mouline,Particuliers,AG-004,489811.54,64,Actif,client421@email.com,0066309738
-CLI-10422,Fatima El Fassi,PME,AG-007,5754564.49,61,Actif,client422@email.com,0067326129
-CLI-10423,Khalid Jai,Particuliers,AG-001,683646.14,100,Actif,client423@email.com,0069973090
-CLI-10424,Khadija Slaoui,Bancassurance,AG-010,574936.56,57,A risque,client424@email.com,0065307420
-CLI-10425,Nadia Balafrej,PME,AG-002,7739532.58,52,A risque,client425@email.com,0062464810
-CLI-10426,Hind Erraji,Professionnels,AG-007,1339227.52,78,Actif,client426@email.com,0069412521
-CLI-10427,Imane Sbihi,PME,AG-004,1241915.35,74,Actif,client427@email.com,0072801380
-CLI-10428,Ahmed El Amrani,Particuliers,AG-006,449121.06,75,Actif,client428@email.com,0072416510
-CLI-10429,Said Alaoui,Particuliers,AG-002,602089.53,82,Actif,client429@email.com,0071145923
-CLI-10430,Hind Lamrani,PME,AG-004,7752708.69,46,A risque,client430@email.com,0072278719
-CLI-10431,Karim Bencheikh,Particuliers,AG-002,422084.74,45,A risque,client431@email.com,0070246390
-CLI-10432,Imane Lamrani,Professionnels,AG-009,1461645.77,63,Actif,client432@email.com,0063481735
-CLI-10433,Driss Fassi-Fihri,Particuliers,AG-002,503273.26,87,Actif,client433@email.com,0069852937
-CLI-10434,Omar Mouline,Professionnels,AG-003,1179920.04,67,Actif,client434@email.com,0063296290
-CLI-10435,Youssef El Fassi,PME,AG-001,7111569.44,0,Defaut,client435@email.com,0067857040
-CLI-10436,Amine Fassi-Fihri,Particuliers,AG-004,741904.93,54,A risque,client436@email.com,0072779918
-CLI-10437,Samira Sbihi,Particuliers,AG-004,420948.61,59,A risque,client437@email.com,0061109754
-CLI-10438,Rachid Mouline,Grandes Entreprises,AG-009,39576936.4,98,Actif,,0061139184
-CLI-10439,Abdellah Sbihi,PME,AG-010,6833363.29,68,Actif,client439@email.com,0064107480
-CLI-10440,Samira Alaoui,PME,AG-006,3883098.99,47,A risque,client440@email.com,0072677058
-CLI-10441,Rachid El Amrani,Particuliers,AG-010,494561.44,74,Actif,client441@email.com,0061244755
-CLI-10442,Noureddine Kabbaj,Particuliers,AG-007,708032.11,999,Defaut,client442@email.com,0065653596
-CLI-10443,Leila Ouazzani,Particuliers,AG-009,51722.22,31,Defaut,client443@email.com,0066935313
-CLI-10444,Samira Fikri,Particuliers,AG-002,778096.03,50,A risque,client444@email.com,0062294811
-CLI-10445,Hicham Balafrej,Particuliers,AG-002,356382.21,64,Actif,client445@email.com,0071577138
-CLI-10446,Amina Mouline,PME,AG-010,2029633.24,47,A risque,client446@email.com,0064547676
-CLI-10447,Abdellah El Amrani,Particuliers,AG-010,571136.34,39,A risque,client447@email.com,0067714058
-CLI-10448,Nadia Balafrej,Particuliers,AG-008,134645.27,62,Actif,client448@email.com,0065107471
-CLI-10449,Leila Lamrani,PME,AG-001,,66,Actif,client449@email.com,0065287969
-CLI-10450,Fatima Slaoui,PME,AG-010,2364724.25,52,A risque,client450@email.com,0063906146
-CLI-10451,Khalid Mouline,,AG-007,718008.02,66,Actif,client451@email.com,0068439540
-CLI-10452,Amina Tazi,PME,AG-006,5908246.81,39,A risque,client452@email.com,0067537290
-CLI-10453,Nadia Zniber,Particuliers,AG-004,408253.48,30,Defaut,client453@email.com,0068154190
-CLI-10454,Salma El Fassi,Particuliers,AG-006,449619.86,75,Actif,client454@email.com,0066762965
-CLI-10455,Amine Kabbaj,Particuliers,AG-006,409824.93,90,Actif,client455@email.com,0071893173
-CLI-10456,Fatima El Fassi,Particuliers,AG-004,383247.22,62,Actif,client456@email.com,0061449191
-CLI-10457,Amine Tazi,Particuliers,AG-006,422319.97,72,Actif,client457@email.com,0069309014
-CLI-10458,Samira Mouline,Particuliers,AG-005,780135.48,54,A risque,client458@email.com,0063516874
-CLI-10459,Nadia Hakim,Particuliers,AG-010,488202.76,65,Actif,client459@email.com,0067182274
-CLI-10460,Karim Berrada,Particuliers,AG-007,688579.48,53,A risque,client460@email.com,0071572778
-CLI-10461,Zineb Guedira,Bancassurance,AG-003,2268872.09,48,A risque,client461@email.com,0068827046
-CLI-10462,Hicham Sbihi,Particuliers,AG-007,486320.21,64,Actif,client462@email.com,0070779150
-CLI-10463,Hind Slaoui,Particuliers,AG-009,276134.49,69,Actif,client463@email.com,0062374620
-CLI-10464,Omar Balafrej,PME,AG-002,2935080.63,44,A risque,client464@email.com,0063964752
-CLI-10465,Khalid Tazi,Particuliers,AG-003,621979.37,46,A risque,client465@email.com,0067434581
-CLI-10466,Imane Balafrej,Professionnels,AG-005,669932.97,83,Actif,client466@email.com,0061142010
-CLI-10467,Fatima Alaoui,Particuliers,AG-007,235472.2,88,Actif,client467@email.com,0070786771
-CLI-10468,Ahmed Guedira,PME,AG-002,1266883.37,42,A risque,client468@email.com,0069443618
-CLI-10469,Hicham Alaoui,Particuliers,AG-007,88497.55,31,Defaut,client469@email.com,0066881483
-CLI-10470,Leila Slaoui,PME,AG-007,715828.51,70,Actif,client470@email.com,0063437240
-CLI-10471,Soukaina Benjelloun,Particuliers,AG-008,486699.77,33,Defaut,client471@email.com,0068464441
-CLI-10472,Driss Sbihi,PME,AG-004,2996089.24,,Actif,client472@email.com,0061371071
-CLI-10473,Driss Lamrani,PME,AG-004,3331541.8,65,Actif,client473@email.com,0065692471
-CLI-10474,Samira Lamrani,Particuliers,AG-004,704633.93,65,Actif,client474@email.com,0065456111
-CLI-10475,Youssef Sbihi,PME,AG-008,7468958.63,66,Actif,client475@email.com,0072849933
-CLI-10476,Abdellah Bennani,PME,AG-009,4278198.25,60,Actif,client476@email.com,0066853644
-CLI-10477,Imane Berrada,PME,AG-007,679681.64,57,A risque,client477@email.com,0061575881
-CLI-10478,Fatima Zniber,Particuliers,AG-003,245436.41,71,Actif,client478@email.com,0063832616
-CLI-10479,Fatima Slaoui,Particuliers,AG-001,399931.38,52,A risque,client479@email.com,0070748475
-CLI-10480,Omar Ouazzani,Grandes Entreprises,AG-005,18397817.79,93,Actif,client480@email.com,0070743142
-CLI-10481,Mehdi Sbihi,Particuliers,AG-009,287945.73,39,A risque,client481@email.com,0065589161
-CLI-10482,Hicham Idrissi,Particuliers,AG-005,289433.07,40,A risque,client482@email.com,0066843823
-CLI-10483,Samira Idrissi,Particuliers,AG-010,572023.6,48,A risque,client483@email.com,0067648265
-CLI-10484,Noureddine Zniber,Bancassurance,AG-003,1358025.38,30,Defaut,client484@email.com,0062577338
-CLI-10485,Soukaina Alaoui,Particuliers,AG-006,302369.06,64,Actif,client485@email.com,0069293237
-CLI-10486,Ahmed Berrada,Particuliers,AG-006,32744.25,51,A risque,client486@email.com,0072307355
-CLI-10487,Nadia Jai,PME,AG-008,1594716.94,53,A risque,client487@email.com,0063735141
-CLI-10488,Said Zniber,Particuliers,AG-006,138150.6,45,A risque,client488@email.com,0068885289
-CLI-10489,Amine Slaoui,Particuliers,AG-010,390832.21,33,Defaut,client489@email.com,0068783964
-CLI-10490,Hassan Benjelloun,Particuliers,AG-002,422049.24,64,Actif,client490@email.com,0070344779
-CLI-10491,Said Balafrej,PME,AG-001,3190684.26,33,Defaut,client491@email.com,0069101456
-CLI-10492,Meryem Fassi-Fihri,Particuliers,AG-002,170549.91,76,Actif,client492@email.com,0064942059
-CLI-10493,Leila Ouazzani,Particuliers,AG-002,394027.92,45,A risque,client493@email.com,0066443645
-CLI-10494,Said Fikri,PME,AG-003,6232051.4,74,Actif,client494@email.com,0064409149
-CLI-10495,Hind Tazi,Professionnels,AG-010,1043527.08,67,Actif,client495@email.com,0063599689
-CLI-10496,Omar Lamrani,PME,AG-003,4219841.91,48,A risque,client496@email.com,0069579380
-CLI-10497,Hind El Amrani,Grandes Entreprises,AG-005,6524447.59,74,Actif,client497@email.com,0067399771
-CLI-10498,Ahmed Idrissi,PME,AG-006,3411111.93,60,Actif,client498@email.com,0065847710
-CLI-10499,Rachid Zniber,Particuliers,AG-005,643471.21,54,A risque,pas_un_email,0066392822
-CLI-10500,Ahmed Hakim,Particuliers,AG-007,330156.94,68,Actif,client500@email.com,0069948073
+CLI-10001,Noureddine Jai,PME,AG-009,5152830.65,49,A risque,client1@email.com,0069413069
+CLI-10002,Noureddine Jai,Particuliers,AG-002,616967.73,55,A risque,client2@email.com,0061391450
+CLI-10003,Rachid Benjelloun,Grandes Entreprises,AG-004,26906669.28,86,Actif,client3@email.com,0067926828
+CLI-10004,Hicham Benjelloun,Particuliers,AG-009,600140.91,51,A risque,client4@email.com,0067846156
+CLI-10005,Noureddine Ouazzani,PME,AG-010,1447859.61,58,A risque,client5@email.com,0071648618
+CLI-10006,Amina Jai,Particuliers,AG-006,777151.92,54,A risque,client6@email.com,0061972497
+CLI-10007,Abdellah El Amrani,Particuliers,AG-005,701923.82,19,Defaut,client7@email.com,0065743274
+CLI-10008,Mohamed Lamrani,Particuliers,AG-006,167139.77,74,Actif,client8@email.com,0066307977
+CLI-10009,Hassan Idrissi,Particuliers,AG-008,647352.1,27,Defaut,client9@email.com,0064174082
+CLI-10010,Amina Tazi,Bancassurance,AG-005,1644847.89,100,Actif,client10@email.com,0063269470
+CLI-10011,Soukaina El Amrani,PME,AG-006,6091068.53,92,Actif,client11@email.com,0072354961
+CLI-10012,Nadia Sbihi,Particuliers,AG-004,105593.31,52,A risque,client12@email.com,0064185312
+CLI-10013,Hicham Jai,Particuliers,AG-008,63246.26,60,Actif,client13@email.com,0061521975
+CLI-10014,Imane Mouline,Particuliers,AG-007,749056.25,55,A risque,client14@email.com,0070837041
+CLI-10015,Leila El Fassi,Particuliers,AG-001,378949.49,44,A risque,client15@email.com,0072169693
+CLI-10016,Driss Benjelloun,Particuliers,AG-007,690721.3,69,Actif,client16@email.com,0064343478
+CLI-10017,Amina Bennani,Particuliers,AG-002,648337.57,67,Actif,client17@email.com,0069221693
+CLI-10018,Ahmed Tazi,Professionnels,AG-007,291151.11,999,Actif,client18@email.com,0068713761
+CLI-10019,Youssef Balafrej,Grandes Entreprises,AG-005,28470477.14,78,Actif,client19@email.com,0072819472
+CLI-10020,Nadia Mouline,Particuliers,AG-009,591232.37,47,A risque,client20@email.com,0061501716
+CLI-10021,Zineb Berrada,Particuliers,AG-007,682560.61,82,Actif,client21@email.com,0062861896
+CLI-10022,Said Bencheikh,Professionnels,AG-010,407012.25,75,Actif,client22@email.com,0070158920
+CLI-10023,Leila Hakim,Particuliers,AG-008,258205.25,60,Actif,client23@email.com,0065602695
+CLI-10024,Hassan Sbihi,PME,AG-004,765836.29,78,Actif,client24@email.com,0068898222
+CLI-10025,Hind Hakim,Particuliers,AG-010,202984.69,58,A risque,client25@email.com,0065306679
+CLI-10026,Abdellah Benjelloun,Professionnels,AG-005,816964.0,73,Actif,client26@email.com,0071804894
+CLI-10027,Leila Jai,Particuliers,AG-009,487815.56,48,A risque,client27@email.com,0072533697
+CLI-10028,Ahmed Bennani,Grandes Entreprises,AG-006,34151941.11,70,Actif,client28@email.com,0062916445
+CLI-10029,Hassan Fassi-Fihri,PME,AG-003,4503107.28,49,A risque,client29@email.com,0067811124
+CLI-10030,Mehdi Fikri,Professionnels,AG-001,894638.87,97,Actif,client30@email.com,0063652615
+CLI-10031,Zineb Tazi,Particuliers,AG-003,626291.83,62,Actif,client31@email.com,0067892940
+CLI-10032,Rachid Tazi,Particuliers,AG-002,591885.93,70,Actif,client32@email.com,0066629541
+CLI-10033,Mohamed Bencheikh,Particuliers,AG-004,735577.0,50,A risque,client33@email.com,0066493938
+CLI-10034,Noureddine Bencheikh,Particuliers,AG-009,64842.4,64,Actif,client34@email.com,0065549275
+CLI-10035,Said Fikri,Particuliers,AG-006,468665.89,72,Actif,client35@email.com,0065142386
+CLI-10036,Hind Guedira,Bancassurance,AG-001,435372.77,60,Actif,client36@email.com,0070344215
+CLI-10037,Soukaina Erraji,Professionnels,AG-010,1118704.66,51,A risque,client37@email.com,0064566518
+CLI-10038,Said Erraji,Professionnels,AG-007,1093643.68,28,Defaut,client38@email.com,0065744995
+CLI-10039,Mehdi Ouazzani,PME,AG-009,3157333.16,61,Actif,client39@email.com,0072328882
+CLI-10040,Driss Kabbaj,Particuliers,AG-008,176044.32,86,Actif,client40@email.com,0070879351
+CLI-10041,Soukaina El Amrani,Particuliers,AG-010,591409.54,74,Actif,client41@email.com,0071204675
+CLI-10042,Youssef Bennani,Professionnels,AG-001,1139150.3,24,Defaut,client42@email.com,0071493835
+CLI-10043,Noureddine Mouline,Particuliers,AG-007,337408.4,66,Actif,client43@email.com,0071833499
+CLI-10044,Imane Fassi-Fihri,PME,AG-009,243249.58,46,A risque,client44@email.com,0062643832
+CLI-10045,Samira Erraji,PME,AG-008,1240045.02,59,A risque,client45@email.com,0068957781
+CLI-10046,Driss Jai,PME,AG-004,4137269.69,47,A risque,client46@email.com,0069673070
+CLI-10047,Rachid Erraji,Particuliers,AG-006,199004.23,65,Actif,client47@email.com,0068194640
+CLI-10048,Hassan Guedira,Particuliers,AG-007,129156.22,41,A risque,client48@email.com,0067982937
+CLI-10049,Noureddine Mouline,Particuliers,AG-001,317686.68,93,Actif,client49@email.com,0070991283
+CLI-10050,Hicham Mouline,Particuliers,AG-004,318089.45,74,Actif,client50@email.com,0067787987
+CLI-10051,Samira Sbihi,Particuliers,AG-001,640532.44,41,A risque,client51@email.com,0072316926
+CLI-10052,Zineb Kabbaj,PME,AG-003,5371398.1,999,Actif,client52@email.com,0062926427
+CLI-10053,Mohamed Sbihi,Particuliers,AG-001,309509.71,47,A risque,client53@email.com,0067422070
+CLI-10054,Khalid Bennani,Particuliers,AG-010,523613.83,88,Actif,client54@email.com,0071151341
+CLI-10055,Samira Lamrani,Particuliers,AG-002,182191.99,50,A risque,client55@email.com,0072425731
+CLI-10056,Soukaina Ouazzani,Particuliers,AG-007,255720.75,41,A risque,client56@email.com,0070134983
+CLI-10057,Imane El Fassi,Particuliers,AG-010,201851.01,33,Defaut,client57@email.com,0072489786
+CLI-10058,Karim Bennani,Particuliers,AG-007,348418.63,43,A risque,client58@email.com,0066187492
+CLI-10059,Salma Slaoui,Particuliers,AG-005,664678.78,86,Actif,client59@email.com,0072296532
+CLI-10060,Karim Berrada,Grandes Entreprises,AG-002,31436375.11,68,Actif,client60@email.com,0068658544
+CLI-10061,Omar Mouline,Particuliers,AG-004,537868.89,62,Actif,client61@email.com,0066137351
+CLI-10062,Mohamed Slaoui,Particuliers,AG-004,999999999,38,A risque,client62@email.com,0070994581
+CLI-10063,Hicham Ouazzani,PME,AG-004,5752370.77,53,A risque,client63@email.com,0068122147
+CLI-10064,Karim Fikri,PME,AG-008,3891431.81,72,Actif,client64@email.com,0069546480
+CLI-10065,Khalid Mouline,Particuliers,AG-005,104448.25,70,Actif,client65@email.com,0069983334
+CLI-10066,Hicham Fikri,Bancassurance,AG-003,1621446.92,78,Actif,client66@email.com,0065223447
+CLI-10067,Zineb Mouline,PME,AG-002,625302.96,55,A risque,client67@email.com,0065992691
+CLI-10068,Rachid Mouline,PME,AG-002,3861296.17,55,A risque,client68@email.com,0068533316
+CLI-10069,Hicham El Fassi,Particuliers,AG-009,52351.17,84,Actif,client69@email.com,0063824820
+CLI-10070,Driss Hakim,PME,AG-010,6367778.47,63,Actif,client70@email.com,0064765867
+CLI-10071,Soukaina Idrissi,Particuliers,AG-003,594670.55,44,A risque,client71@email.com,0064903743
+CLI-10072,Fatima Hakim,PME,AG-001,1420954.4,34,Defaut,client72@email.com,0067679886
+CLI-10073,Imane Balafrej,PME,AG-007,5561602.38,46,A risque,client73@email.com,0065908594
+CLI-10074,Omar Hakim,Particuliers,AG-010,127701.63,43,A risque,client74@email.com,0065281917
+CLI-10075,Amina Mouline,PME,AG-008,,49,A risque,client75@email.com,0072614474
+CLI-10076,Asmaa Zniber,PME,AG-010,4908966.4,61,Actif,client76@email.com,0061213996
+CLI-10077,Driss Jai,Bancassurance,AG-003,216671.85,63,Actif,client77@email.com,0063707693
+CLI-10078,Karim Erraji,Particuliers,AG-002,653253.51,49,A risque,client78@email.com,0062705462
+CLI-10079,Karim Jai,Particuliers,AG-006,756702.9,56,A risque,client79@email.com,0069146821
+CLI-10080,Said Alaoui,PME,AG-004,6946302.56,38,A risque,client80@email.com,0061947969
+CLI-10081,Driss Fassi-Fihri,PME,AG-008,602571.85,32,Defaut,client81@email.com,0065802646
+CLI-10082,Mohamed Sbihi,Bancassurance,AG-007,,70,Actif,client82@email.com,0064304980
+CLI-10083,Asmaa Mouline,Grandes Entreprises,AG-008,37440816.28,68,Actif,client83@email.com,0065754463
+CLI-10084,Rachid Guedira,PME,AG-006,3191970.9,43,A risque,client84@email.com,0070752718
+CLI-10085,Zineb Benjelloun,Particuliers,AG-008,245859.12,68,Actif,client85@email.com,0070849472
+CLI-10086,Zineb Balafrej,Particuliers,AG-004,446014.76,48,A risque,client86@email.com,0069586851
+CLI-10087,Imane El Amrani,Particuliers,AG-003,598317.07,62,Actif,client87@email.com,0072585994
+CLI-10088,Abdellah Slaoui,Particuliers,AG-008,,56,A risque,client88@email.com,0070522266
+CLI-10089,Noureddine El Amrani,Professionnels,AG-002,1183211.67,74,Actif,client89@email.com,0065538998
+CLI-10090,Zineb Sbihi,Professionnels,AG-001,1296046.17,66,Actif,client90@email.com,0067509072
+CLI-10091,Hind El Fassi,Particuliers,AG-008,189714.16,56,A risque,client91@email.com,0062652291
+CLI-10092,Amine Guedira,Particuliers,AG-003,32868.33,48,A risque,client92@email.com,0066174755
+CLI-10093,Hicham Mouline,Particuliers,AG-010,148304.79,57,A risque,client93@email.com,0070588997
+CLI-10094,Mehdi Bencheikh,Particuliers,AG-009,210642.1,51,A risque,client94@email.com,0065951169
+CLI-10095,Zineb Hakim,Particuliers,AG-004,514761.57,48,A risque,client95@email.com,0067984268
+CLI-10096,Mehdi Fassi-Fihri,Professionnels,AG-005,204647.24,999,Actif,client96@email.com,0067835583
+CLI-10097,Samira Fikri,Particuliers,AG-004,779146.23,82,Actif,client97@email.com,0070734639
+CLI-10098,Leila El Fassi,PME,AG-001,5486562.78,28,Defaut,client98@email.com,0072949727
+CLI-10099,Khalid Benjelloun,Particuliers,AG-009,81205.37,36,A risque,client99@email.com,0065516332
+CLI-10100,Imane Hakim,Particuliers,AG-006,406417.86,47,A risque,client100@email.com,0065314271
+CLI-10101,Amine Idrissi,Particuliers,AG-007,188235.61,88,Actif,client101@email.com,0071966081
+CLI-10102,Asmaa El Amrani,Particuliers,AG-006,541534.42,75,Actif,client102@email.com,0071438458
+CLI-10103,Leila Kabbaj,Particuliers,AG-005,453511.83,98,Actif,client103@email.com,0070389218
+CLI-10104,Abdellah Berrada,Particuliers,AG-009,45823.98,67,Actif,client104@email.com,0061487324
+CLI-10105,Leila El Fassi,Particuliers,AG-008,757319.53,47,A risque,client105@email.com,0067852963
+CLI-10106,Driss Berrada,Grandes Entreprises,AG-006,12630125.32,48,A risque,client106@email.com,0072573766
+CLI-10107,Khalid El Amrani,Grandes Entreprises,AG-010,12483494.75,71,Actif,client107@email.com,0062682194
+CLI-10108,Asmaa Sbihi,Particuliers,AG-004,273472.23,56,A risque,client108@email.com,0063823618
+CLI-10109,Youssef Sbihi,Professionnels,AG-005,1193533.44,71,Actif,client109@email.com,0070104528
+CLI-10110,Nadia Erraji,Particuliers,AG-001,694493.83,92,Actif,client110@email.com,0063115540
+CLI-10111,Nadia El Fassi,Particuliers,AG-008,599075.57,60,Actif,client111@email.com,0068675675
+CLI-10112,Leila Bennani,Grandes Entreprises,AG-001,3647871.4,53,A risque,client112@email.com,0071764868
+CLI-10113,Samira Benjelloun,Professionnels,AG-002,1082981.91,60,Actif,client113@email.com,0068192051
+CLI-10114,Khadija Hakim,PME,AG-008,4765844.57,55,A risque,client114@email.com,0072515886
+CLI-10115,Hicham Guedira,Particuliers,AG-006,527223.24,64,Actif,client115@email.com,0069376567
+CLI-10116,Rachid Fikri,Particuliers,AG-003,586393.88,53,A risque,client116@email.com,0066645095
+CLI-10117,Ahmed Zniber,Particuliers,AG-009,351182.45,68,Actif,client117@email.com,0072572681
+CLI-10118,Samira Hakim,PME,AG-006,3404307.34,56,A risque,client118@email.com,0071641646
+CLI-10119,Meryem Jai,Particuliers,AG-010,679347.13,73,Actif,client119@email.com,0066815724
+CLI-10120,Amina Bennani,Particuliers,AG-010,453162.9,79,Actif,client120@email.com,0070889692
+CLI-10121,Omar Benjelloun,Professionnels,AG-010,1068913.22,66,Actif,client121@email.com,0065535410
+CLI-10122,Noureddine Guedira,Particuliers,AG-008,595365.56,73,Actif,client122@email.com,0061217737
+CLI-10123,Meryem Lamrani,Particuliers,AG-001,458398.91,56,A risque,client123@email.com,0062162930
+CLI-10124,Rachid Balafrej,Particuliers,AG-009,532931.57,31,Defaut,client124@email.com,0068876663
+CLI-10125,Noureddine Lamrani,Particuliers,AG-001,394439.88,56,A risque,client125@email.com,0000000000
+CLI-10126,Fatima Guedira,PME,AG-003,6160454.99,78,Actif,client126@email.com,0065512510
+CLI-10127,Said Bennani,Particuliers,AG-008,537758.06,64,Actif,client127@email.com,0066196015
+CLI-10128,Mehdi El Fassi,Professionnels,AG-007,884850.78,90,Actif,client128@email.com,0000000000
+CLI-10129,Said Zniber,Professionnels,AG-007,1383666.14,42,A risque,client129@email.com,0062652341
+CLI-10130,Hassan Slaoui,Particuliers,AG-002,255116.9,39,A risque,client130@email.com,0066385231
+CLI-10131,Youssef Jai,Particuliers,AG-004,766996.45,64,Actif,client131@email.com,0071284023
+CLI-10132,Driss Zniber,Particuliers,AG-010,609730.38,45,A risque,client132@email.com,0062329073
+CLI-10133,Hassan Mouline,Grandes Entreprises,AG-008,25731827.62,51,A risque,client133@email.com,0071502966
+CLI-10134,Driss Kabbaj,PME,AG-001,4813074.1,41,A risque,pas_un_email,0066741949
+CLI-10135,Imane Alaoui,PME,AG-008,4833822.59,59,A risque,client135@email.com,0067698480
+CLI-10136,Ahmed Kabbaj,PME,AG-002,1668267.83,50,A risque,client136@email.com,0070707429
+CLI-10137,Khadija Slaoui,Professionnels,AG-010,986884.28,75,Actif,client137@email.com,0061416666
+CLI-10138,Ahmed El Amrani,Particuliers,AG-006,233485.93,61,,client138@email.com,0067539686
+CLI-10139,Nadia Bencheikh,PME,AG-003,5321199.87,45,A risque,client139@email.com,0070295220
+CLI-10140,Hind Idrissi,Particuliers,AG-005,528283.23,90,Actif,client140@email.com,0071602686
+CLI-10141,Leila Bencheikh,PME,AG-007,5682080.8,47,A risque,client141@email.com,0072977721
+CLI-10142,Hicham Benjelloun,Particuliers,AG-003,254004.2,70,,client142@email.com,0064537234
+CLI-10143,Noureddine Benjelloun,PME,AG-003,494430.44,71,Actif,client143@email.com,0066892686
+CLI-10144,Amine Bencheikh,PME,AG-004,5072975.74,19,Defaut,client144@email.com,0063661562
+CLI-10145,Amine Bencheikh,PME,AG-010,2025222.97,52,A risque,client145@email.com,0064497034
+CLI-10146,Omar Balafrej,Particuliers,AG-010,232599.67,30,Defaut,client146@email.com,0067747763
+CLI-10147,Hassan Tazi,Particuliers,AG-005,448087.19,38,A risque,client147@email.com,0062762546
+CLI-10148,Mohamed Guedira,Particuliers,AG-001,666526.91,33,Defaut,client148@email.com,0062386754
+CLI-10149,Imane Benjelloun,Particuliers,AG-003,187385.62,56,A risque,client149@email.com,0066229352
+CLI-10150,Hassan Bennani,Professionnels,AG-005,1150319.67,72,Actif,client150@email.com,0068678810
+CLI-10151,Ahmed Berrada,Particuliers,AG-007,344371.26,84,Actif,client151@email.com,0065404825
+CLI-10152,Leila Slaoui,PME,AG-010,689895.78,42,A risque,client152@email.com,0068867812
+CLI-10153,Hassan Slaoui,Particuliers,AG-006,200045.75,39,Inconnu,client153@email.com,0067339595
+CLI-10154,Ahmed El Amrani,Particuliers,AG-007,790781.87,72,Actif,client154@email.com,0069125970
+CLI-10155,Meryem Zniber,Particuliers,AG-006,282393.97,93,Actif,client155@email.com,0072949023
+CLI-10156,Hind Mouline,Particuliers,AG-003,277452.33,65,Actif,client156@email.com,0071329769
+CLI-10157,Mehdi Slaoui,Particuliers,AG-007,241819.63,65,Actif,client157@email.com,0061351550
+CLI-10158,Zineb Alaoui,Particuliers,AG-006,210117.87,42,A risque,client158@email.com,0071344655
+CLI-10159,Hind Mouline,PME,AG-006,3629945.74,35,A risque,client159@email.com,0067533373
+CLI-10160,Samira Tazi,Particuliers,AG-009,642906.99,69,Actif,client160@email.com,0072642065
+CLI-10161,Driss Fikri,Particuliers,AG-008,362273.45,54,A risque,client161@email.com,0072643198
+CLI-10162,Noureddine Fikri,Bancassurance,AG-009,896210.54,83,Actif,client162@email.com,0061199591
+CLI-10163,Hicham El Amrani,PME,AG-006,4939068.65,61,Actif,client163@email.com,0068142618
+CLI-10164,Amine Kabbaj,Grandes Entreprises,AG-002,3230642.31,72,Actif,client164@email.com,0063966757
+CLI-10165,Khadija Ouazzani,Particuliers,AG-009,207193.21,41,A risque,client165@email.com,0062133373
+CLI-10166,Fatima Balafrej,PME,AG-002,5691494.93,67,Actif,client166@email.com,0064884698
+CLI-10167,Hind Idrissi,Particuliers,AG-009,797837.3,75,Actif,client167@email.com,0071509554
+CLI-10168,Imane Fikri,Professionnels,AG-009,1284474.97,93,Actif,client168@email.com,0072999132
+CLI-10169,Driss Sbihi,Bancassurance,AG-003,1532663.62,73,Actif,client169@email.com,0066808357
+CLI-10170,Meryem Guedira,Particuliers,AG-010,254339.67,49,A risque,client170@email.com,0072717762
+CLI-10171,Meryem Benjelloun,Particuliers,AG-007,111384.34,40,A risque,client171@email.com,0069918533
+CLI-10172,Omar Erraji,Professionnels,AG-004,1255516.67,72,Actif,client172@email.com,0069294831
+CLI-10173,Leila Hakim,Grandes Entreprises,AG-010,11523001.74,100,Actif,client173@email.com,0071804526
+CLI-10174,Samira Lamrani,Particuliers,AG-006,143222.36,40,A risque,client174@email.com,0070293194
+CLI-10175,Khalid Zniber,PME,AG-007,554602.07,53,A risque,client175@email.com,0071834393
+CLI-10176,Fatima Berrada,Particuliers,AG-007,712307.54,58,A risque,client176@email.com,0069479248
+CLI-10177,Karim Fassi-Fihri,Particuliers,AG-006,392558.39,80,Actif,client177@email.com,0064538728
+CLI-10178,Abdellah Erraji,Professionnels,AG-004,1464292.49,75,Actif,client178@email.com,0063577581
+CLI-10179,Zineb Tazi,Particuliers,AG-006,239267.48,62,Actif,client179@email.com,0067886341
+CLI-10180,Fatima Hakim,PME,AG-008,1680705.99,60,Actif,client180@email.com,0063737569
+CLI-10181,Soukaina Mouline,Particuliers,AG-005,48439.93,63,Actif,client181@email.com,0065738693
+CLI-10182,Ahmed Ouazzani,Professionnels,AG-001,674845.27,91,Actif,client182@email.com,0065566156
+CLI-10183,Samira El Fassi,Particuliers,AG-003,408361.87,55,A risque,client183@email.com,0069458997
+CLI-10184,Khalid Lamrani,Particuliers,AG-009,637968.81,59,A risque,client184@email.com,0066815628
+CLI-10185,Khadija Benjelloun,Particuliers,AG-006,645133.03,89,Actif,client185@email.com,0069682987
+CLI-10186,Khadija Slaoui,Particuliers,AG-009,320434.12,68,Actif,client186@email.com,0070488553
+CLI-10187,Imane Fassi-Fihri,PME,AG-001,2783668.83,48,A risque,client187@email.com,0062638449
+CLI-10188,Nadia Mouline,Particuliers,AG-003,527916.87,62,Actif,client188@email.com,0070833916
+CLI-10189,Abdellah Balafrej,PME,AG-001,6608958.07,54,A risque,client189@email.com,0064148399
+CLI-10190,Fatima Alaoui,Particuliers,AG-003,336238.49,44,A risque,client190@email.com,0064627488
+CLI-10191,Amina Fikri,PME,AG-005,3139233.25,72,Actif,client191@email.com,0063687853
+CLI-10192,Meryem Hakim,Particuliers,AG-004,204750.12,61,Actif,client192@email.com,0069483848
+CLI-10193,Nadia Bencheikh,Particuliers,AG-009,748243.46,39,A risque,client193@email.com,0072454625
+CLI-10194,Hind Idrissi,Bancassurance,AG-006,2473294.63,72,Actif,client194@email.com,0063471546
+CLI-10195,Youssef El Fassi,PME,AG-010,6658023.29,51,A risque,client195@email.com,0065819944
+CLI-10196,Ahmed El Fassi,Particuliers,AG-007,50104.69,49,A risque,client196@email.com,0069389139
+CLI-10197,Fatima El Amrani,Particuliers,AG-004,771969.83,57,A risque,client197@email.com,0063629370
+CLI-10198,Hicham Sbihi,Particuliers,AG-001,235478.12,53,A risque,client198@email.com,0061219383
+CLI-10199,Ahmed Bennani,Particuliers,AG-005,736511.5,70,Actif,client199@email.com,0067733347
+CLI-10200,Khadija Mouline,Particuliers,AG-003,786565.17,54,A risque,client200@email.com,0065689279
+CLI-10201,Mohamed Erraji,Particuliers,AG-005,138370.47,65,Actif,client201@email.com,0068924233
+CLI-10202,Karim Idrissi,PME,AG-007,1568860.33,60,Actif,client202@email.com,0071616475
+CLI-10203,Meryem Jai,Particuliers,AG-006,205957.2,72,Actif,client203@email.com,0065594067
+CLI-10204,Ahmed Bencheikh,PME,AG-002,289198.73,64,Actif,client204@email.com,0071569840
+CLI-10205,Mehdi Fikri,Particuliers,AG-010,711363.12,46,A risque,client205@email.com,0065982591
+CLI-10206,Hind Sbihi,Grandes Entreprises,AG-008,20170912.19,37,A risque,client206@email.com,0068875763
+CLI-10207,Khadija Fassi-Fihri,Professionnels,AG-006,1036495.78,81,Actif,client207@email.com,0070207767
+CLI-10208,Youssef Tazi,Particuliers,AG-006,442642.91,34,Defaut,client208@email.com,0069358378
+CLI-10209,Youssef Slaoui,Particuliers,AG-007,396174.09,49,A risque,client209@email.com,0069671768
+CLI-10210,Asmaa Bennani,Particuliers,AG-004,375278.86,36,A risque,client210@email.com,0065126042
+CLI-10211,Said Tazi,Particuliers,AG-003,795357.69,58,A risque,client211@email.com,0062701446
+CLI-10212,Zineb Ouazzani,Bancassurance,AG-007,1973054.37,75,Actif,client212@email.com,0067575867
+CLI-10213,Meryem Bennani,PME,AG-005,4390616.19,45,A risque,client213@email.com,0069263810
+CLI-10214,Amine Benjelloun,PME,AG-005,3508198.63,61,Actif,client214@email.com,0067394168
+CLI-10215,Hassan El Fassi,VIP,AG-010,1007286.64,68,Actif,client215@email.com,0070124036
+CLI-10216,Hicham Sbihi,PME,AG-004,579675.31,47,A risque,client216@email.com,0072156166
+CLI-10217,Samira Bencheikh,PME,AG-006,2026459.83,88,Actif,client217@email.com,0072835083
+CLI-10218,Rachid Alaoui,Professionnels,AG-009,1479258.56,100,Actif,client218@email.com,0069386248
+CLI-10219,Soukaina Ouazzani,Professionnels,AG-009,669440.84,89,Actif,client219@email.com,0068165492
+CLI-10220,Hicham Berrada,Particuliers,AG-005,127881.91,48,A risque,client220@email.com,0067337870
+CLI-10221,Noureddine Berrada,Particuliers,AG-005,336015.22,55,A risque,client221@email.com,0067817727
+CLI-10222,Ahmed Jai,PME,AG-007,7393363.62,53,A risque,client222@email.com,0066217834
+CLI-10223,Fatima Balafrej,PME,AG-006,6141232.06,60,Actif,client223@email.com,0072958137
+CLI-10224,Hind Lamrani,Grandes Entreprises,AG-004,10048695.34,66,Actif,client224@email.com,0064257141
+CLI-10225,Amine Slaoui,Particuliers,AG-008,378337.86,55,A risque,client225@email.com,0071554943
+CLI-10226,Said Alaoui,Professionnels,AG-010,1097499.68,81,Actif,client226@email.com,0066365750
+CLI-10227,Khalid Erraji,PME,AG-004,4755448.81,74,Actif,client227@email.com,0072634729
+CLI-10228,Meryem Mouline,Professionnels,AG-008,773987.15,70,Actif,client228@email.com,0071975342
+CLI-10229,Khadija Alaoui,PME,AG-002,4463061.36,46,A risque,client229@email.com,0063799217
+CLI-10230,Hassan Fassi-Fihri,PME,AG-003,6161842.98,59,A risque,client230@email.com,0067279039
+CLI-10231,Mohamed Sbihi,Particuliers,AG-009,497050.3,42,A risque,client231@email.com,0068947212
+CLI-10232,Asmaa Fassi-Fihri,Particuliers,AG-007,580532.25,43,A risque,client232@email.com,0069461274
+CLI-10233,Asmaa Fikri,Grandes Entreprises,AG-005,7658104.46,81,Actif,client233@email.com,0064897742
+CLI-10234,Hicham Hakim,Particuliers,AG-002,767845.26,67,Actif,client234@email.com,0068824199
+CLI-10235,Mohamed Fassi-Fihri,Professionnels,AG-003,599932.83,68,Actif,client235@email.com,0069701791
+CLI-10236,Khalid Fassi-Fihri,PME,AG-010,4613681.7,44,A risque,client236@email.com,0062771539
+CLI-10237,Zineb Erraji,Particuliers,AG-001,720456.2,98,Actif,client237@email.com,0070941432
+CLI-10238,Omar Zniber,PME,AG-004,6067584.86,70,Actif,client238@email.com,0072601948
+CLI-10239,Khadija Fikri,Professionnels,AG-001,606577.01,58,A risque,,0072279820
+CLI-10240,Leila Jai,Particuliers,AG-008,617514.47,41,A risque,client240@email.com,0070605113
+CLI-10241,Mehdi Berrada,Particuliers,AG-002,,79,Actif,client241@email.com,0071582089
+CLI-10242,Abdellah Idrissi,PME,AG-001,5144426.88,45,A risque,client242@email.com,0072595056
+CLI-10243,Khadija Guedira,Particuliers,AG-002,78964.81,62,Actif,client243@email.com,0067678181
+CLI-10244,Said Ouazzani,Particuliers,AG-002,482454.6,53,A risque,client244@email.com,0066591147
+CLI-10245,Rachid Hakim,PME,AG-005,4264615.34,65,Actif,client245@email.com,0071583127
+CLI-10246,Amine Jai,Particuliers,AG-004,353394.25,61,Actif,client246@email.com,0067487119
+CLI-10247,Noureddine Erraji,Particuliers,AG-008,117036.73,47,A risque,client247@email.com,0061605289
+CLI-10248,Samira Fassi-Fihri,Professionnels,AG-004,1296287.28,54,A risque,client248@email.com,0070274851
+CLI-10249,Karim Ouazzani,Particuliers,AG-005,590550.75,49,A risque,client249@email.com,0071728341
+CLI-10250,Omar Bencheikh,Particuliers,AG-009,99971.38,71,Actif,client250@email.com,0070358579
+CLI-10251,Leila Hakim,Particuliers,AG-004,64635.35,72,Actif,client251@email.com,0067967327
+CLI-10252,Fatima Zniber,Particuliers,AG-007,344271.08,29,Defaut,client252@email.com,0067196786
+CLI-10253,Leila Idrissi,Grandes Entreprises,AG-002,3397076.23,87,Actif,client253@email.com,0066997886
+CLI-10254,Leila Bencheikh,PME,AG-007,2969068.79,38,A risque,client254@email.com,0071881582
+CLI-10255,Nadia Fassi-Fihri,Particuliers,AG-010,87899.18,64,Actif,client255@email.com,0064757681
+CLI-10256,Youssef Fikri,Particuliers,AG-001,375819.93,53,A risque,client256@email.com,0071859874
+CLI-10257,Karim Kabbaj,Particuliers,AG-004,666741.02,68,Actif,client257@email.com,0072285449
+CLI-10258,Hassan Hakim,Particuliers,AG-001,87122.19,58,A risque,client258@email.com,0072996750
+CLI-10259,Amina Tazi,Particuliers,AG-006,544940.07,77,Actif,client259@email.com,0063417632
+CLI-10260,Leila Bencheikh,Grandes Entreprises,AG-007,10810510.8,53,A risque,client260@email.com,0067903333
+CLI-10261,Meryem Fassi-Fihri,PME,AG-002,3550512.16,66,Actif,client261@email.com,0061373645
+CLI-10262,Abdellah Jai,PME,AG-008,4387734.28,38,A risque,client262@email.com,0066513568
+CLI-10263,Omar Bencheikh,PME,AG-005,4778636.77,31,Defaut,client263@email.com,0066556889
+CLI-10264,Abdellah Tazi,PME,AG-006,5442458.64,37,A risque,client264@email.com,0066254049
+CLI-10265,Hind El Amrani,Particuliers,AG-003,313130.87,53,A risque,client265@email.com,0063729178
+CLI-10266,Zineb Fikri,Particuliers,AG-001,120834.26,66,Actif,client266@email.com,0066678916
+CLI-10267,Hind Kabbaj,Particuliers,AG-008,525925.11,44,A risque,client267@email.com,0067977263
+CLI-10268,Hicham Sbihi,PME,AG-005,6407870.94,67,Actif,client268@email.com,0064471445
+CLI-10269,Meryem Sbihi,Particuliers,AG-006,444283.69,60,Actif,client269@email.com,0062832444
+CLI-10270,Abdellah El Amrani,PME,AG-004,6128032.22,21,Defaut,client270@email.com,0068793764
+CLI-10271,Imane Zniber,Bancassurance,AG-006,2468512.9,54,A risque,client271@email.com,0068254036
+CLI-10272,Imane Alaoui,PME,AG-010,3539703.08,57,A risque,client272@email.com,0070273636
+CLI-10273,Soukaina El Fassi,Particuliers,AG-003,566202.47,46,A risque,client273@email.com,0065834475
+CLI-10274,Zineb Benjelloun,PME,AG-004,7366395.95,48,A risque,client274@email.com,0065932699
+CLI-10275,Leila Guedira,Particuliers,AG-007,320233.59,62,Actif,client275@email.com,0063839044
+CLI-10276,Hind Fikri,PME,AG-008,7064975.63,86,Actif,client276@email.com,0062617545
+CLI-10277,Hind Fikri,Particuliers,AG-002,588851.98,93,Actif,client277@email.com,0072689195
+CLI-10278,Asmaa Hakim,Particuliers,AG-006,774821.58,62,Actif,client278@email.com,0064734451
+CLI-10279,Imane Kabbaj,Particuliers,AG-001,716382.18,81,Actif,client279@email.com,0061152290
+CLI-10280,Youssef El Amrani,Professionnels,AG-005,689864.63,42,A risque,client280@email.com,0061643598
+CLI-10281,Ahmed Ouazzani,Grandes Entreprises,AG-005,11514792.58,71,Actif,client281@email.com,0066959331
+CLI-10282,Fatima Idrissi,PME,AG-003,3548001.34,77,Actif,client282@email.com,0062221037
+CLI-10283,Fatima Idrissi,Particuliers,AG-004,281423.58,59,A risque,client283@email.com,0062649826
+CLI-10284,Noureddine Benjelloun,PME,AG-003,998931.93,52,A risque,client284@email.com,0066574827
+CLI-10285,Soukaina Kabbaj,PME,AG-004,1861832.52,60,Actif,client285@email.com,
+CLI-10286,Imane Benjelloun,PME,AG-004,4798676.56,66,Actif,client286@email.com,0067546450
+CLI-10287,Khalid Slaoui,Particuliers,AG-010,489998.55,38,A risque,client287@email.com,0072139448
+CLI-10288,Abdellah Berrada,PME,AG-008,2505228.0,43,A risque,client288@email.com,0061407359
+CLI-10289,Said Fikri,Particuliers,AG-009,295267.58,64,Actif,client289@email.com,0066265982
+CLI-10290,Mohamed Jai,PME,AG-004,,50,A risque,client290@email.com,0062128518
+CLI-10291,Amina Sbihi,Particuliers,AG-010,338191.28,47,A risque,client291@email.com,0072612091
+CLI-10292,Noureddine Zniber,Particuliers,AG-002,72427.03,46,A risque,client292@email.com,0064297851
+CLI-10293,Samira Alaoui,Particuliers,AG-005,203139.01,74,Actif,client293@email.com,0067246888
+CLI-10294,Omar Mouline,PME,AG-006,1570038.05,48,A risque,client294@email.com,0061279911
+CLI-10295,Imane Guedira,PME,AG-005,1190058.74,50,A risque,client295@email.com,0065251352
+CLI-10296,Khadija Fikri,Particuliers,AG-001,780289.96,51,A risque,client296@email.com,0071197368
+CLI-10297,Salma Slaoui,PME,AG-001,1002658.34,42,A risque,client297@email.com,
+CLI-10298,Imane Fassi-Fihri,Particuliers,AG-007,297541.43,72,Actif,client298@email.com,0063321480
+CLI-10299,Soukaina Alaoui,Particuliers,AG-003,662537.63,75,Actif,client299@email.com,0070572574
+CLI-10300,Meryem Hakim,Particuliers,AG-006,46283.59,54,A risque,client300@email.com,0067186946
+CLI-10301,Fatima Balafrej,Particuliers,AG-009,594265.03,53,A risque,client301@email.com,0064695785
+CLI-10302,Amine El Amrani,Particuliers,AG-001,15038.53,92,Actif,client302@email.com,0067133979
+CLI-10303,Said Mouline,Particuliers,AG-001,584499.88,42,A risque,client303@email.com,0062367740
+CLI-10304,Hind Fikri,Particuliers,AG-008,231061.96,32,Defaut,client304@email.com,0061397662
+CLI-10305,Said Bencheikh,Particuliers,AG-003,657770.68,69,Actif,client305@email.com,0062858217
+CLI-10306,Driss Jai,Particuliers,AG-004,258857.04,67,Actif,client306@email.com,
+CLI-10307,Amina Fikri,PME,AG-004,1482124.85,42,A risque,client307@email.com,0068506225
+CLI-10308,Asmaa Fassi-Fihri,Particuliers,AG-010,683460.93,56,A risque,client308@email.com,0000000000
+CLI-10309,Mohamed Ouazzani,Particuliers,AG-008,415633.14,62,Actif,client309@email.com,0071484332
+CLI-10310,Ahmed Berrada,PME,AG-003,938857.16,68,Actif,client310@email.com,0062272511
+CLI-10311,Hassan Balafrej,Particuliers,AG-008,76391.15,45,A risque,client311@email.com,0070431912
+CLI-10312,Ahmed Tazi,Particuliers,AG-010,679347.59,22,Defaut,client312@email.com,0066251569
+CLI-10313,Rachid Kabbaj,PME,AG-003,3527979.34,34,Inconnu,client313@email.com,0066373345
+CLI-10314,Hassan Jai,Particuliers,AG-007,243133.08,62,Actif,client314@email.com,0067807117
+CLI-10315,Fatima Sbihi,Particuliers,AG-008,508295.97,78,Actif,client315@email.com,0069125855
+CLI-10316,Samira Berrada,PME,AG-001,2708514.47,37,A risque,client316@email.com,0065331350
+CLI-10317,Hicham Bencheikh,PME,AG-004,4329571.88,100,Actif,client317@email.com,0070393022
+CLI-10318,Amine Tazi,Professionnels,AG-003,1380026.25,88,Actif,client318@email.com,0061388359
+CLI-10319,Nadia Benjelloun,Particuliers,AG-010,477334.37,60,Actif,client319@email.com,0072995582
+CLI-10320,Fatima Alaoui,Professionnels,AG-002,1225081.69,51,A risque,client320@email.com,0068794932
+CLI-10321,Ahmed Bennani,Particuliers,AG-003,495166.47,45,A risque,client321@email.com,0063533251
+CLI-10322,Hind Bencheikh,Grandes Entreprises,AG-007,31425926.96,77,Actif,client322@email.com,0069561957
+CLI-10323,Karim Tazi,Particuliers,AG-009,588558.1,40,A risque,client323@email.com,0067917293
+CLI-10324,Noureddine Hakim,Grandes Entreprises,AG-005,31905688.12,100,Actif,client324@email.com,0064958532
+CLI-10325,Karim Lamrani,PME,AG-004,3254491.13,93,Actif,client325@email.com,0070143387
+CLI-10326,Karim Tazi,Particuliers,AG-002,401986.2,48,A risque,client326@email.com,0066194054
+CLI-10327,Amine Jai,PME,AG-002,288885.84,49,A risque,client327@email.com,0064419818
+CLI-10328,Noureddine Fikri,Particuliers,AG-009,356193.91,45,A risque,client328@email.com,0067316273
+CLI-10329,Imane Alaoui,Professionnels,AG-005,1149453.14,73,Actif,pas_un_email,0064306719
+CLI-10330,Hassan Erraji,Particuliers,AG-010,144383.11,39,A risque,client330@email.com,0067301980
+CLI-10331,Abdellah Erraji,Professionnels,AG-004,997771.0,62,Actif,client331@email.com,0070653016
+CLI-10332,Mehdi Hakim,Particuliers,AG-004,447748.82,43,A risque,client332@email.com,0072794394
+CLI-10333,Samira Mouline,Particuliers,AG-004,13014.3,55,A risque,client333@email.com,
+CLI-10334,Fatima Mouline,PME,AG-005,7821050.03,52,A risque,client334@email.com,0068244960
+CLI-10335,Hicham Jai,Particuliers,AG-010,362162.46,75,Actif,,0065666943
+CLI-10336,Ahmed Ouazzani,PME,AG-009,6503805.23,40,A risque,client336@email.com,0067853980
+CLI-10337,Zineb Fassi-Fihri,Particuliers,AG-001,706506.56,75,Actif,client337@email.com,0068482060
+CLI-10338,Meryem Kabbaj,Grandes Entreprises,AG-003,32417112.8,59,A risque,client338@email.com,0071892825
+CLI-10339,Asmaa El Amrani,Particuliers,AG-003,43713.96,64,Actif,client339@email.com,0062976535
+CLI-10340,Noureddine Sbihi,Particuliers,AG-006,729535.54,73,Actif,client340@email.com,0062215981
+CLI-10341,Said Benjelloun,Particuliers,AG-003,563325.58,64,Actif,client341@email.com,0070766324
+CLI-10342,Imane Hakim,PME,AG-009,7725686.98,50,A risque,client342@email.com,0062238222
+CLI-10343,Noureddine Benjelloun,Professionnels,AG-010,879433.7,65,Actif,client343@email.com,0068143245
+CLI-10344,Salma Mouline,PME,AG-005,502503.75,78,Actif,client344@email.com,0066984016
+CLI-10345,Zineb Berrada,Particuliers,AG-003,231473.86,68,Actif,client345@email.com,0068999722
+CLI-10346,Leila Idrissi,PME,AG-004,6237441.02,38,A risque,client346@email.com,0066446387
+CLI-10347,Hassan Hakim,Grandes Entreprises,AG-009,21627053.89,57,A risque,client347@email.com,0066177530
+CLI-10348,Asmaa Balafrej,PME,AG-001,4289432.49,63,Actif,client348@email.com,0070133234
+CLI-10349,Abdellah Bencheikh,Particuliers,AG-001,226442.22,86,Actif,client349@email.com,0068746091
+CLI-10350,Amine Tazi,Particuliers,AG-005,362421.71,48,A risque,client350@email.com,0068858054
+CLI-10351,Hicham Bencheikh,PME,AG-004,1470677.76,48,A risque,client351@email.com,0070373892
+CLI-10352,Leila Tazi,Particuliers,AG-010,25841.36,79,Actif,client352@email.com,0071117026
+CLI-10353,Noureddine Fikri,Particuliers,AG-008,573064.99,28,Defaut,client353@email.com,0072924564
+CLI-10354,Mohamed Slaoui,Particuliers,AG-006,544984.96,34,Defaut,client354@email.com,0070608423
+CLI-10355,Zineb Jai,PME,AG-005,3957559.67,46,A risque,client355@email.com,0066459151
+CLI-10356,Ahmed Lamrani,Grandes Entreprises,AG-007,26755725.81,100,Actif,client356@email.com,0064297640
+CLI-10357,Salma Alaoui,PME,AG-010,7980258.98,47,A risque,client357@email.com,0065636159
+CLI-10358,Leila Mouline,PME,AG-006,1681338.25,26,Defaut,client358@email.com,0072389778
+CLI-10359,Salma Sbihi,Professionnels,AG-003,312646.99,87,Actif,client359@email.com,0062702643
+CLI-10360,Said Erraji,Professionnels,AG-006,998930.23,36,A risque,client360@email.com,0064553849
+CLI-10361,Fatima Balafrej,Particuliers,AG-009,694450.76,74,Actif,client361@email.com,0070848919
+CLI-10362,Khalid Erraji,PME,AG-007,4332740.34,35,A risque,client362@email.com,0067162927
+CLI-10363,Leila Tazi,Professionnels,AG-006,1300471.22,77,Actif,client363@email.com,0063207252
+CLI-10364,Imane Idrissi,Particuliers,AG-003,226087.01,61,Actif,client364@email.com,0063833072
+CLI-10365,Mohamed Erraji,PME,AG-009,3189868.08,13,Defaut,client365@email.com,0061783557
+CLI-10366,Mehdi Benjelloun,PME,AG-002,5088158.04,78,Actif,client366@email.com,0064389854
+CLI-10367,Khadija Erraji,PME,AG-007,2525977.58,68,Actif,client367@email.com,0065687686
+CLI-10368,Imane Ouazzani,Bancassurance,AG-001,1093925.23,99,Actif,client368@email.com,0068553431
+CLI-10369,Imane Alaoui,PME,AG-007,4799604.11,71,Actif,client369@email.com,0063255693
+CLI-10370,Abdellah El Amrani,Particuliers,AG-001,,83,Actif,client370@email.com,0061861694
+CLI-10371,Mohamed Hakim,Particuliers,AG-007,564475.89,71,Actif,client371@email.com,0064989790
+CLI-10372,Asmaa El Fassi,PME,AG-009,2305821.77,61,Actif,client372@email.com,0070992763
+CLI-10373,Amine Fassi-Fihri,Particuliers,AG-007,166930.86,68,Actif,client373@email.com,0064437635
+CLI-10374,Hicham Bennani,Particuliers,AG-001,402120.22,67,Actif,client374@email.com,0064987152
+CLI-10375,Rachid El Amrani,Grandes Entreprises,AG-004,7667490.72,88,Actif,client375@email.com,0062751922
+CLI-10376,Zineb Hakim,Bancassurance,AG-006,865962.57,46,A risque,client376@email.com,0061223215
+CLI-10377,Leila Tazi,Particuliers,AG-006,608981.16,61,Actif,client377@email.com,0061112794
+CLI-10378,Omar El Fassi,Particuliers,AG-007,501227.56,53,A risque,client378@email.com,0072215753
+CLI-10379,Youssef Fassi-Fihri,Particuliers,AG-001,387813.56,76,Actif,client379@email.com,0067933124
+CLI-10380,Driss Tazi,Professionnels,AG-010,200384.0,44,A risque,client380@email.com,0070718296
+CLI-10381,Said Kabbaj,Particuliers,AG-001,672443.82,88,Actif,pas_un_email,0063717224
+CLI-10382,Soukaina Erraji,PME,AG-009,5487845.58,56,A risque,client382@email.com,0072838238
+CLI-10383,Noureddine Benjelloun,PME,AG-009,2138900.56,73,Actif,client383@email.com,0066949692
+CLI-10384,Zineb Tazi,PME,AG-002,290829.97,66,Actif,client384@email.com,0063747073
+CLI-10385,Asmaa Berrada,Particuliers,AG-002,410474.17,54,A risque,client385@email.com,0069925861
+CLI-10386,Fatima El Amrani,Professionnels,AG-001,699742.95,80,Actif,client386@email.com,0068675025
+CLI-10387,Khadija Sbihi,Particuliers,AG-004,81807.48,61,Actif,client387@email.com,0070899148
+CLI-10388,Amina Lamrani,Particuliers,AG-010,279274.82,61,Actif,client388@email.com,0061386852
+CLI-10389,Asmaa El Amrani,PME,AG-005,6122695.62,50,A risque,client389@email.com,0064105355
+CLI-10390,Abdellah Jai,Particuliers,AG-010,93994.56,53,A risque,client390@email.com,0063732762
+CLI-10391,Ahmed El Amrani,Particuliers,AG-010,661397.77,69,Actif,client391@email.com,0064532363
+CLI-10392,Mohamed Slaoui,Professionnels,AG-001,713212.42,57,A risque,client392@email.com,0070742773
+CLI-10393,Salma Benjelloun,Particuliers,AG-002,627054.38,26,Defaut,client393@email.com,0063988432
+CLI-10394,Hind Berrada,PME,AG-005,7085027.74,31,Defaut,client394@email.com,0069596387
+CLI-10395,Asmaa Fassi-Fihri,Particuliers,AG-009,119162.2,53,A risque,client395@email.com,0070997548
+CLI-10396,Samira Fassi-Fihri,PME,AG-005,7496994.2,83,Actif,client396@email.com,0071373536
+CLI-10397,Leila Erraji,Grandes Entreprises,AG-002,39056820.74,94,Actif,client397@email.com,0063747998
+CLI-10398,Mehdi Guedira,PME,AG-001,4745888.91,72,Actif,client398@email.com,0071639678
+CLI-10399,Youssef Alaoui,Particuliers,AG-005,167922.91,78,Actif,client399@email.com,0063469742
+CLI-10400,Salma Sbihi,Particuliers,AG-004,293359.13,83,Actif,client400@email.com,0068238896
+CLI-10401,Noureddine Ouazzani,PME,AG-007,6430809.67,54,A risque,client401@email.com,0065989516
+CLI-10402,Khalid Lamrani,Bancassurance,AG-008,1006696.54,100,Actif,client402@email.com,0069161142
+CLI-10403,Mehdi Kabbaj,Grandes Entreprises,AG-003,30694092.8,67,Actif,client403@email.com,0069873534
+CLI-10404,Ahmed Guedira,Particuliers,AG-005,770355.45,37,A risque,client404@email.com,0072752558
+CLI-10405,Karim Lamrani,Particuliers,AG-001,271144.6,50,A risque,client405@email.com,0072291529
+CLI-10406,Amine Idrissi,PME,AG-006,6776491.85,45,A risque,client406@email.com,0065728380
+CLI-10407,Amine Berrada,Grandes Entreprises,AG-004,8056078.72,43,A risque,client407@email.com,0069786121
+CLI-10408,Asmaa El Amrani,Particuliers,AG-001,241923.74,57,A risque,client408@email.com,0070777081
+CLI-10409,Noureddine El Fassi,Particuliers,AG-007,735699.77,63,Actif,client409@email.com,0064159751
+CLI-10410,Driss Mouline,PME,AG-001,392704.69,77,Actif,client410@email.com,0069577575
+CLI-10411,Hassan Balafrej,PME,AG-004,948460.16,48,A risque,client411@email.com,0069781090
+CLI-10412,Asmaa Idrissi,Particuliers,AG-003,92102.18,68,Actif,pas_un_email,0069996592
+CLI-10413,Noureddine Kabbaj,Particuliers,AG-007,450886.52,92,Actif,client413@email.com,0070394362
+CLI-10414,Hassan Zniber,Particuliers,AG-001,541906.0,72,Actif,client414@email.com,0069109289
+CLI-10415,Meryem Kabbaj,Particuliers,AG-007,631644.6,69,Actif,client415@email.com,0065872146
+CLI-10416,Imane Sbihi,PME,AG-005,3897103.88,48,A risque,client416@email.com,0069382760
+CLI-10417,Amina Sbihi,Particuliers,AG-003,638063.53,44,A risque,client417@email.com,0072925711
+CLI-10418,Khalid Fikri,Particuliers,AG-004,481357.36,26,Defaut,client418@email.com,0069802049
+CLI-10419,Soukaina Zniber,PME,AG-001,1922146.16,41,A risque,client419@email.com,0065342433
+CLI-10420,Mehdi Bencheikh,Grandes Entreprises,AG-002,39783895.92,74,Actif,client420@email.com,0068928019
+CLI-10421,Mehdi Lamrani,Particuliers,AG-002,292139.3,23,Defaut,client421@email.com,0071934022
+CLI-10422,Nadia Benjelloun,Particuliers,AG-010,366010.32,40,A risque,client422@email.com,0070944998
+CLI-10423,Asmaa Fikri,Professionnels,AG-003,504161.43,78,Actif,client423@email.com,0064926545
+CLI-10424,Amina El Fassi,Particuliers,AG-003,389163.64,59,A risque,client424@email.com,0068554972
+CLI-10425,Salma Idrissi,Particuliers,AG-001,714124.66,55,A risque,client425@email.com,0064439019
+CLI-10426,Ahmed Sbihi,PME,AG-005,6538610.72,85,Actif,client426@email.com,0070618537
+CLI-10427,Driss Slaoui,Bancassurance,AG-009,1160874.03,39,A risque,client427@email.com,0064854727
+CLI-10428,Youssef Kabbaj,Particuliers,AG-003,198715.84,67,Actif,client428@email.com,0070973175
+CLI-10429,Meryem Mouline,Grandes Entreprises,AG-004,29964952.74,49,A risque,client429@email.com,0000000000
+CLI-10430,Ahmed Alaoui,Particuliers,AG-006,173351.52,22,Defaut,client430@email.com,0066597068
+CLI-10431,Noureddine El Amrani,Bancassurance,AG-007,2251538.15,60,Actif,client431@email.com,0070798232
+CLI-10432,Khadija Ouazzani,PME,AG-006,6716658.73,41,A risque,client432@email.com,0069425838
+CLI-10433,Hassan Slaoui,Particuliers,AG-005,15212.17,71,Actif,client433@email.com,0063663139
+CLI-10434,Said Erraji,Particuliers,AG-002,296156.13,25,Defaut,client434@email.com,0072259439
+CLI-10435,Nadia Zniber,Particuliers,AG-003,668358.35,64,Actif,client435@email.com,0061411526
+CLI-10436,Omar Slaoui,Particuliers,AG-007,713730.16,72,Actif,client436@email.com,0063173143
+CLI-10437,Samira Mouline,PME,AG-008,5361611.49,80,Actif,client437@email.com,0065203767
+CLI-10438,Khadija Jai,Professionnels,AG-003,921216.14,71,Actif,client438@email.com,0070338994
+CLI-10439,Khalid Slaoui,Particuliers,AG-009,191552.89,38,A risque,client439@email.com,0067262312
+CLI-10440,Ahmed Sbihi,Professionnels,AG-009,927990.98,74,Actif,client440@email.com,0063708886
+CLI-10441,Khadija Guedira,Particuliers,AG-006,436035.93,41,A risque,client441@email.com,0061969365
+CLI-10442,Imane Fassi-Fihri,PME,AG-010,3545858.86,,Defaut,client442@email.com,0068585485
+CLI-10443,Mohamed Fassi-Fihri,Particuliers,AG-001,233780.67,65,Actif,client443@email.com,0069624234
+CLI-10444,Said Fikri,Particuliers,AG-002,15683.3,97,Actif,client444@email.com,0071369850
+CLI-10445,Noureddine Balafrej,PME,AG-007,3503780.07,51,A risque,client445@email.com,0066884597
+CLI-10446,Mehdi Zniber,PME,AG-006,1594012.86,87,Actif,client446@email.com,0069817142
+CLI-10447,Abdellah Balafrej,Particuliers,AG-009,104077.75,85,Actif,client447@email.com,0064679930
+CLI-10448,Noureddine El Amrani,Particuliers,AG-001,444955.21,89,Actif,client448@email.com,0072971630
+CLI-10449,Samira Alaoui,Professionnels,AG-007,177804.0,44,A risque,client449@email.com,0065385720
+CLI-10450,Leila Mouline,Particuliers,AG-008,528378.43,66,Actif,client450@email.com,0065861732
+CLI-10451,Amine Berrada,Particuliers,AG-001,561775.29,66,Actif,client451@email.com,0070319614
+CLI-10452,Noureddine Zniber,Particuliers,AG-004,227990.13,40,A risque,client452@email.com,0067559560
+CLI-10453,Asmaa Jai,PME,AG-004,2419051.54,59,A risque,client453@email.com,0069845454
+CLI-10454,Said Slaoui,Particuliers,AG-002,744473.93,65,Actif,client454@email.com,0070104332
+CLI-10455,Hind Kabbaj,Particuliers,AG-007,415496.48,57,A risque,client455@email.com,0065788342
+CLI-10456,Zineb Bennani,PME,AG-008,6108291.62,59,A risque,client456@email.com,0068976885
+CLI-10457,Khadija Sbihi,Particuliers,AG-001,544761.25,23,Defaut,client457@email.com,0064506255
+CLI-10458,Amina Tazi,Particuliers,AG-008,236958.77,18,Defaut,client458@email.com,0067965319
+CLI-10459,Salma Berrada,Particuliers,AG-005,599463.44,51,A risque,client459@email.com,0064733540
+CLI-10460,Abdellah Idrissi,Particuliers,AG-008,207259.39,56,A risque,client460@email.com,0070552923
+CLI-10461,Zineb Jai,PME,AG-008,3961878.23,46,A risque,client461@email.com,0070507383
+CLI-10462,Ahmed Slaoui,PME,AG-007,4186842.36,50,A risque,client462@email.com,0067388326
+CLI-10463,Khadija Kabbaj,Particuliers,AG-006,552207.53,43,A risque,client463@email.com,0063682599
+CLI-10464,Samira Jai,Particuliers,AG-003,176494.38,61,Actif,client464@email.com,0070225156
+CLI-10465,Hind Fikri,Particuliers,AG-006,299080.08,37,A risque,client465@email.com,0068643663
+CLI-10466,Asmaa El Fassi,Particuliers,AG-005,152112.49,66,Actif,client466@email.com,0063839739
+CLI-10467,Omar Guedira,PME,AG-008,6440292.17,59,A risque,client467@email.com,0072297011
+CLI-10468,Rachid Sbihi,,AG-010,964445.38,58,A risque,client468@email.com,0069507248
+CLI-10469,Amine Fikri,Particuliers,AG-009,672787.65,64,Actif,client469@email.com,0062675243
+CLI-10470,Samira Balafrej,Professionnels,AG-010,549003.4,81,Actif,client470@email.com,0067255496
+CLI-10471,Hassan Ouazzani,PME,AG-010,2969850.5,66,Actif,client471@email.com,0071757267
+CLI-10472,Leila Lamrani,PME,AG-010,1329817.04,79,Actif,client472@email.com,0063915363
+CLI-10473,Leila Ouazzani,Grandes Entreprises,AG-005,13912318.41,89,Actif,client473@email.com,0071474487
+CLI-10474,Said Tazi,PME,AG-003,7522404.71,59,A risque,client474@email.com,0072857667
+CLI-10475,Noureddine El Fassi,Particuliers,AG-002,597661.52,63,Actif,client475@email.com,0072203631
+CLI-10476,Samira Benjelloun,Particuliers,AG-002,619037.63,75,Actif,client476@email.com,0069202343
+CLI-10477,Asmaa Tazi,Professionnels,AG-001,462054.16,-5,Actif,client477@email.com,0071262677
+CLI-10478,Youssef Fassi-Fihri,Professionnels,AG-009,727430.54,80,Actif,client478@email.com,0069448066
+CLI-10479,Mehdi Fikri,PME,AG-008,4599079.0,34,Defaut,client479@email.com,0069919178
+CLI-10480,Mehdi Bennani,Professionnels,AG-001,690697.44,49,A risque,client480@email.com,0066624329
+CLI-10481,Mohamed Guedira,PME,AG-005,4373771.33,61,Actif,client481@email.com,0072727148
+CLI-10482,Noureddine Berrada,PME,AG-003,4476055.13,63,Actif,client482@email.com,0064628165
+CLI-10483,Imane Fassi-Fihri,PME,AG-005,817835.92,58,A risque,client483@email.com,0071407688
+CLI-10484,Youssef Hakim,PME,AG-002,6508707.46,40,A risque,client484@email.com,0067341833
+CLI-10485,Mohamed Tazi,PME,AG-002,1664757.65,48,A risque,client485@email.com,0061291678
+CLI-10486,Mohamed Mouline,Particuliers,AG-004,356349.14,86,Actif,client486@email.com,0061392129
+CLI-10487,Ahmed Jai,Particuliers,AG-007,376310.73,81,Actif,client487@email.com,0061522028
+CLI-10488,Noureddine Kabbaj,Particuliers,AG-004,674816.04,1,Defaut,client488@email.com,0067112541
+CLI-10489,Mehdi Erraji,Particuliers,AG-003,421699.9,32,Defaut,client489@email.com,0064705997
+CLI-10490,Leila Hakim,Particuliers,AG-004,750562.53,69,Actif,client490@email.com,0069254271
+CLI-10491,Imane Jai,Particuliers,AG-010,196413.01,37,A risque,client491@email.com,0067511131
+CLI-10492,Hind Lamrani,PME,AG-003,269652.88,10,Defaut,client492@email.com,0061849870
+CLI-10493,Leila Benjelloun,Particuliers,AG-009,498729.44,66,Actif,client493@email.com,0071171755
+CLI-10494,Salma Balafrej,Particuliers,AG-001,193812.96,68,Actif,client494@email.com,0069925466
+CLI-10495,Hind Mouline,Particuliers,AG-004,393388.69,87,Actif,client495@email.com,0068814779
+CLI-10496,Omar Idrissi,Particuliers,AG-009,265707.89,90,Actif,client496@email.com,0068458680
+CLI-10497,Mohamed Lamrani,Particuliers,AG-006,10568.66,60,Actif,client497@email.com,0071745833
+CLI-10498,Khadija Bencheikh,Particuliers,AG-008,579592.81,79,Actif,client498@email.com,0071785934
+CLI-10499,Ahmed Benjelloun,Particuliers,AG-003,264399.0,58,A risque,client499@email.com,0062769418
+CLI-10500,Asmaa Ouazzani,Particuliers,AG-008,393442.53,80,Actif,client500@email.com,0062148392

@@ -5,12 +5,18 @@ Un data engineer doit nettoyer tout ca dans la couche Silver
 """
 
 import csv
-import random
 import os
-from datetime import datetime, timedelta
+import random
+from datetime import datetime
+
 from faker import Faker
 
 fake = Faker("fr_FR")
+
+# Graine fixe pour un resultat reproductible (meme donnees a chaque generation)
+SEED = 42
+random.seed(SEED)
+fake.seed_instance(SEED)
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "data")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -165,7 +171,6 @@ def generate_engagements(count=2000, clients=None):
     for i in range(count):
         client = random.choice(clients)
         credit_type = random.choices(CREDIT_TYPES, weights=CREDIT_WEIGHTS, k=1)[0]
-        client_segment = client.get("segment", "Particuliers")
 
         # Montant coherent avec le type de credit
         if credit_type == "Mourabaha Immo":
@@ -243,6 +248,33 @@ def generate_users(count=8):
         rows.append(r)
     return rows
 
+def generate_qualite(agences=None):
+    if agences is None:
+        agences = [{"id": "AG-001"}]
+    agence_ids = [a["id"] for a in agences]
+    rows = []
+    for aid in agence_ids:
+        for year in [2023, 2024, 2025, 2026]:
+            for month in range(1, 13):
+                note_satisfaction = random.randint(30, 85)
+                recl_ouvertes = random.randint(0, 20)
+                recl_traitees = max(0, recl_ouvertes - random.randint(0, 5))
+                delai = random.randint(1, 10)
+                date_str = f"{year}-{month:02d}-01"
+                r = {
+                    "qualite_id": f"QUAL-{aid}-{year}-{month:02d}",
+                    "agence_id": aid,
+                    "date": date_str,
+                    "note_satisfaction_client": note_satisfaction,
+                    "reclamations_ouvertes": recl_ouvertes,
+                    "reclamations_traitees": recl_traitees,
+                    "delai_resolution_moyen": delai,
+                }
+                if random.random() < ANOMALY_RATE:
+                    r = inject_anomaly(r, ["note_satisfaction_client", "date"])
+                rows.append(r)
+    return rows
+
 def save_csv(filename, rows):
     path = os.path.join(OUTPUT_DIR, filename)
     if not rows:
@@ -272,6 +304,10 @@ def main():
     print("4 - Utilisateurs...")
     users = generate_users(8)
     save_csv("users.csv", users)
+
+    print("5 - Qualite CRM...")
+    qualite = generate_qualite(agences)
+    save_csv("crm.csv", qualite)
 
     print(f"\nTermine ! Fichiers dans : {OUTPUT_DIR}")
 

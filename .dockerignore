@@ -1,0 +1,13 @@
+**/node_modules
+**/dist
+**/venv
+**/__pycache__
+**/.pytest_cache
+.git
+.gitignore
+*.log
+.env
+backend/saham_bank.db
+ALL_IN_ONE.md
+ECRITURES
+data

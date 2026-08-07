@@ -1,7 +1,6 @@
-from typing import List, Dict, Any
-from datetime import datetime
 import re
-
+from datetime import datetime
+from typing import Any, Dict, List
 
 VALID_SEGMENTS = {"Particuliers", "Professionnels", "PME", "Grandes Entreprises", "Bancassurance"}
 VALID_STATUTS_CLIENT = {"Actif", "Defaut", "A risque"}
@@ -225,6 +224,35 @@ class SilverTransformer:
 
         return self._add_tech_cols(engagement, len(errors) == 0, errors)
 
+    def validate_qualite(self, qualite: Dict[str, Any]) -> Dict[str, Any]:
+        errors = []
+        qualite = dict(qualite)
+
+        qid = str(qualite.get("qualite_id") or "").strip()
+        if qid == "":
+            errors.append("Qualite_id vide")
+        qualite["qualite_id"] = qid
+
+        aid = str(qualite.get("agence_id") or "").strip()
+        if aid == "":
+            errors.append("Agence_id vide")
+        qualite["agence_id"] = aid or None
+
+        note = _to_int(qualite.get("note_satisfaction_client"))
+        if note is None:
+            errors.append("Note satisfaction vide")
+            qualite["note_satisfaction_client"] = None
+        elif note < 0:
+            errors.append(f"Note satisfaction negative: {note}")
+            qualite["note_satisfaction_client"] = 0
+        elif note > 100:
+            errors.append(f"Note satisfaction > 100: {note}")
+            qualite["note_satisfaction_client"] = 100
+        else:
+            qualite["note_satisfaction_client"] = note
+
+        return self._add_tech_cols(qualite, len(errors) == 0, errors)
+
     def deduplicate(self, data: List[Dict[str, Any]], key: str) -> List[Dict[str, Any]]:
         seen = set()
         unique = []
@@ -243,10 +271,12 @@ class SilverTransformer:
         users = [self.validate_user(u) for u in bronze_data.get("users", [])]
         clients = [self.validate_client(c) for c in bronze_data.get("clients", [])]
         engagements = [self.validate_engagement(e) for e in bronze_data.get("engagements", [])]
+        qualite = [self.validate_qualite(q) for q in bronze_data.get("qualite", [])]
 
         return {
             "users": self.deduplicate(users, "id"),
             "agences": self.deduplicate(agences, "id"),
             "clients": self.deduplicate(clients, "id"),
             "engagements": self.deduplicate(engagements, "ref"),
+            "qualite": self.deduplicate(qualite, "qualite_id"),
         }

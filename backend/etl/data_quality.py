@@ -16,47 +16,46 @@ Pourquoi ce fichier ?
 - Facilite la maintenance (un seul fichier pour les règles)
 """
 
-from typing import List, Dict, Any, Tuple
-from datetime import datetime
+from typing import Any, Dict, List, Tuple
 
 
 class DataQuality:
     """Validateur de qualité des données"""
-    
+
     # TODO : Définir les règles de validation pour les utilisateurs
     @staticmethod
     def validate_user(user: Dict[str, Any]) -> Tuple[bool, List[str]]:
         """
         Valider une donnée utilisateur
-        
+
         TODO : Implémenter la validation
         - Vérifier que l'email est valide
         - Vérifier que le nom n'est pas vide
         - Vérifier que le rôle est valide
         - Retourner (is_valid, error_messages)
-        
+
         Exemple :
         errors = []
-        
+
         if not user.get("email") or "@" not in user["email"]:
             errors.append("Email invalide")
-        
+
         if not user.get("nom") or len(user["nom"]) < 1:
             errors.append("Nom vide")
-        
+
         if user.get("role") not in ["DG", "DR", "CA", "AR", "ADMIN"]:
             errors.append("Rôle invalide")
-        
+
         return (len(errors) == 0, errors)
         """
         pass
-    
+
     # TODO : Définir les règles de validation pour les agences
     @staticmethod
     def validate_agence(agence: Dict[str, Any]) -> Tuple[bool, List[str]]:
         """
         Valider une donnée agence
-        
+
         TODO : Implémenter la validation
         - Vérifier que le nom n'est pas vide
         - Vérifier que la ville est valide
@@ -64,13 +63,13 @@ class DataQuality:
         - Retourner (is_valid, error_messages)
         """
         pass
-    
+
     # TODO : Définir les règles de validation pour les clients
     @staticmethod
     def validate_client(client: Dict[str, Any]) -> Tuple[bool, List[str]]:
         """
         Valider une donnée client
-        
+
         TODO : Implémenter la validation
         - Vérifier que le nom n'est pas vide
         - Vérifier que le segment est valide
@@ -80,13 +79,13 @@ class DataQuality:
         - Retourner (is_valid, error_messages)
         """
         pass
-    
+
     # TODO : Définir les règles de validation pour les engagements
     @staticmethod
     def validate_engagement(engagement: Dict[str, Any]) -> Tuple[bool, List[str]]:
         """
         Valider une donnée engagement
-        
+
         TODO : Implémenter la validation
         - Vérifier que le client_id existe
         - Vérifier que le type est valide
@@ -97,20 +96,20 @@ class DataQuality:
         - Retourner (is_valid, error_messages)
         """
         pass
-    
+
     # TODO : Implémenter la validation de toutes les données
     @staticmethod
     def validate_all(data: Dict[str, List[Dict[str, Any]]]) -> Dict[str, Dict[str, Any]]:
         """
         Valider toutes les données
-        
+
         TODO : Implémenter la validation
         - Valider les utilisateurs
         - Valider les agences
         - Valider les clients
         - Valider les engagements
         - Retourner un rapport de qualité
-        
+
         Exemple :
         report = {
             "users": {
@@ -138,7 +137,7 @@ class DataQuality:
                 "errors": []
             }
         }
-        
+
         for user in data["users"]:
             is_valid, errors = DataQuality.validate_user(user)
             if is_valid:
@@ -146,29 +145,29 @@ class DataQuality:
             else:
                 report["users"]["invalid"] += 1
                 report["users"]["errors"].extend(errors)
-        
+
         # ... autres validations
-        
+
         return report
         """
         pass
-    
+
     # TODO : Implémenter la génération de rapport de qualité
     @staticmethod
     def generate_quality_report(report: Dict[str, Dict[str, Any]]) -> str:
         """
         Générer un rapport de qualité lisible
-        
+
         TODO : Implémenter la génération
         - Formater le rapport
         - Calculer les pourcentages
         - Retourner le rapport en texte
-        
+
         Exemple :
         lines = []
         lines.append("=== Rapport de Qualité des Données ===")
         lines.append("")
-        
+
         for entity, stats in report.items():
             lines.append(f"{entity.capitalize()}:")
             lines.append(f"  Total : {stats['total']}")
@@ -177,7 +176,7 @@ class DataQuality:
             if stats['errors']:
                 lines.append(f"  Erreurs : {', '.join(set(stats['errors']))}")
             lines.append("")
-        
+
         return "\n".join(lines)
         """
         pass
@@ -187,14 +186,14 @@ class DataQuality:
 # Exemple :
 # if __name__ == "__main__":
 #     from etl.bronze.extract_bronze import BronzeExtractor
-#     
+#
 #     # Extraire les données
 #     extractor = BronzeExtractor()
 #     data = extractor.generate_all()
-#     
+#
 #     # Valider les données
 #     report = DataQuality.validate_all(data)
-#     
+#
 #     # Générer le rapport
 #     quality_report = DataQuality.generate_quality_report(report)
 #     print(quality_report)

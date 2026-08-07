@@ -1,9 +1,12 @@
-from fastapi import APIRouter, Query
-from typing import List, Optional
-from sqlalchemy import create_engine, text
-from app.config import settings
+from typing import Optional
 
-router = APIRouter()
+from fastapi import APIRouter, Depends
+from sqlalchemy import create_engine, text
+
+from app.config import settings
+from app.core.deps import get_current_user
+
+router = APIRouter(dependencies=[Depends(get_current_user)])
 engine = create_engine(settings.DATABASE_URL)
 
 
@@ -34,10 +37,12 @@ async def pnb_mensuel(annee: Optional[int] = None):
         FROM fact_performance fp
         JOIN dim_date dd ON fp.date_id = dd.date_id
     """
+    params = {}
     if annee:
-        q += f" WHERE dd.annee = {annee}"
+        q += " WHERE dd.annee = :annee"
+        params["annee"] = annee
     q += " GROUP BY dd.annee_mois ORDER BY dd.annee_mois"
-    return run_sql(q)
+    return run_sql(q, params)
 
 
 @router.get("/credits-par-type")
@@ -97,10 +102,10 @@ async def performance_agences():
 async def qualite_agences():
     return run_sql("""
         SELECT da.nom as agence,
-               AVG(fq.nps) as nps_moyen,
+               AVG(fq.note_satisfaction_client) as satisfaction_moyenne,
                SUM(fq.reclamations_ouvertes) as total_reclamations,
                AVG(fq.delai_resolution_moyen) as delai_moyen
         FROM fact_qualite fq
         JOIN dim_agence da ON fq.agence_id = da.agence_id
-        GROUP BY da.nom ORDER BY nps_moyen DESC
+        GROUP BY da.nom ORDER BY satisfaction_moyenne DESC
     """)

@@ -1,8 +1,10 @@
 import random
-from typing import List, Dict, Any
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
+from typing import Any, Dict, List
+
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
+
 from app.config import settings
 
 SEASONAL_PNB = {1: 0.85, 2: 0.78, 3: 0.92, 4: 0.88, 5: 0.95, 6: 1.05,
@@ -20,6 +22,8 @@ CREDIT_TYPES = [
 class GoldTransformer:
 
     def __init__(self):
+        # Graine fixe pour un PNB/nim/ratios reproductibles d'un run a l'autre
+        random.seed(42)
         self.engine = create_engine(settings.DATABASE_URL)
         self.SessionLocal = sessionmaker(bind=self.engine)
 
@@ -51,19 +55,21 @@ class GoldTransformer:
 
     def build_dim_client(self) -> List[Dict[str, Any]]:
         silver = self._fetch_silver("silver_clients")
+        agences = self._fetch_silver("silver_agences")
+        agence_ville = {a["id"]: a.get("ville", "") for a in agences}
         rows = []
         for s in silver:
             if not s.get("is_valid", True):
                 continue
-            ville = (s.get("agence_id") or "").replace("AG-", "")
+            aid = s.get("agence_id")
             rows.append({
                 "client_id": s["id"],
                 "nom": s.get("nom", ""),
                 "segment": s.get("segment"),
                 "email": s.get("email"),
                 "telephone": s.get("telephone"),
-                "agence_id": s.get("agence_id"),
-                "ville": f"Ville-{ville}",
+                "agence_id": aid,
+                "ville": agence_ville.get(aid, ""),
                 "encours_actuel": s.get("encours") or 0,
                 "score_actuel": s.get("score"),
                 "statut_actuel": s.get("statut"),
@@ -200,12 +206,10 @@ class GoldTransformer:
 
     def build_fact_risque(self, dim_clients: List[Dict[str, Any]],
                            dim_dates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        engagements = self._fetch_silver("silver_engagements")
         months = sorted(set(d["annee_mois"] for d in dim_dates))
         rows = []
         for c in dim_clients:
             cid = c["client_id"]
-            cli_eng = [e for e in engagements if e.get("client_id") == cid and e.get("is_valid", True)]
             score = c.get("score_actuel") or 50
             if score >= 70:
                 cls_risk, cls_lib, npl = "A", "Faible", False
@@ -213,7 +217,7 @@ class GoldTransformer:
                 cls_risk, cls_lib, npl = "B", "Moyen", False
             else:
                 cls_risk, cls_lib, npl = "C", "Eleve", True
-            for am in months[:3]:
+            for am in months:
                 parts = am.split("-")
                 yr, mo = int(parts[0]), int(parts[1])
                 date_id = yr * 10000 + mo * 100 + 1
@@ -230,26 +234,36 @@ class GoldTransformer:
 
     def build_fact_qualite(self, dim_agences: List[Dict[str, Any]],
                             dim_dates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        random.seed(42)
-        months = sorted(set(d["annee_mois"] for d in dim_dates))
+        silver = self._fetch_silver("silver_qualite")
+        agence_ids = [a["agence_id"] for a in dim_agences]
+        valid_aid_set = set(agence_ids)
         rows = []
-        for aid in [a["agence_id"] for a in dim_agences]:
-            for am in months:
-                parts = am.split("-")
-                yr, mo = int(parts[0]), int(parts[1])
-                date_id = yr * 10000 + mo * 100 + 1
-                recl_ouvertes = random.randint(0, 20)
-                recl_traitees = max(0, recl_ouvertes - random.randint(0, 5))
-                rows.append({
-                    "qualite_id": f"QUAL-{aid}-{am}",
-                    "agence_id": aid,
-                    "date_id": date_id,
-                    "nps": random.randint(30, 85),
-                    "reclamations_ouvertes": recl_ouvertes,
-                    "reclamations_traitees": recl_traitees,
-                    "delai_resolution_moyen": random.randint(1, 10),
-                    "traitement_rate": round((recl_traitees / recl_ouvertes * 100) if recl_ouvertes > 0 else 100, 2),
-                })
+        for s in silver:
+            if not s.get("is_valid", True):
+                continue
+            aid = s.get("agence_id", "")
+            if aid not in valid_aid_set:
+                continue
+            dt_val = s.get("date")
+            date_id = 0
+            if dt_val:
+                try:
+                    dt = dt_val if isinstance(dt_val, datetime) else datetime.strptime(str(dt_val)[:10], "%Y-%m-%d")
+                    date_id = int(dt.strftime("%Y%m%d"))
+                except (ValueError, TypeError):
+                    pass
+            recl_ouvertes = s.get("reclamations_ouvertes") or 0
+            recl_traitees = s.get("reclamations_traitees") or 0
+            rows.append({
+                "qualite_id": s["qualite_id"],
+                "agence_id": aid,
+                "date_id": date_id,
+                "note_satisfaction_client": s.get("note_satisfaction_client"),
+                "reclamations_ouvertes": recl_ouvertes,
+                "reclamations_traitees": recl_traitees,
+                "delai_resolution_moyen": s.get("delai_resolution_moyen") or 0,
+                "traitement_rate": round((recl_traitees / recl_ouvertes * 100) if recl_ouvertes > 0 else 100, 2),
+            })
         return rows
 
 

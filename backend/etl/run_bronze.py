@@ -21,7 +21,7 @@ def main():
     loader.create_tables()
     counts = loader.load_all(data)
 
-    print(f"\n  Chargement termine !")
+    print("\n  Chargement termine !")
     for table, count in counts.items():
         print(f"  bronze_{table}: {count} lignes inserees / upsertées")
 

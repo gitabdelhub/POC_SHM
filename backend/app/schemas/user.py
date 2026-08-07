@@ -16,9 +16,11 @@ Pourquoi ces schemas ?
 - Type safety
 """
 
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, EmailStr, Field
+
 from app.models.user import UserRole
 
 
@@ -40,7 +42,7 @@ class UserResponse(UserBase):
     is_active: bool
     created_at: datetime
     updated_at: Optional[datetime]
-    
+
     class Config:
         from_attributes = True
 

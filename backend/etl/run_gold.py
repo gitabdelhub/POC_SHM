@@ -1,8 +1,8 @@
 """
 ETL Gold - Silver → Star Schema (Dimensions + Facts)
 """
-from etl.gold.transform_gold import GoldTransformer
 from etl.gold.load_gold import GoldLoader
+from etl.gold.transform_gold import GoldTransformer
 
 
 def main():

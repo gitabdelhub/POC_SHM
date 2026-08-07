@@ -2,9 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from loguru import logger
+
 from app.config import settings
-from app.database import init_db, engine
-from app.routers import auth, clients, engagements, agences, gold
+from app.database import engine, init_db
+from app.routers import agences, auth, clients, engagements, gold
 
 app = FastAPI(
     title="Saham Bank Analytics Portal API",
@@ -14,9 +15,16 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+# CORS restreint : seules les origines de la config sont acceptées.
+# Par défaut localhost (dev). En prod on y ajoutera l'URL Vercel.
+allowed_origins = [
+    o.strip()
+    for o in settings.CORS_ORIGINS.split(",")
+    if o.strip()
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
