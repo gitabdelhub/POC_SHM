@@ -5,8 +5,7 @@ Remplace Faker par la lecture des fichiers CSV generes
 
 import csv
 import os
-from typing import List, Dict, Any
-
+from typing import Any, Dict, List
 
 CSV_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 
@@ -36,10 +35,14 @@ class BronzeExtractor:
     def extract_engagements(self) -> List[Dict[str, Any]]:
         return self._read_csv("engagements.csv")
 
+    def extract_qualite(self) -> List[Dict[str, Any]]:
+        return self._read_csv("crm.csv")
+
     def extract_all(self) -> Dict[str, List[Dict[str, Any]]]:
         return {
             "users": self.extract_users(),
             "agences": self.extract_agences(),
             "clients": self.extract_clients(),
             "engagements": self.extract_engagements(),
+            "qualite": self.extract_qualite(),
         }

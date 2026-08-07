@@ -15,9 +15,10 @@ Pourquoi ces schemas ?
 - Type safety
 """
 
-from pydantic import BaseModel, Field, EmailStr
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, EmailStr, Field
 
 
 class AgenceBase(BaseModel):
@@ -42,7 +43,7 @@ class AgenceResponse(AgenceBase):
     encours_total: float
     created_at: datetime
     updated_at: Optional[datetime]
-    
+
     class Config:
         from_attributes = True
 

@@ -17,10 +17,13 @@ Pourquoi ce modèle ?
 - Intègre avec RLS (Row Level Security)
 """
 
-from sqlalchemy import Column, String, Boolean, DateTime, Enum as SQLEnum
-from sqlalchemy.sql import func
-from app.database import Base
 import enum
+
+from sqlalchemy import Boolean, Column, DateTime, String
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy.sql import func
+
+from app.database import Base
 
 
 class UserRole(enum.Enum):

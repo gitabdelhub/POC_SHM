@@ -2,9 +2,11 @@
 Chargement Bronze Layer - Insertion dans PostgreSQL
 """
 
+from typing import Any, Dict, List
+
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
-from typing import List, Dict, Any
+
 from app.config import settings
 
 
@@ -63,6 +65,17 @@ class BronzeLoader:
                     role VARCHAR(20) NOT NULL,
                     is_active BOOLEAN DEFAULT TRUE,
                     hashed_password VARCHAR(255)
+                )
+            """))
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS bronze_qualite (
+                    qualite_id VARCHAR(50) PRIMARY KEY,
+                    agence_id VARCHAR(50) NOT NULL,
+                    date DATE NOT NULL,
+                    note_satisfaction_client INTEGER,
+                    reclamations_ouvertes INTEGER DEFAULT 0,
+                    reclamations_traitees INTEGER DEFAULT 0,
+                    delai_resolution_moyen INTEGER DEFAULT 0
                 )
             """))
             conn.commit()
@@ -162,12 +175,39 @@ class BronzeLoader:
         finally:
             session.close()
 
+    def load_qualite(self, qualite: List[Dict[str, Any]]) -> int:
+        session = self.SessionLocal()
+        count = 0
+        for q in qualite:
+            try:
+                with session.begin_nested():
+                    session.execute(
+                        text("""
+                            INSERT INTO bronze_qualite (qualite_id, agence_id, date, note_satisfaction_client, reclamations_ouvertes, reclamations_traitees, delai_resolution_moyen)
+                            VALUES (:qualite_id, :agence_id, :date, :note_satisfaction_client, :reclamations_ouvertes, :reclamations_traitees, :delai_resolution_moyen)
+                        """),
+                        q
+                    )
+                count += 1
+            except Exception as e_row:
+                print(f"  [WARN] Ligne ignoree (qualite {q.get('qualite_id','?')}) : {e_row}")
+        try:
+            session.commit()
+            return count
+        except Exception as e:
+            session.rollback()
+            print(f"  [ERR] bronze_qualite commit : {e}")
+            return 0
+        finally:
+            session.close()
+
     def load_all(self, data: Dict[str, List[Dict[str, Any]]]) -> Dict[str, int]:
         return {
             "agences": self.load_agences(data.get("agences", [])),
             "clients": self.load_clients(data.get("clients", [])),
             "engagements": self.load_engagements(data.get("engagements", [])),
             "users": self.load_users(data.get("users", [])),
+            "qualite": self.load_qualite(data.get("qualite", [])),
         }
 
     @staticmethod
@@ -181,7 +221,7 @@ class BronzeLoader:
 
     def truncate_all(self):
         with self.engine.connect() as conn:
-            for table in ["bronze_engagements", "bronze_clients", "bronze_agences", "bronze_users"]:
+            for table in ["bronze_engagements", "bronze_clients", "bronze_agences", "bronze_users", "bronze_qualite"]:
                 conn.execute(text(f"TRUNCATE TABLE {table} CASCADE"))
             conn.commit()
         print("  [OK] Tables bronze videes")

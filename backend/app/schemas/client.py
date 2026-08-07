@@ -15,9 +15,11 @@ Pourquoi ces schemas ?
 - Type safety
 """
 
-from pydantic import BaseModel, Field, validator
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
 from app.models.client import ClientSegment, ClientStatus
 
 
@@ -45,7 +47,7 @@ class ClientResponse(ClientBase):
     statut: ClientStatus
     date_creation: datetime
     updated_at: Optional[datetime]
-    
+
     class Config:
         from_attributes = True
 

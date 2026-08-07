@@ -17,9 +17,10 @@ Pourquoi ce modèle ?
 - Intègre avec RLS (Row Level Security)
 """
 
-from sqlalchemy import Column, String, Integer, Float, DateTime
+from sqlalchemy import Column, DateTime, Float, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+
 from app.database import Base
 
 

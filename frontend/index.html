@@ -1235,7 +1235,10 @@
         const API_BASE = 'http://localhost:8000';
         async function apiGet(path) {
             try {
-                const r = await fetch(API_BASE + path);
+                const token = localStorage.getItem('saham_access_token');
+                const headers = {};
+                if (token) headers['Authorization'] = 'Bearer ' + token;
+                const r = await fetch(API_BASE + path, { headers });
                 if (!r.ok) return null;
                 return await r.json();
             } catch(e) { return null; }
@@ -1517,31 +1520,50 @@
         /* --- 4. CORE LOGIC & ROUTING --- */
 
         function login(role) {
-            APP.userRole = role;
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-layout').classList.remove('hidden');
-            document.getElementById('saham-fab').classList.remove('hidden');
-            
-            // Set User Info
-            const roleNames = { 'DG': 'Directeur Général', 'DR': 'Directeur Régional', 'CA': "Chargé d'Affaires", 'AR': 'Analyste Risque', 'Admin': 'Administrateur IT' };
-            const nameMapping = { 'DG': 'Mehdi Tazi', 'DR': 'Youssef Berrada', 'CA': 'Amine Benali', 'AR': 'Nadia Fassi', 'Admin': 'Meryem El Asri' };
-            document.getElementById('user-avatar').innerText = (nameMapping[role] || role).substring(0,2).toUpperCase();
-            document.getElementById('user-name').innerText = nameMapping[role] || role;
+            const demoAccounts = {
+                'DG': 'dg@sahambank.ma', 'DR': 'dr@sahambank.ma', 'CA': 'ca@sahambank.ma',
+                'AR': 'ar@sahambank.ma', 'Admin': 'admin@sahambank.ma'
+            };
+            const email = demoAccounts[role];
+            if (!email) { showToast('Aucun compte démo pour ce rôle', 'error'); return; }
+            const password = localStorage.getItem('saham_demo_password') || 'Demo2026!';
+            fetch(API_BASE + '/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
+            .then(async r => {
+                const data = await r.json();
+                if (!r.ok) throw new Error(data.detail || 'Email ou mot de passe incorrect');
+                return data;
+            })
+            .then(data => {
+                localStorage.setItem('saham_access_token', data.access_token);
+                APP.userRole = role;
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app-layout').classList.remove('hidden');
+                document.getElementById('saham-fab').classList.remove('hidden');
 
-            buildSidebar();
-            
-            // Navigate to appropriate default tab based on role
-            if (role === 'Admin') {
-                location.hash = 'admin-add-dash';
-            } else {
-                const firstModule = APP.modules.find(m => m.roles && m.roles.includes(role) && m.id !== 'admin');
-                if (firstModule) location.hash = firstModule.id;
-                else location.hash = 'dashboard';
-            }
-            route();
+                const roleNames = { 'DG': 'Directeur Général', 'DR': 'Directeur Régional', 'CA': "Chargé d'Affaires", 'AR': 'Analyste Risque', 'Admin': 'Administrateur IT' };
+                const nameMapping = { 'DG': 'Mehdi Tazi', 'DR': 'Youssef Berrada', 'CA': 'Amine Benali', 'AR': 'Nadia Fassi', 'Admin': 'Meryem El Asri' };
+                document.getElementById('user-avatar').innerText = (nameMapping[role] || role).substring(0,2).toUpperCase();
+                document.getElementById('user-name').innerText = nameMapping[role] || role;
+
+                buildSidebar();
+                if (role === 'Admin') {
+                    location.hash = 'admin-add-dash';
+                } else {
+                    const firstModule = APP.modules.find(m => m.roles && m.roles.includes(role) && m.id !== 'admin');
+                    if (firstModule) location.hash = firstModule.id;
+                    else location.hash = 'dashboard';
+                }
+                route();
+            })
+            .catch(err => showToast(err.message, 'error'));
         }
 
         function logout() {
+            localStorage.removeItem('saham_access_token');
             location.hash = '';
             document.getElementById('app-layout').classList.add('hidden');
             document.getElementById('saham-fab').classList.add('hidden');
@@ -1872,7 +1894,6 @@
                 if (this.instances[canvasId]) this.instances[canvasId].destroy();
                 const ctx = document.getElementById(canvasId);
                 if (!ctx) return;
-                
                 this.instances[canvasId] = new Chart(ctx.getContext('2d'), {
                     type: 'bar',
                     data: {
@@ -1887,17 +1908,19 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        animation: { duration: 500 },
                         plugins: {
-                            legend: { display: false },
+                            legend: { display: true, position: 'top', labels: { usePointStyle: true, font: { family: 'Manrope', size: 11 } } },
                             tooltip: {
                                 backgroundColor: '#3b504a',
                                 titleFont: { family: 'Montserrat' },
-                                bodyFont: { family: 'Manrope' }
+                                bodyFont: { family: 'Manrope' },
+                                callbacks: { label: function(c) { return c.raw.toFixed(1) + ' M MAD'; } }
                             }
                         },
                         scales: {
-                            y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
-                            x: { grid: { display: false } }
+                            y: { beginAtZero: true, grid: { borderDash: [5, 5] }, title: { display: true, text: 'Montant (M MAD)', font: { family: 'Manrope', size: 12, weight: 'bold' } } },
+                            x: { grid: { display: false }, title: { display: true, text: 'Mois', font: { family: 'Manrope', size: 12, weight: 'bold' } } }
                         }
                     }
                 });
@@ -1916,7 +1939,7 @@
                             data: dataArr,
                             backgroundColor: colors,
                             borderWidth: 0,
-                            hoverOffset: 4
+                            hoverOffset: 12
                         }]
                     },
                     options: {
@@ -1927,7 +1950,7 @@
                             legend: { position: 'bottom', labels: { usePointStyle: true, font: { family: 'Manrope', size: 11 } } },
                             tooltip: {
                                 backgroundColor: '#3b504a',
-                                callbacks: { label: function(c) { return ' ' + c.label + ': ' + c.raw + '%'; } }
+                                callbacks: { label: function(c) { var t = c.dataset.data.reduce(function(a, b) { return a + b; }, 0); return ' ' + c.label + ': ' + ((c.raw / t) * 100).toFixed(1) + '%'; } }
                             }
                         }
                     }
@@ -1991,8 +2014,25 @@
             const totAgences = kpis.total_agences || '--';
 
             // Build chart data
-            const pnbLabels = pnbData.map(d => d.annee_mois ? d.annee_mois.slice(-2) : '');
-            const pnbValues = pnbData.map(d => (d.pnb / 1e6).toFixed(1));
+            var moisFR = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'];
+            var pnbAnneeToutes = pnbData.map(function(d) { return d.annee_mois ? parseInt(d.annee_mois.slice(0,4)) : 0; });
+            var pnbAnnees = [...new Set(pnbAnneeToutes)].sort();
+            var pnbLabels = pnbData.map(function(d) { if (d.annee_mois) { var p = d.annee_mois.split('-'); return moisFR[parseInt(p[1])-1] + ' ' + p[0]; } return ''; });
+            var pnbValues = pnbData.map(function(d) { return (d.pnb / 1e6).toFixed(1); });
+            var pnbFullData = pnbData;
+            var pnbAnneeCourante = 'Toutes';
+            window.filtrerPNB = function() {
+                var annee = document.getElementById('pnbYearSelect').value;
+                pnbAnneeCourante = annee;
+                var filtrees = annee === 'Toutes' ? pnbFullData : pnbFullData.filter(function(d) { return d.annee_mois && d.annee_mois.slice(0,4) == annee; });
+                var newLabels = filtrees.map(function(d) { if (d.annee_mois) { var p = d.annee_mois.split('-'); return moisFR[parseInt(p[1])-1] + ' ' + p[0]; } return ''; });
+                var newValues = filtrees.map(function(d) { return parseFloat((d.pnb / 1e6).toFixed(1)); });
+                window.ChartManager.initBarChart('pnbChart', newLabels, newValues, 'PNB Mensuel (M MAD)');
+            }
+            var anneesDesc = [...pnbAnnees].reverse();
+            var pnbOptionsHTML = '';
+            anneesDesc.forEach(function(a) { pnbOptionsHTML += '<option value="' + a + '"' + (a === 2026 ? ' selected' : '') + '>Année ' + a + '</option>'; });
+            pnbOptionsHTML += '<option value="Toutes">Toutes les années</option>';
             const credLabels = credData.map(d => d.label || '');
             const credValues = credData.map(d => d.value || 0);
 
@@ -2007,9 +2047,6 @@
                     <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
                         <span style="background:var(--light-bg); color:var(--primary-teal); padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">${data.title}</span>
                         <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; color:var(--dark-teal); font-weight:800; margin:0; flex:1;">Performances Financières & Commerciales</h2>
-                        <button onclick="exportDashCSV()" style="background:var(--primary-teal); color:white; border:none; padding:8px 16px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Exporter CSV
-                        </button>
                     </div>
 
                     <!-- KPI Row -->
@@ -2219,7 +2256,7 @@
                             <div style="padding:20px 24px; border-bottom:1px solid var(--sec-bg); display:flex; justify-content:space-between; align-items:center;">
                                 <h3 style="font-family:'Montserrat', sans-serif; font-size:16px; font-weight:700; color:var(--dark-teal); margin:0;">Évolution du Produit Net Bancaire (M MAD)</h3>
                                 <div style="display:flex; gap:8px;">
-                                    <select style="padding:6px 12px; border:1px solid var(--sec-bg); border-radius:6px; font-size:12px; background:var(--light-bg);"><option>Année 2025</option><option>Année 2026</option></select>
+                                    <select id="pnbYearSelect" onchange="filtrerPNB()" style="padding:6px 12px; border:1px solid var(--sec-bg); border-radius:6px; font-size:12px; background:var(--light-bg);">${pnbOptionsHTML}</select>
                                     <button class="btn-fullscreen" onclick="toggleFullscreen(this)"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg></button>
                                 </div>
                             </div>
@@ -2242,14 +2279,15 @@
                 </div>
             `;
             
-            setTimeout(() => {
+setTimeout(() => {
                 if (pnbLabels.length > 0) {
-                    window.ChartManager.initBarChart('pnbChart', pnbLabels, pnbValues, 'PNB (M MAD)');
+                    window.ChartManager.initBarChart('pnbChart', pnbLabels, pnbValues, 'PNB Mensuel (M MAD)');
+                    window.filtrerPNB();
                 } else {
-                    window.ChartManager.initBarChart('pnbChart', 
-                        ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'], 
-                        [112, 125, 138, 141, 156, 184, 142, 135, 151, 165, 178, 221], 
-                        'PNB (M MAD)');
+window.ChartManager.initBarChart('pnbChart',
+                        ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'],
+                        [112, 125, 138, 141, 156, 184, 142, 135, 151, 165, 178, 221],
+                        'PNB Mensuel (M MAD)');
                 }
                 if (credLabels.length > 0) {
                     window.ChartManager.initDoughnutChart('creditChart', credLabels, credValues,
@@ -2305,7 +2343,7 @@
                             <div style="font-size:12px; color:var(--slate-500); margin-top:8px;">Objectif: < 3 jours</div>
                         </div>
                         <div class="card" style="padding:24px;">
-                            <h3 style="font-size:14px; color:var(--slate-500); margin-bottom:12px;">NPS (Net Promoter Score)</h3>
+                            <h3 style="font-size:14px; color:var(--slate-500); margin-bottom:12px;">Satisfaction Client</h3>
                             <div style="font-size:36px; font-weight:800; color:var(--primary-teal);">${APP.userRole === 'DR' ? '68' : APP.userRole === 'CA' ? '71' : '64'}</div>
 
                             <div style="font-size:12px; color:var(--slate-500); margin-top:8px;">+4 points T3</div>
@@ -2317,7 +2355,7 @@
                         <div class="table-responsive">
                             <table>
                                 <thead>
-                                    <tr><th>Code Agence</th><th>Région</th><th>NPS</th><th>Réclamations Traitées</th><th>Délai Moyen</th></tr>
+                                    <tr><th>Code Agence</th><th>Région</th><th>Satisfaction</th><th>Réclamations Traitées</th><th>Délai Moyen</th></tr>
                                 </thead>
                                 <tbody>
                                     
@@ -2358,7 +2396,28 @@
             `;
         }
 
-        function renderPowerbi(container) {
+        async function renderPowerbi(container) {
+            var pnbAPIData = await apiGet('/gold/pnb-mensuel') || [];
+            var anneesDispo = [...new Set(pnbAPIData.map(function(d) { return d.annee_mois ? parseInt(d.annee_mois.slice(0,4)) : 0; }).filter(function(a) { return a > 0; }))].sort();
+            if (anneesDispo.length === 0) anneesDispo = [2023, 2024, 2025, 2026];
+            var moisFR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+            var optionsAnnees = '<option value="Tout">Tout</option>';
+            anneesDispo.forEach(function(a) { optionsAnnees += '<option value="' + a + '">' + a + '</option>'; });
+            var optionsMois = '<option value="Tout">Tout</option>';
+            moisFR.forEach(function(m, i) { optionsMois += '<option value="' + (i+1) + '">' + m + '</option>'; });
+            var optionsJours = '<option value="Tout">Tout</option>';
+            for (var j = 1; j <= 31; j++) optionsJours += '<option value="' + j + '">' + j + '</option>';
+            window.mettreJourFiltresPowerbi = function() {
+                var ann = document.getElementById('pbAnnee');
+                var moi = document.getElementById('pbMois');
+                var jou = document.getElementById('pbJour');
+                if (!ann) return;
+                var parties = [];
+                if (ann.value !== 'Tout') parties.push('Année: ' + ann.value);
+                if (moi.value !== 'Tout') parties.push('Mois: ' + moisFR[parseInt(moi.value)-1]);
+                if (jou.value !== 'Tout') parties.push('Jour: ' + jou.value);
+                document.getElementById('pbFiltresActifs').innerHTML = parties.length ? 'Filtres actifs : ' + parties.join(' | ') : 'Aucun filtre actif';
+            }
             container.innerHTML = `
                 <div class="fade-in">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
@@ -2399,14 +2458,18 @@
                             </div>
                         </div>
                         
-                        <div style="padding:20px 24px; background:var(--light-bg); border-bottom:1px solid var(--sec-bg); display:grid; grid-template-columns:repeat(5, 1fr); gap:20px; align-items:end;">
+                        <div style="padding:20px 24px; background:var(--light-bg); border-bottom:1px solid var(--sec-bg); display:grid; grid-template-columns:repeat(6, 1fr); gap:20px; align-items:end;">
                             <div>
                                 <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Année</label>
-                                <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option><option>2026</option><option>2025</option></select>
+                                <select id="pbAnnee" onchange="mettreJourFiltresPowerbi()" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;">${optionsAnnees}</select>
                             </div>
                             <div>
                                 <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Mois</label>
-                                <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option><option>Janvier</option><option>Février</option><option>Mars</option><option>Avril</option><option>Mai</option><option>Juin</option></select>
+                                <select id="pbMois" onchange="mettreJourFiltresPowerbi()" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;">${optionsMois}</select>
+                            </div>
+                            <div>
+                                <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Jour</label>
+                                <select id="pbJour" onchange="mettreJourFiltresPowerbi()" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;">${optionsJours}</select>
                             </div>
                             <div>
                                 <label style="font-size:11px; font-weight:800; color:var(--primary-teal); margin-bottom:8px; display:block; text-transform:uppercase; letter-spacing:0.5px;">Réseau</label>
@@ -2429,12 +2492,14 @@
                                 <select onchange="showToast('Filtre appliqué. Mise à jour du rapport...', 'info')" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--sec-bg); background:white; color:var(--dark-teal); font-weight:500; font-family:'Manrope', sans-serif; cursor:pointer; outline:none;"><option>Tout</option><option>Portefeuille Actif</option><option>Clients NPL (Non-Performing)</option><option>Comptes Inactifs</option></select>
                             </div>
                             <div>
-                                <button style="width:100%; padding:12px; display:flex; justify-content:center; gap:8px; align-items:center; background:white; color:var(--primary-teal); border:1px solid var(--sec-bg); border-radius:8px; font-weight:700; cursor:pointer;">
+                                <button onclick="document.getElementById('pbAnnee').value='Tout';document.getElementById('pbMois').value='Tout';document.getElementById('pbJour').value='Tout';mettreJourFiltresPowerbi()" style="width:100%; padding:12px; display:flex; justify-content:center; gap:8px; align-items:center; background:white; color:var(--primary-teal); border:1px solid var(--sec-bg); border-radius:8px; font-weight:700; cursor:pointer;">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                                     Réinitialiser
                                 </button>
                             </div>
                         </div>
+                        
+                        <div id="pbFiltresActifs" style="padding:8px 24px; font-size:12px; color:var(--primary-teal); font-weight:600; background:#e8f4ed; border-bottom:1px solid var(--sec-bg);">Aucun filtre actif</div>
                         
                         <div style="height:550px; background:#f9fafb; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden;">
                             <div style="position:absolute; inset:0; opacity:0.03; background-image:radial-gradient(circle at 2px 2px, black 1px, transparent 0); background-size:32px 32px;"></div>
@@ -2454,6 +2519,7 @@
                         </div>
                     </div>
                 </div>`;
+            mettreJourFiltresPowerbi();
         }        function renderPortefeuille(container) {
             container.innerHTML = `
                 <div class="fade-in">
@@ -3023,16 +3089,6 @@ function renderChatbot(container) {
                             <div class="bubble">
                                 <p style="margin-bottom:8px">Voici les résultats trouvés (${res.length} clients).</p>
                                 ${tableHtml}
-                                <div style="margin-top:12px; background:var(--light-bg); border-radius:6px; border:1px solid var(--sec-bg); overflow:hidden;">
-                                    <button class="toggle-btn" style="width:100%; padding:8px 12px; background:#f4f6f5; text-align:left; font-size:12px; font-weight:600; cursor:pointer; border:none; color:var(--text-main); display:flex; align-items:center; gap:6px;" onclick="toggleSql(this)">
-                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                        Voir la requête SQL
-                                    </button>
-                                    <div class="sql-container">
-                                        <div class="sql-code">${syntaxHighlightSQL(mockSQL)}</div>
-                                        <div class="sql-meta">Exécutée en ${timeMs}ms</div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     `;
@@ -3136,7 +3192,6 @@ function renderChatbot(container) {
                 </table>`;
             }
 
-            const highlightedSql = syntaxHighlightSQL(sql);
             const execTime = Math.floor(Math.random() * 150) + 50;
 
             MOCK.queries.unshift({
@@ -3144,14 +3199,12 @@ function renderChatbot(container) {
                 sql: sql,
                 results: resultsCount,
                 time: execTime,
-                date: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR').toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR'),
+                date: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR'),
                 user: APP.userRole || 'Inconnu'
             });
 
             container.innerHTML += `
                 <div class="chat-msg bot" style="width: 100%;">
-                    <div style="font-weight:600; margin-bottom:4px; color:var(--dark-teal); font-size:12px;">Requête générée :</div>
-                    <div class="chat-sql-block">${highlightedSql}</div>
                     <div style="margin-top:12px;">${nlpResponse}</div>
                     ${tableHtml}
                     <div style="text-align:right; font-size:10px; color:var(--slate-500); margin-top:8px;">Exécuté en ${execTime}ms</div>
@@ -3359,25 +3412,16 @@ function renderChatbot(container) {
             }
 
             if (!oob) {
-                // Step 2: Génération SQL
+                // Step 2: Traitement (la requête SQL est générée en arrière-plan, non affichée)
                 document.getElementById(step1Id).style.display = 'none';
                 const step2Id = 'msg-' + Date.now() + '-2';
-                
-                const highlight = sql
-                    .replace(/\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|LIMIT|SUM|ASC|DESC|AND|OR|IN|INTERVAL)\b/g, '<span class="sql-syntax-purple">$1</span>')
-                    .replace(/\b(clients|dossiers|agences_perf|performances|churn_predictions|transactions|alertes_aml|scoring_marketing)\b/g, '<span class="sql-syntax-cyan">$1</span>')
-                    .replace(/([0-9]+|'[^']*')/g, '<span class="sql-syntax-green">$1</span>')
-                    .replace(/([A-Z_a-z0-9]+.[A-Z_a-z0-9]+)/g, '<span class="sql-syntax-blue">$1</span>');
 
                 msgs.innerHTML += `
                     <div id="${step2Id}" class="saham-msg bot">
                         <div class="bubble">
-                            <div class="saham-sql-block">
-                                <div class="saham-sql-header">
-                                    <span>Requête SQL générée</span>
-                                    <span class="saham-sql-badge">PostgreSQL</span>
-                                </div>
-                                <div class="saham-sql-content">${highlight}</div>
+                            <div class="saham-msg-icon">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                Analyse des données de la banque<span class="typing-dots"><span></span><span></span><span></span></span>
                             </div>
                         </div>
                     </div>
@@ -3437,23 +3481,9 @@ function renderChatbot(container) {
                     </table>
                 ` : "";
 
-                const sourcesHtml = `
-                    <div class="saham-rag-sources">
-                        <div class="saham-rag-title" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'flex' : 'none'">
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Sources de données utilisées (${tablesUsed.length})
-                        </div>
-                        <div class="saham-rag-content" style="display:none;">
-                            ${tablesUsed.map(t => `<div style="display:flex; justify-content:space-between;"><span>Table : <strong>${t}</strong></span><span>~1.2M lignes analysées</span></div>`).join('')}
-                            <div style="display:flex; justify-content:space-between; margin-top:4px; font-style:italic;"><span>Période couverte</span><span>Temps réel</span></div>
-                        </div>
-                    </div>
-                `;
-
                 msgs.innerHTML += `
                     <div class="saham-msg bot">
                         <div class="bubble">
-                            ${sourcesHtml}
                             <p>${nlpResponse}</p>
                             ${tableStr}
                             <button class="saham-btn-module" onclick="showToast('Ouverture du module concerné...')">

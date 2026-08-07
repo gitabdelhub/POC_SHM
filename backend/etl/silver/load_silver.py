@@ -1,6 +1,8 @@
+from typing import Any, Dict, List
+
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
-from typing import List, Dict, Any
+
 from app.config import settings
 
 
@@ -73,6 +75,20 @@ class SilverLoader:
                     ingested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """))
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS silver_qualite (
+                    qualite_id VARCHAR(50) PRIMARY KEY,
+                    agence_id VARCHAR(50),
+                    date DATE,
+                    note_satisfaction_client INTEGER,
+                    reclamations_ouvertes INTEGER DEFAULT 0,
+                    reclamations_traitees INTEGER DEFAULT 0,
+                    delai_resolution_moyen INTEGER DEFAULT 0,
+                    is_valid BOOLEAN DEFAULT TRUE,
+                    error_message TEXT,
+                    ingested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """))
             conn.commit()
         print("  [OK] Tables silver creees")
 
@@ -120,17 +136,22 @@ class SilverLoader:
         cols = ["ref", "client_id", "client_nom", "type_credit", "montant", "duree", "taux", "score", "statut", "date_depot", "agence_id", "is_valid", "error_message", "ingested_at"]
         return self._bulk_insert("silver_engagements", engagements, cols)
 
+    def load_qualite(self, qualite: List[Dict[str, Any]]) -> int:
+        cols = ["qualite_id", "agence_id", "date", "note_satisfaction_client", "reclamations_ouvertes", "reclamations_traitees", "delai_resolution_moyen", "is_valid", "error_message", "ingested_at"]
+        return self._bulk_insert("silver_qualite", qualite, cols)
+
     def load_all(self, data: Dict[str, List[Dict[str, Any]]]) -> Dict[str, int]:
         return {
             "agences": self.load_agences(data.get("agences", [])),
             "users": self.load_users(data.get("users", [])),
             "clients": self.load_clients(data.get("clients", [])),
             "engagements": self.load_engagements(data.get("engagements", [])),
+            "qualite": self.load_qualite(data.get("qualite", [])),
         }
 
     def truncate_all(self):
         with self.engine.connect() as conn:
-            for table in ["silver_engagements", "silver_clients", "silver_users", "silver_agences"]:
+            for table in ["silver_engagements", "silver_clients", "silver_users", "silver_agences", "silver_qualite"]:
                 conn.execute(text(f"TRUNCATE TABLE {table} CASCADE"))
             conn.commit()
         print("  [OK] Tables silver videes")

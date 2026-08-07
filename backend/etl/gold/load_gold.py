@@ -1,6 +1,8 @@
+from typing import Any, Dict, List
+
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
-from typing import List, Dict, Any
+
 from app.config import settings
 
 
@@ -12,6 +14,17 @@ class GoldLoader:
 
     def create_tables(self):
         with self.engine.connect() as conn:
+            conn.execute(text("""
+                DROP TABLE IF EXISTS fact_risque CASCADE;
+                DROP TABLE IF EXISTS fact_qualite CASCADE;
+                DROP TABLE IF EXISTS fact_performance CASCADE;
+                DROP TABLE IF EXISTS fact_engagement CASCADE;
+                DROP TABLE IF EXISTS dim_utilisateur CASCADE;
+                DROP TABLE IF EXISTS dim_type_credit CASCADE;
+                DROP TABLE IF EXISTS dim_agence CASCADE;
+                DROP TABLE IF EXISTS dim_client CASCADE;
+                DROP TABLE IF EXISTS dim_date CASCADE;
+            """))
             conn.execute(text("""
                 CREATE TABLE IF NOT EXISTS dim_date (
                     date_id INTEGER PRIMARY KEY,
@@ -97,7 +110,7 @@ class GoldLoader:
                     qualite_id VARCHAR(50) PRIMARY KEY,
                     agence_id VARCHAR(50),
                     date_id INTEGER,
-                    nps INTEGER,
+                    note_satisfaction_client INTEGER,
                     reclamations_ouvertes INTEGER,
                     reclamations_traitees INTEGER,
                     delai_resolution_moyen INTEGER,

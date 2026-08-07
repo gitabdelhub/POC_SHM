@@ -2,8 +2,8 @@
 Test complet de la couche Silver : extraire Bronze -> transformer Silver -> charger Silver
 """
 from etl.bronze.extract_bronze import BronzeExtractor
-from etl.silver.transform_silver import SilverTransformer
 from etl.silver.load_silver import SilverLoader
+from etl.silver.transform_silver import SilverTransformer
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
         valides = sum(1 for r in rows if r["is_valid"])
         print(f"  silver_{table}: {valides}/{total} valides")
         if total - valides > 0:
-            print(f"    Lignes invalides:")
+            print("    Lignes invalides:")
             for r in rows:
                 if not r["is_valid"]:
                     id_key = r.get("id") or r.get("ref", "?")
