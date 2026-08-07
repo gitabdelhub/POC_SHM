@@ -9,7 +9,8 @@ Usage : python -m app.seed_demo
 from sqlalchemy import text
 
 from app.core.security import hash_password
-from app.database import engine
+from app.database import engine, init_db
+from app.models import User  # noqa: F401  (enregistre le modèle auprès de Base.metadata)
 
 DEMO_ACCOUNTS = [
     {"id": "USR-DEMO-DG",    "email": "dg@sahambank.ma",    "nom": "Mehdi Tazi",      "role": "DG"},
@@ -22,6 +23,7 @@ DEMO_PASSWORD = "Demo2026!"
 
 
 def seed():
+    init_db()
     hashed = hash_password(DEMO_PASSWORD)
     with engine.begin() as conn:
         for acc in DEMO_ACCOUNTS:

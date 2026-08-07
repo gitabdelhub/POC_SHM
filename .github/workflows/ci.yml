@@ -76,11 +76,11 @@ jobs:
         run: docker compose build
 
       - name: Démarrer la stack
-        run: docker compose up -d
+        run: docker compose up -d --wait
 
       - name: Attendre l'API (health)
         run: |
-          for i in $(seq 1 30); do
+          for i in $(seq 1 60); do
             if curl -sf http://localhost:8000/health >/dev/null; then
               echo "API OK"
               break

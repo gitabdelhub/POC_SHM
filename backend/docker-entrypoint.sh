@@ -18,7 +18,7 @@ except Exception:
 done
 echo "==> PostgreSQL prêt."
 
-echo "==> Création des tables applicatives (init_db)..." ; python -c "from app.database import init_db; init_db()"
+echo "==> Création des tables applicatives (init_db)..." ; python -c "import app.models; from app.database import init_db; init_db()"
 
 # Les tables GOLD sont créées par le pipeline ETL. On les charge si absentes ou vides.
 echo "==> Vérification de la présence des données GOLD..."
