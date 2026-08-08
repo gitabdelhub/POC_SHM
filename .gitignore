@@ -20,3 +20,6 @@ backend/.coverage
 ALL_IN_ONE.md
 ECRITURES/
 backend/ECRITURES/
+
+# Artefacts de travail temporaires (carte Maroc inachevée, etc.)
+data/

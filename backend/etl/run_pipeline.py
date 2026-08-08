@@ -119,11 +119,18 @@ def main() -> None:
     only = None
     if "--step" in args:
         only = args[args.index("--step") + 1]
-
     if only and only not in ("bronze", "silver", "gold"):
         print(f"Étape inconnue : {only} (bronze | silver | gold)")
         sys.exit(2)
+    run_all(only)
 
+
+def run_all(only: str | None = None) -> None:
+    """Exécute le pipeline complet (bronze → silver → gold).
+
+    Récupère du main() pour pouvoir être appelée par le planificateur
+    (APScheduler) ou l'endpoint /etl/run sans passer par sys.argv.
+    """
     print(SEP)
     print("PIPELINE ETL SAHAM BANK")
     print(SEP)
@@ -141,7 +148,7 @@ def main() -> None:
             step_gold()
     except Exception as exc:
         print(f"\n[ERREUR] Pipeline interrompu : {exc}")
-        sys.exit(1)
+        raise RuntimeError(f"ETL interrompu : {exc}") from exc
 
     verify()
     print(f"\n{SEP}\nPIPELINE TERMINÉ AVEC SUCCÈS\n{SEP}")

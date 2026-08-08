@@ -1,0 +1,21 @@
+# Planification cloud du pipeline ETL pour Render (optionnelle).
+#
+# Render Cron Jobs exécute un service à intervalle régulier. Ce job relance
+# le pipeline complet (bronze → silver → gold) une fois par jour.
+#
+# Pour l'utiliser après le déploiement (tâche D) :
+#   1. Déployer l'API sur Render (service web).
+#   2. Créer un "Cron Job" Render pointant vers ce dépôt, commande :
+#        python -m etl.run_pipeline
+#   3. Brancher les mêmes variables d'environnement que le service web
+#      (DATABASE_URL, POSTGRES_*, SECRET_KEY, ...).
+#
+# La fréquence "une fois par jour à 02h" correspond à la config de l'app :
+# ETL_SCHEDULER_ENABLED + ETL_SCHEDULE_HOUR permettent aussi de le faire
+# in-process (APScheduler) sans Cron Job Render.
+
+schema: v1
+triggers:
+  - type: schedule
+    schedule: "0 2 * * *"
+    serviceName: saham-bank-etl
