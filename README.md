@@ -35,6 +35,35 @@ Au premier démarrage, le conteneur `api` initialise la base PostgreSQL
 
 - Python 3.12
 - PostgreSQL (base `saham_bank`, connexion configurée dans `backend/.env`)
+- Node.js (pour `npm run dev`)
+
+## Installation sur un autre poste (recommandé, lancement en 1 commande)
+
+```bash
+# 1. Dépendances Node (concurrently) — node_modules n'est pas versionné
+npm install
+
+# 2. Environnement Python — backend/venv n'est pas versionné non plus
+cd backend
+python -m venv venv
+.\venv\Scripts\pip install -r requirements.txt
+cd ..
+
+# 3. Config de la base — copier backend/.env.example vers backend/.env
+#    et renseigner DATABASE_URL / POSTGRES_PASSWORD (créer la base "saham_bank").
+
+# 4. Charger les données (ETL) + comptes démo
+cd backend
+.\venv\Scripts\python -m etl.run_pipeline
+.\venv\Scripts\python -m app.seed_demo
+cd ..
+
+# 5. Lancer API + frontend ensemble
+npm run dev
+```
+
+Puis ouvrir http://localhost:5500 (frontend) et http://localhost:8000/docs (API).
+`Ctrl+C` dans le terminal arrête les deux serveurs.
 
 ## Installation
 
