@@ -47,6 +47,11 @@ class Settings(BaseSettings):
     AI_TOP_K: int = Field(4, env="AI_TOP_K")                       # nb de chunks pertinents
     SQL_MAX_ROWS: int = Field(100, env="SQL_MAX_ROWS")             # LIMIT max appliquee
 
+    # Planification ETL légère (APScheduler, pas d'Airflow)
+    # Désactivé par défaut en dev pour ne pas surcharger la base.
+    ETL_SCHEDULER_ENABLED: bool = Field(False, env="ETL_SCHEDULER_ENABLED")
+    ETL_SCHEDULE_HOUR: int = Field(2, env="ETL_SCHEDULE_HOUR")     # heure (0-23) du batch quotidien
+
     class Config:
         env_file = ".env"
         case_sensitive = True

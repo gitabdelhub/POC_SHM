@@ -28,13 +28,42 @@ Au premier démarrage, le conteneur `api` initialise la base PostgreSQL
   - `app/` : API FastAPI (`app.main:app`), routeurs, sécurité JWT
   - `tests/` : suite pytest
 - `frontend/` : portail web (fichier unique `frontend/index.html` + logo)
-- `ALL_IN_ONE.md` : documentation technique et pédagogique du projet
-- `ECRITURES/` : documentation technique
+- `backend/app/scheduler.py` : planification légère du pipeline (APScheduler)
+- `render.yaml` : configuration de déploiement cloud (API + Cron ETL)
 
 ## Prérequis
 
 - Python 3.12
 - PostgreSQL (base `saham_bank`, connexion configurée dans `backend/.env`)
+- Node.js (pour `npm run dev`)
+
+## Installation sur un autre poste (recommandé, lancement en 1 commande)
+
+```bash
+# 1. Dépendances Node (concurrently) — node_modules n'est pas versionné
+npm install
+
+# 2. Environnement Python — backend/venv n'est pas versionné non plus
+cd backend
+python -m venv venv
+.\venv\Scripts\pip install -r requirements.txt
+cd ..
+
+# 3. Config de la base — copier backend/.env.example vers backend/.env
+#    et renseigner DATABASE_URL / POSTGRES_PASSWORD (créer la base "saham_bank").
+
+# 4. Charger les données (ETL) + comptes démo
+cd backend
+.\venv\Scripts\python -m etl.run_pipeline
+.\venv\Scripts\python -m app.seed_demo
+cd ..
+
+# 5. Lancer API + frontend ensemble
+npm run dev
+```
+
+Puis ouvrir http://localhost:5500 (frontend) et http://localhost:8000/docs (API).
+`Ctrl+C` dans le terminal arrête les deux serveurs.
 
 ## Installation
 
@@ -50,6 +79,23 @@ python -m venv venv
 cd backend
 .\venv\Scripts\python -m etl.run_pipeline      # bronze + silver + gold
 ```
+
+En conditions de production, le pipeline est relancé quotidiennement par le
+planificateur intégré (APScheduler) :
+
+```bash
+cd backend
+$env:ETL_SCHEDULER_ENABLED="true"; $env:ETL_SCHEDULE_HOUR="2"   # daily à 02:00
+.\venv\Scripts\python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+Ou déclenché manuellement via l'API (JWT requis, rôles DG/ADMIN) :
+
+```bash
+curl -X POST http://localhost:8000/etl/run -H "Authorization: Bearer $TOKEN"
+```
+
+Pour le cloud (Render), voir `render.yaml` (Cron Job quotidien).
 
 ## Démarrage de l'API
 

@@ -15,3 +15,19 @@ backend/saham_bank.db
 .pytest_cache/
 .coverage
 backend/.coverage
+
+# Documents personnels (lecture seule, hors repo)
+ALL_IN_ONE.md
+ECRITURES/
+backend/ECRITURES/
+
+# Artefacts de travail temporaires (carte Maroc inachevée, etc.)
+data/
+
+# Vestiges React du frontend (le frontend est vanilla, un seul index.html)
+frontend/dist/
+frontend/node_modules/
+frontend/vite.config.ts
+frontend/tsconfig.json
+frontend/server.cjs
+frontend/serve_frontend.cjs

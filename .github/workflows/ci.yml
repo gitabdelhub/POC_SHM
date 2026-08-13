@@ -1,15 +1,23 @@
+# CI : vérifications automatiques à chaque push / pull request.
+# Deux jobs : (1) tests backend + lint, (2) validation Docker Compose.
 name: CI
 
 on:
+  # Maints sur main (ex: fusion d'une PR de release)
   push:
     branches: [main]
+  # À chaque pull request vers n'importe quelle branche
   pull_request:
 
 jobs:
+  # Job 1 : on installe le backend dans Python 3.12, on charge une
+  # vraie base PostgreSQL vierge via le pipeline ETL, puis on lance
+  # ruff (style) et pytest (tests + couverture).
   test-backend:
     name: Tests backend (pytest)
     runs-on: ubuntu-latest
     services:
+      # Base PostgreSQL vierge, isolée pour le job (pas de conflit de port)
       postgres:
         image: postgres:16-alpine
         env:
@@ -24,12 +32,14 @@ jobs:
           --health-timeout 5s
           --health-retries 12
     env:
+      # Même configuration qu'en local, mais connectée au service postgres CI
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/saham_bank
       POSTGRES_HOST: localhost
       POSTGRES_PORT: 5432
       POSTGRES_DB: saham_bank
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      # Secrets factices : suffisants pour les tests, jamais les vrais
       SECRET_KEY: ci-secret-key
       OAUTH_CLIENT_ID: client_id
       OAUTH_CLIENT_SECRET: client_secret
@@ -41,10 +51,13 @@ jobs:
       CORS_ORIGINS: http://localhost:3000
     defaults:
       run:
+        # Toutes les commandes tournent dans le dossier backend
         working-directory: backend
     steps:
+      # Récupère le code du dépôt
       - uses: actions/checkout@v4
 
+      # Installe l'interpréteur Python 3.12 (même version qu'en local)
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -54,30 +67,40 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # Remplit la base depuis les CSV (ETL) puis crée les comptes démo.
+      # Ordre important : le seed a besoin des tables créées par l'étage gold.
       - name: Charger la base (ETL) + seed démo
         run: |
           python -m etl.run_pipeline
           python -m app.seed_demo
 
+      # Vérifie le style de code (lint)
       - name: Lint (ruff)
         run: pip install ruff && ruff check app etl tests --output-format=concise
 
+      # Lance les tests avec le taux de couverture affiché
       - name: Tests pytest avec couverture
         run: |
           python -m pytest -q --cov=app --cov-report=term-missing
 
+  # Job 2 : vérifie que le docker-compose (db + api + web) monte bien en entier
+  # et répond sur /health (API) et sur le port 80 du nginx (web).
   docker:
     name: Validation Docker Compose
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      # Construit les 3 images (backend, frontend, volume db implicite)
       - name: Build les images
         run: docker compose build
 
+      # Démarre toutes les images. --wait attend que les healthchecks passent.
       - name: Démarrer la stack
         run: docker compose up -d --wait
 
+      # L'API peut être lente au premier démarrage (étage d'initialisation) :
+      # on réinterroge jusqu'à réussir (60 x 5s = 5 min maximum).
       - name: Attendre l'API (health)
         run: |
           for i in $(seq 1 60); do
@@ -90,9 +113,12 @@ jobs:
           done
           curl -fsS http://localhost:8000/health
 
+      # Le frontend (nginx) sert index.html sur le port 3000
       - name: Vérifier le frontend
         run: curl -fsS http://localhost:3000/ >/dev/null && echo "Frontend OK"
 
+      # Bout en bout : on se connecte avec un compte démo puis on lit les
+      # KPIs de l'étage gold, pour prouver que les données sont chargées.
       - name: Vérifier les données gold chargées
         run: |
           TOKEN=$(curl -sS -X POST http://localhost:8000/auth/login \
