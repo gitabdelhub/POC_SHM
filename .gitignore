@@ -23,3 +23,11 @@ backend/ECRITURES/
 
 # Artefacts de travail temporaires (carte Maroc inachevée, etc.)
 data/
+
+# Vestiges React du frontend (le frontend est vanilla, un seul index.html)
+frontend/dist/
+frontend/node_modules/
+frontend/vite.config.ts
+frontend/tsconfig.json
+frontend/server.cjs
+frontend/serve_frontend.cjs
