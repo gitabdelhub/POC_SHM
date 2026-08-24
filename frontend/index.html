@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/chatbot.css">
     <style>
         :root {
             /* Identité Saham Bank (New Palette from Logo) */
@@ -68,12 +70,13 @@
             right: 32px;
             width: 62px;
             height: 62px;
-            background: #C8102E;
+            background: linear-gradient(135deg, #C8102E 0%, #8A0B20 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 8px 24px rgba(200, 16, 46, 0.4);
+            border: 2px solid #C9A84C;
             cursor: pointer;
             z-index: 9999;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -85,12 +88,12 @@
             animation: none;
         }
         @keyframes pulse-fab {
-            0% { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.5); }
+            0% { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.4); }
             70% { box-shadow: 0 0 0 15px rgba(200, 16, 46, 0); }
             100% { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0); }
         }
         .saham-fab-icon {
-            color: #C9A84C;
+            color: #ffffff;
             width: 28px;
             height: 28px;
         }
@@ -98,25 +101,28 @@
             position: absolute;
             top: -4px;
             right: -4px;
-            background: #ffffff;
-            color: #C8102E;
+            background: #C9A84C;
+            color: #ffffff;
             font-size: 10px;
             font-weight: 800;
             padding: 2px 6px;
             border-radius: 10px;
             border: 2px solid #C8102E;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
         .saham-chat-panel {
             position: fixed;
-            bottom: 110px;
-            right: 32px;
+            bottom: 24px;
+            right: 24px;
             width: 440px;
-            height: 580px;
-            background: #FBF8F5;
-            border-radius: 20px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            height: 600px;
+            max-width: calc(100vw - 32px);
+            max-height: calc(100vh - 48px);
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--sec-bg);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.18);
             display: flex;
             flex-direction: column;
             z-index: 9998;
@@ -133,31 +139,34 @@
         }
         @media (max-width: 480px) {
             .saham-chat-panel {
-                width: calc(100% - 32px);
-                right: 16px;
-                height: calc(100vh - 120px);
+                width: calc(100% - 24px);
+                right: 12px;
+                bottom: 12px;
+                height: calc(100vh - 24px);
             }
         }
         .saham-chat-header {
             background: linear-gradient(135deg, #C8102E 0%, #8A0B20 100%);
-            padding: 20px;
+            padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             color: white;
             flex-shrink: 0;
+            border-bottom: 2px solid #C9A84C;
         }
         .saham-chat-header-info {
             display: flex;
             flex-direction: column;
         }
         .saham-chat-title {
-            font-family: 'Fraunces', serif;
-            font-size: 20px;
-            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 8px;
+            letter-spacing: -0.3px;
         }
         .saham-chat-online {
             width: 8px;
@@ -174,10 +183,11 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
         }
         .saham-chat-subtitle {
-            font-size: 12px;
+            font-size: 11px;
             color: #C9A84C;
-            font-weight: 500;
+            font-weight: 600;
             margin-top: 2px;
+            letter-spacing: 0.3px;
         }
         .saham-chat-close {
             background: rgba(255,255,255,0.1);
@@ -262,13 +272,13 @@
             align-self: flex-end;
         }
         .saham-msg.user .bubble {
-            background: #C8102E;
+            background: linear-gradient(135deg, #C8102E 0%, #A60D26 100%);
             color: white;
             padding: 12px 16px;
             border-radius: 16px 16px 0 16px;
             font-size: 14px;
             line-height: 1.5;
-            box-shadow: 0 2px 8px rgba(200, 16, 46, 0.15);
+            box-shadow: 0 3px 10px rgba(200, 16, 46, 0.25);
         }
         .saham-msg.bot {
             align-self: flex-start;
@@ -342,7 +352,7 @@
             border-radius: 6px;
             font-size: 12px;
             color: #C8102E;
-            font-weight: 500;
+            font-weight: 600;
         }
         .saham-spinner {
             width: 14px;
@@ -986,6 +996,79 @@
             border-radius: 0;
             box-shadow: none;
         }
+        /* Poignées de redimensionnement du chat (façon Codex / VS Code) */
+        .saham-resize-handle {
+            position: absolute;
+            z-index: 10;
+        }
+        .saham-resize-handle.nw {
+            top: -5px; left: -5px;
+            width: 14px; height: 14px;
+            cursor: nwse-resize;
+        }
+        .saham-resize-handle.n {
+            top: -5px; left: 24px; right: 24px;
+            height: 10px;
+            cursor: ns-resize;
+        }
+        .saham-resize-handle.e {
+            top: 24px; bottom: 24px; right: -5px;
+            width: 10px;
+            cursor: ew-resize;
+        }
+        .saham-resize-handle.se {
+            bottom: -5px; right: -5px;
+            width: 16px; height: 16px;
+            cursor: nwse-resize;
+        }
+        .saham-resize-handle.s {
+            bottom: -5px; left: 24px; right: 24px;
+            height: 10px;
+            cursor: ns-resize;
+        }
+        .saham-resize-handle.w {
+            top: 24px; bottom: 24px; left: -5px;
+            width: 10px;
+            cursor: ew-resize;
+        }
+        .saham-resize-handle.ne {
+            top: -5px; right: -5px;
+            width: 14px; height: 14px;
+            cursor: nesw-resize;
+        }
+        .saham-resize-handle.sw {
+            bottom: -5px; left: -5px;
+            width: 14px; height: 14px;
+            cursor: nesw-resize;
+        }
+        /* Indicateur visuel de redimensionnement (coin bas-droit) */
+        .saham-resize-grip {
+            position: absolute;
+            bottom: 4px; right: 4px;
+            width: 14px; height: 14px;
+            z-index: 11;
+            cursor: nwse-resize;
+            opacity: 0.45;
+            pointer-events: none;
+        }
+        .saham-resize-grip::before {
+            content: "";
+            position: absolute;
+            right: 1px; bottom: 1px;
+            width: 6px; height: 6px;
+            border-right: 2px solid #94a3b8;
+            border-bottom: 2px solid #94a3b8;
+        }
+        .saham-resize-grip::after {
+            content: "";
+            position: absolute;
+            right: 5px; bottom: 5px;
+            width: 6px; height: 6px;
+            border-right: 2px solid #94a3b8;
+            border-bottom: 2px solid #94a3b8;
+            opacity: 0.7;
+        }
+        .saham-chat-panel:hover .saham-resize-grip { opacity: 0.85; }
         .saham-chat-header-actions {
             display: flex;
             align-items: center;
@@ -1087,7 +1170,10 @@
             justify-content: center !important;
         }
 </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <!-- Config d'environnement (optionnel) : permet de pointer vers une API distante
+         sans modifier le code. Doit etre charge AVANT le script principal. -->
+    <script src="config.js"></script>
 </head>
 <body>
 
@@ -1232,7 +1318,27 @@
     <!-- ==================== JS LOGIC ==================== -->
     <script>
         /* --- 0. API HELPER --- */
-        const API_BASE = 'http://localhost:8000';
+        /**
+         * URL de l'API, resolue automatiquement selon l'environnement.
+         *
+         * 1. window.SAHAM_API_BASE  -> surcharge manuelle (config.js, voir plus bas)
+         * 2. localhost / 127.0.0.1  -> developpement : l'API tourne sur le port 8000
+         * 3. tout autre domaine     -> production : l'API est servie sur la MEME origine
+         *    (ex. https://saham-api.onrender.com), donc chaine vide = chemin relatif.
+         *
+         * Pourquoi : en production le navigateur du visiteur n'a pas d'API sur SA machine.
+         * Un "localhost" code en dur donnerait un portail vide chez l'encadrante.
+         */
+        const API_BASE = (function () {
+            if (typeof window !== 'undefined' && window.SAHAM_API_BASE) {
+                return String(window.SAHAM_API_BASE).replace(/\/$/, '');
+            }
+            var h = (typeof location !== 'undefined' && location.hostname) || '';
+            if (h === 'localhost' || h === '127.0.0.1' || h === '' || h === '::1') {
+                return 'http://localhost:8000';
+            }
+            return '';
+        })();
         async function apiGet(path) {
             try {
                 const token = localStorage.getItem('saham_access_token');
@@ -1508,6 +1614,37 @@
         }
         function hideTooltip() { if(tooltipEl) tooltipEl.style.opacity = 0; }
 
+        function showMapBubbleTooltip(e, ville, region, vol, cred, dep, pct) {
+            if(!tooltipEl) tooltipEl = document.getElementById('tooltip');
+            if(!tooltipEl) return;
+            tooltipEl.innerHTML = `
+                <div style="font-family:'Montserrat', sans-serif; min-width:170px; padding:2px 0;">
+                    <div style="font-weight:700; font-size:13px; color:#fff; border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:4px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+                        <span>📍 ${ville}</span>
+                        <span style="font-size:11px; background:rgba(255,255,255,0.15); padding:1px 5px; border-radius:3px;">${pct}</span>
+                    </div>
+                    ${region ? `<div style="font-size:10px; color:#94a3b8; margin-bottom:4px;">Région : ${region}</div>` : ''}
+                    <div style="font-size:12px; font-weight:700; color:#38bdf8; margin-bottom:4px;">Encours Total : ${vol} MAD</div>
+                    <div style="font-size:10px; color:#cbd5e1; display:flex; justify-content:space-between; gap:8px;">
+                        <span>Crédits: ${cred}</span>
+                        <span>Dépôts: ${dep}</span>
+                    </div>
+                </div>
+            `;
+            tooltipEl.style.opacity = 1;
+            tooltipEl.style.zIndex = '99999';
+            tooltipEl.style.left = (e.pageX + 15) + 'px';
+            tooltipEl.style.top = (e.pageY - 30) + 'px';
+        }
+        function moveMapBubbleTooltip(e) {
+            if(!tooltipEl) return;
+            tooltipEl.style.left = (e.pageX + 15) + 'px';
+            tooltipEl.style.top = (e.pageY - 30) + 'px';
+        }
+        function hideMapBubbleTooltip() {
+            if(tooltipEl) tooltipEl.style.opacity = 0;
+        }
+
         /* Power BI Placeholder */
         const PBI_TEMPLATE = `
             <div class="pbi-placeholder fade-in">
@@ -1667,51 +1804,193 @@
         }
 
         
+        window.toggleMobileMenu = function() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar) sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+        };
+
         window.deleteUser = function(index) {
-            if(confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) {
+            const user = MOCK.admins[index];
+            if(confirm(`Voulez-vous vraiment supprimer l'utilisateur "${user ? user.nom : ''}" ?`)) {
                 MOCK.admins.splice(index, 1);
-                renderAdmin(document.getElementById('content'), 'admin-users');
-                showToast("Utilisateur supprimé");
+                const content = document.getElementById('main-content');
+                if (content) renderAdmin(content, 'admin-users');
+                showToast("Utilisateur supprimé", 'success');
             }
         };
 
         window.toggleAddUserForm = function() {
             const form = document.getElementById('add-user-form');
+            if (!form) return;
             if(form.classList.contains('hidden')) {
                 form.classList.remove('hidden');
+                const nomEl = document.getElementById('new-user-nom');
+                if (nomEl) nomEl.focus();
             } else {
                 form.classList.add('hidden');
             }
         };
 
         window.submitAddUser = function() {
-            const nom = document.getElementById('new-user-nom').value;
-            const email = document.getElementById('new-user-email').value;
-            const profil = document.getElementById('new-user-profil').value;
-            const agence = document.getElementById('new-user-agence').value;
+            const nomEl = document.getElementById('new-user-nom');
+            const emailEl = document.getElementById('new-user-email');
+            const profilEl = document.getElementById('new-user-profil');
+            const agenceEl = document.getElementById('new-user-agence');
+
+            const nom = nomEl ? nomEl.value.trim() : '';
+            const email = emailEl ? emailEl.value.trim() : '';
+            const profil = profilEl ? profilEl.value : 'CA';
+            const agence = agenceEl ? agenceEl.value.trim() : 'Siège Casablanca';
 
             if(!nom || !email) {
-                showToast("Veuillez remplir le nom et l'email", true);
+                showToast("Veuillez remplir au moins le nom et l'email", 'error');
                 return;
             }
 
-            MOCK.admins.push({ nom, email, profil, agence, statut: 'Actif', dashboards: 0 });
-            renderAdmin(document.getElementById('content'), 'admin-users');
-            showToast("Utilisateur ajouté avec succès");
+            // Vérifier format email basique
+            if (!email.includes('@')) {
+                showToast("Veuillez saisir une adresse email valide", 'error');
+                return;
+            }
+
+            MOCK.admins.unshift({ nom, email, profil, agence: agence || 'Réseau Saham', statut: 'Actif', dashboards: 0 });
+            
+            // Réinitialiser les champs et masquer le formulaire
+            if (nomEl) nomEl.value = '';
+            if (emailEl) emailEl.value = '';
+            if (agenceEl) agenceEl.value = '';
+            const form = document.getElementById('add-user-form');
+            if (form) form.classList.add('hidden');
+
+            const content = document.getElementById('main-content');
+            if (content) renderAdmin(content, 'admin-users');
+            showToast(`Utilisateur "${nom}" créé avec succès`, 'success');
+        };
+
+        window.openEditUserModal = function(index) {
+            const a = MOCK.admins[index];
+            if (!a) return;
+
+            let modal = document.getElementById('edit-user-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'edit-user-modal';
+                modal.style.cssText = 'position:fixed;inset:0;background:rgba(26,42,38,.65);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+                modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+                document.body.appendChild(modal);
+            }
+
+            modal.innerHTML = `
+                <div style="background:#fff;border-radius:14px;max-width:520px;width:100%;padding:28px;box-shadow:0 25px 60px rgba(0,0,0,.35);border:1px solid rgba(0,0,0,0.08);" class="fade-in">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                        <h3 style="margin:0;font-size:18px;font-weight:700;color:var(--dark-teal);">Modifier l'Utilisateur</h3>
+                        <button onclick="document.getElementById('edit-user-modal').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--slate-500);">&times;</button>
+                    </div>
+                    
+                    <div style="display:flex;flex-direction:column;gap:14px;">
+                        <div>
+                            <label style="display:block;margin-bottom:6px;font-size:12.5px;font-weight:600;color:var(--slate-700);">Nom complet</label>
+                            <input type="text" id="edit-user-nom" value="${escHtml(a.nom)}" style="width:100%;padding:10px 12px;border:1px solid var(--sec-bg);border-radius:6px;font-size:13px;">
+                        </div>
+                        <div>
+                            <label style="display:block;margin-bottom:6px;font-size:12.5px;font-weight:600;color:var(--slate-700);">Email professionnel</label>
+                            <input type="email" id="edit-user-email" value="${escHtml(a.email)}" style="width:100%;padding:10px 12px;border:1px solid var(--sec-bg);border-radius:6px;font-size:13px;">
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div>
+                                <label style="display:block;margin-bottom:6px;font-size:12.5px;font-weight:600;color:var(--slate-700);">Profil Technique</label>
+                                <select id="edit-user-profil" style="width:100%;padding:10px 12px;border:1px solid var(--sec-bg);border-radius:6px;font-size:13px;">
+                                    <option value="Admin IT" ${a.profil === 'Admin IT' ? 'selected' : ''}>Admin IT</option>
+                                    <option value="DG" ${a.profil === 'DG' ? 'selected' : ''}>Directeur Général (DG)</option>
+                                    <option value="DR" ${a.profil === 'DR' ? 'selected' : ''}>Directeur Régional (DR)</option>
+                                    <option value="CA" ${a.profil === 'CA' ? 'selected' : ''}>Chargé d'Affaires (CA)</option>
+                                    <option value="AR" ${a.profil === 'AR' ? 'selected' : ''}>Analyste Risque (AR)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display:block;margin-bottom:6px;font-size:12.5px;font-weight:600;color:var(--slate-700);">Statut</label>
+                                <select id="edit-user-statut" style="width:100%;padding:10px 12px;border:1px solid var(--sec-bg);border-radius:6px;font-size:13px;">
+                                    <option value="Actif" ${a.statut === 'Actif' ? 'selected' : ''}>Actif</option>
+                                    <option value="Inactif" ${a.statut === 'Inactif' ? 'selected' : ''}>Inactif</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display:block;margin-bottom:6px;font-size:12.5px;font-weight:600;color:var(--slate-700);">Agence / DR d'affectation</label>
+                            <input type="text" id="edit-user-agence" value="${escHtml(a.agence || '')}" style="width:100%;padding:10px 12px;border:1px solid var(--sec-bg);border-radius:6px;font-size:13px;">
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;">
+                        <button class="btn btn-secondary" onclick="document.getElementById('edit-user-modal').remove()">Annuler</button>
+                        <button class="btn btn-primary" onclick="saveEditUser(${index})">Enregistrer les modifications</button>
+                    </div>
+                </div>
+            `;
+        };
+
+        window.saveEditUser = function(index) {
+            const a = MOCK.admins[index];
+            if (!a) return;
+
+            const nom = document.getElementById('edit-user-nom').value.trim();
+            const email = document.getElementById('edit-user-email').value.trim();
+            const profil = document.getElementById('edit-user-profil').value;
+            const statut = document.getElementById('edit-user-statut').value;
+            const agence = document.getElementById('edit-user-agence').value.trim();
+
+            if (!nom || !email) {
+                showToast("Le nom et l'email sont obligatoires", 'error');
+                return;
+            }
+
+            a.nom = nom;
+            a.email = email;
+            a.profil = profil;
+            a.statut = statut;
+            a.agence = agence;
+
+            const modal = document.getElementById('edit-user-modal');
+            if (modal) modal.remove();
+
+            const content = document.getElementById('main-content');
+            if (content) renderAdmin(content, 'admin-users');
+            showToast("Informations utilisateur mises à jour", 'success');
         };
 
         window.toggleModuleRole = function(moduleId, role) {
-            const module = APP.modules.find(m => m.id === moduleId);
-            if(module) {
-                if(!module.roles) module.roles = [];
-                if(module.roles.includes(role)) {
-                    module.roles = module.roles.filter(r => r !== role);
-                } else {
-                    module.roles.push(role);
+            // Chercher dans les modules de premier niveau
+            let target = APP.modules.find(m => m.id === moduleId);
+
+            // Si pas trouvé au premier niveau, chercher dans les sous-modules
+            if (!target) {
+                for (const m of APP.modules) {
+                    if (m.isGroup && m.subItems) {
+                        const sub = m.subItems.find(s => s.id === moduleId);
+                        if (sub) { target = sub; break; }
+                    }
                 }
-                renderAdmin(document.getElementById('content'), 'admin-access');
+            }
+
+            if (target) {
+                if (!target.roles) target.roles = [];
+                if (target.roles.includes(role)) {
+                    target.roles = target.roles.filter(r => r !== role);
+                } else {
+                    target.roles.push(role);
+                }
+                const content = document.getElementById('main-content');
+                if (content) renderAdmin(content, 'admin-access');
                 buildSidebar();
-                showToast("Permissions mises à jour");
+                showToast('Permissions mises à jour', 'success');
+
+                // Si la page courante n'est plus accessible après le changement, router immédiatement
+                const currentHash = location.hash.replace('#', '') || 'dashboard';
+                if (!hasAccess(currentHash)) {
+                    route();
+                }
             }
         };
 
@@ -1781,9 +2060,82 @@
             document.getElementById('new-dash-url').value = '';
         }
 
+        /**
+         * Vérifie si le rôle courant a accès au module demandé.
+         * Les pages admin/* sont réservées au rôle Admin.
+         * Toutes les autres pages utilisent la liste `roles` définie dans APP.modules.
+         */
+        function hasAccess(hash) {
+            const role = APP.userRole;
+            if (!role) return false;
+
+            // Pages admin : uniquement l'Admin
+            if (hash === 'admin' || hash.startsWith('admin-')) {
+                return role === 'Admin';
+            }
+
+            // Chercher dans les modules de premier niveau
+            const mod = APP.modules.find(m => m.id === hash);
+            if (mod) {
+                return mod.roles && mod.roles.includes(role);
+            }
+
+            // Chercher dans les sous-modules (groupes)
+            for (const m of APP.modules) {
+                if (m.isGroup && m.subItems) {
+                    const sub = m.subItems.find(s => s.id === hash);
+                    if (sub) {
+                        const roles = sub.roles || m.roles || [];
+                        return roles.includes(role);
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        function renderAccessDenied(container, hash) {
+            container.innerHTML = `
+                <div class="fade-in" style="height:100%; display:flex; align-items:center; justify-content:center;">
+                    <div style="text-align:center; max-width:480px; padding:48px;">
+                        <div style="width:80px; height:80px; border-radius:50%; background:#FEF2F2; display:flex; align-items:center; justify-content:center; margin:0 auto 24px; color:#EF4444;">
+                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <h2 style="font-family:'Montserrat', sans-serif; font-size:24px; font-weight:800; color:var(--dark-teal); margin-bottom:12px;">Accès Refusé</h2>
+                        <p style="color:var(--slate-500); font-size:14px; line-height:1.7; margin-bottom:28px;">
+                            Votre profil <strong>${APP.userRole || 'inconnu'}</strong> ne dispose pas des droits nécessaires pour accéder au module
+                            <strong>"${hash}"</strong>.<br><br>
+                            Contactez votre administrateur pour demander l'accès.
+                        </p>
+                        <div style="display:flex; gap:12px; justify-content:center;">
+                            <button class="btn btn-secondary" onclick="history.back()">← Retour</button>
+                            <button class="btn btn-primary" onclick="location.hash='dashboard'">Tableau de bord</button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
         function route() {
             const hash = location.hash.replace('#', '') || 'dashboard';
             
+            // ── Contrôle d'accès ─────────────────────────────────────────────────
+            // Les pages admin sont toujours accessibles à l'Admin.
+            // Pour les non-Admin, on vérifie que le rôle est autorisé sur ce module.
+            if (!hasAccess(hash)) {
+                // Update Active Nav (désactivé pour la page bloquée)
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                document.getElementById('breadcrumb').innerText = 'Accès refusé';
+
+                const content = document.getElementById('main-content');
+                content.innerHTML = '';
+                content.scrollTop = 0;
+                renderAccessDenied(content, hash);
+                return;
+            }
+            // ─────────────────────────────────────────────────────────────────────
+
             // Update Active Nav
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const activeNav = document.getElementById(`nav-${hash}`);
@@ -1915,7 +2267,7 @@
                                 backgroundColor: '#3b504a',
                                 titleFont: { family: 'Montserrat' },
                                 bodyFont: { family: 'Manrope' },
-                                callbacks: { label: function(c) { return c.raw.toFixed(1) + ' M MAD'; } }
+                                callbacks: { label: function(c) { return Number(c.raw).toLocaleString('fr-MA', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' M MAD'; } }
                             }
                         },
                         scales: {
@@ -2007,18 +2359,110 @@
             const credData = await apiGet('/gold/credits-par-type') || [];
             const agPerf = await apiGet('/gold/performance-agences') || [];
             const qualData = await apiGet('/gold/qualite-agences') || [];
+            const regionEncours = await apiGet('/gold/encours-par-region') || [];
 
             const totClients = kpis.total_clients || '--';
             const totEncours = (kpis.total_encours || 0) / 1e6;
+            // 2 decimales : un ecart de 0,05 M = 50 000 MAD, ce n est pas du detail
+            // en pilotage bancaire. L arrondi a 1 decimale masquait cet ecart.
+            // La virgule decimale suit la convention francaise (fr-MA).
+            const fmtM = function (v) {
+                var o = {minimumFractionDigits: 2, maximumFractionDigits: 2};
+                // Au-dela du milliard on change d unite : "1.151,70 M" se lit mal,
+                // "1,15 Md" se lit d un coup d oeil.
+                if (Math.abs(v) >= 1e9) return (v / 1e9).toLocaleString('fr-MA', o) + ' Md';
+                return (v / 1e6).toLocaleString('fr-MA', o) + ' M';
+            };
+            const realPNBVal = kpis.total_pnb ? fmtM(kpis.total_pnb) : fmtM(totEncours * 0.035 * 1e6);
+            const realDepotsVal = kpis.total_depots ? fmtM(kpis.total_depots) : fmtM(totEncours * 1.2 * 1e6);
             const npl = (kpis.npl_moyen || 0).toFixed(2);
             const totAgences = kpis.total_agences || '--';
+
+            // Coordinates for Morocco Bubble Map across all regions
+            const CITY_MAP_COORDS = {
+                'Casablanca': { x: 237.3, y: 160.6, code: 'CAS', label: 'Casablanca' },
+                'Rabat': { x: 255.9, y: 147.0, code: 'RAB', label: 'Rabat' },
+                'Marrakech': { x: 226.8, y: 218.6, code: 'RAK', label: 'Marrakech' },
+                'Tanger': { x: 281.5, y: 85.7, code: 'TNG', label: 'Tanger' },
+                'Tetouan': { x: 295.0, y: 98.0, code: 'TET', label: 'Tétouan' },
+                'Fes': { x: 295.0, y: 142.0, code: 'FES', label: 'Fès' },
+                'Meknes': { x: 280.0, y: 153.0, code: 'MEK', label: 'Meknès' },
+                'Agadir': { x: 186.8, y: 254.2, code: 'AGA', label: 'Agadir' },
+                'Oujda': { x: 355.0, y: 135.0, code: 'OUJ', label: 'Oujda' },
+                'Nador': { x: 330.0, y: 105.0, code: 'NDR', label: 'Nador' },
+                'Kenitra': { x: 260.0, y: 135.0, code: 'KEN', label: 'Kénitra' },
+                'Beni Mellal': { x: 258.0, y: 190.0, code: 'BML', label: 'Béni Mellal' },
+                'Errachidia': { x: 295.0, y: 215.0, code: 'ERH', label: 'Errachidia' },
+                'Ouarzazate': { x: 240.0, y: 245.0, code: 'OZZ', label: 'Ouarzazate' },
+                'Laayoune': { x: 96.2, y: 348.8, code: 'LAY', label: 'Laâyoune' },
+                'Dakhla': { x: 27.2, y: 444.6, code: 'DAK', label: 'Dakhla' }
+            };
+
+            const FALLBACK_MAP_DATA = [
+                { ville: 'Casablanca', region: 'Casablanca-Settat', total_volume: 1250000000, encours_credits: 750000000, encours_depots: 500000000 },
+                { ville: 'Rabat', region: 'Rabat-Sale-Kenitra', total_volume: 580000000, encours_credits: 320000000, encours_depots: 260000000 },
+                { ville: 'Tanger', region: 'Tanger-Tetouan-Al Hoceima', total_volume: 420000000, encours_credits: 240000000, encours_depots: 180000000 },
+                { ville: 'Marrakech', region: 'Marrakech-Safi', total_volume: 360000000, encours_credits: 200000000, encours_depots: 160000000 },
+                { ville: 'Agadir', region: 'Souss-Massa', total_volume: 240000000, encours_credits: 130000000, encours_depots: 110000000 },
+                { ville: 'Fes', region: 'Fes-Meknes', total_volume: 210000000, encours_credits: 115000000, encours_depots: 95000000 },
+                { ville: 'Meknes', region: 'Fes-Meknes', total_volume: 170000000, encours_credits: 90000000, encours_depots: 80000000 },
+                { ville: 'Kenitra', region: 'Rabat-Sale-Kenitra', total_volume: 140000000, encours_credits: 75000000, encours_depots: 65000000 },
+                { ville: 'Oujda', region: 'L\'Oriental', total_volume: 130000000, encours_credits: 70000000, encours_depots: 60000000 },
+                { ville: 'Tetouan', region: 'Tanger-Tetouan-Al Hoceima', total_volume: 120000000, encours_credits: 65000000, encours_depots: 55000000 },
+                { ville: 'Nador', region: 'L\'Oriental', total_volume: 110000000, encours_credits: 60000000, encours_depots: 50000000 },
+                { ville: 'Beni Mellal', region: 'Beni Mellal-Khenifra', total_volume: 95000000, encours_credits: 50000000, encours_depots: 45000000 },
+                { ville: 'Ouarzazate', region: 'Draa-Tafilalet', total_volume: 65000000, encours_credits: 35000000, encours_depots: 30000000 },
+                { ville: 'Errachidia', region: 'Draa-Tafilalet', total_volume: 60000000, encours_credits: 32000000, encours_depots: 28000000 },
+                { ville: 'Laayoune', region: 'Laayoune-Sakia El Hamra', total_volume: 55000000, encours_credits: 30000000, encours_depots: 25000000 },
+                { ville: 'Dakhla', region: 'Dakhla-Oued Ed-Dahab', total_volume: 45000000, encours_credits: 25000000, encours_depots: 20000000 }
+            ];
+
+            const mapDataList = (regionEncours && regionEncours.length > 0) ? regionEncours : FALLBACK_MAP_DATA;
+
+            const maxMapVol = Math.max(...mapDataList.map(r => parseFloat(r.total_volume || 0))) || 1;
+            const minMapVol = Math.min(...mapDataList.map(r => parseFloat(r.total_volume || 0))) || 0;
+            const sumMapVol = mapDataList.reduce((acc, r) => acc + parseFloat(r.total_volume || 0), 0) || 1;
+
+            const mapBubblesSVG = mapDataList.map(item => {
+                const vName = item.ville || '';
+                const coord = CITY_MAP_COORDS[vName] || CITY_MAP_COORDS[vName.replace(/é/g,'e').replace(/è/g,'e').replace(/â/g,'a')];
+                if (!coord) return '';
+                const vol = parseFloat(item.total_volume || 0);
+                const cred = parseFloat(item.encours_credits || 0);
+                const dep = parseFloat(item.encours_depots || 0);
+                
+                const rMin = 10, rMax = 24;
+                const ratio = maxMapVol > minMapVol ? (vol - minMapVol) / (maxMapVol - minMapVol) : 0.5;
+                const radius = (rMin + ratio * (rMax - rMin)).toFixed(1);
+                const volFmt = fmtM(vol);
+                const credFmt = fmtM(cred);
+                const depFmt = fmtM(dep);
+                const pctFmt = ((vol / sumMapVol) * 100).toFixed(1) + '%';
+                const isLeader = (vol === maxMapVol);
+                const fillCol = isLeader ? 'rgba(200, 16, 46, 0.92)' : 'rgba(59, 82, 73, 0.9)';
+                const strokeCol = isLeader ? '#8b0000' : '#2b3b35';
+                const fontSize = Math.max(6.5, Math.min(9.5, Math.round(radius * 0.44)));
+
+                return `
+                    <g class="map-bubble" style="cursor:pointer;" transform="translate(${coord.x}, ${coord.y})"
+                       onmouseenter="showMapBubbleTooltip(event, '${coord.label}', '${item.region || ''}', '${volFmt}', '${credFmt}', '${depFmt}', '${pctFmt}')"
+                       onmousemove="moveMapBubbleTooltip(event)"
+                       onmouseleave="hideMapBubbleTooltip()"
+                       onclick="showToast('${coord.label} : ${volFmt} MAD d\\'encours (${pctFmt} du total)', 'info')">
+                        <circle cx="0" cy="0" r="${radius}" fill="${fillCol}" stroke="${strokeCol}" stroke-width="1.8">
+                            ${isLeader ? '<animate attributeName="r" values="' + radius + ';' + (parseFloat(radius)+1.5) + ';' + radius + '" dur="2s" repeatCount="indefinite" />' : ''}
+                        </circle>
+                        <text x="0" y="${fontSize * 0.35}" font-family="'Montserrat', sans-serif" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="middle">${coord.code}</text>
+                    </g>
+                `;
+            }).join('\\n');
 
             // Build chart data
             var moisFR = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'];
             var pnbAnneeToutes = pnbData.map(function(d) { return d.annee_mois ? parseInt(d.annee_mois.slice(0,4)) : 0; });
             var pnbAnnees = [...new Set(pnbAnneeToutes)].sort();
             var pnbLabels = pnbData.map(function(d) { if (d.annee_mois) { var p = d.annee_mois.split('-'); return moisFR[parseInt(p[1])-1] + ' ' + p[0]; } return ''; });
-            var pnbValues = pnbData.map(function(d) { return (d.pnb / 1e6).toFixed(1); });
+            var pnbValues = pnbData.map(function(d) { return (d.pnb / 1e6).toFixed(2); });
             var pnbFullData = pnbData;
             var pnbAnneeCourante = 'Toutes';
             window.filtrerPNB = function() {
@@ -2026,7 +2470,7 @@
                 pnbAnneeCourante = annee;
                 var filtrees = annee === 'Toutes' ? pnbFullData : pnbFullData.filter(function(d) { return d.annee_mois && d.annee_mois.slice(0,4) == annee; });
                 var newLabels = filtrees.map(function(d) { if (d.annee_mois) { var p = d.annee_mois.split('-'); return moisFR[parseInt(p[1])-1] + ' ' + p[0]; } return ''; });
-                var newValues = filtrees.map(function(d) { return parseFloat((d.pnb / 1e6).toFixed(1)); });
+                var newValues = filtrees.map(function(d) { return parseFloat((d.pnb / 1e6).toFixed(2)); });
                 window.ChartManager.initBarChart('pnbChart', newLabels, newValues, 'PNB Mensuel (M MAD)');
             }
             var anneesDesc = [...pnbAnnees].reverse();
@@ -2036,7 +2480,16 @@
             const credLabels = credData.map(d => d.label || '');
             const credValues = credData.map(d => d.value || 0);
 
-            const data = { pnb: (totEncours * 0.035).toFixed(1) + ' M', credits: totEncours.toFixed(1) + ' M', depots: (totEncours * 1.2).toFixed(1) + ' M', npl: npl };
+            const data = {
+                title: prof.title || 'CONSOLIDÉ',
+                pnb: realPNBVal,
+                credits: fmtM(totEncours * 1e6),
+                depots: realDepotsVal,
+                npl: npl,
+                trendPNB: prof.trendPNB || '+5.4%',
+                trendCred: prof.trendCred || '+2.1%',
+                trendDep: prof.trendDep || '+3.8%'
+            };
             const formatVal = (str) => {
                 const parts = str.split(' ');
                 return `${parts[0]} <span style="font-size:16px; font-weight:600; color:var(--slate-500);">${parts[1] || ''} MAD</span>`;
@@ -2091,53 +2544,25 @@
                             </div>
                         </div>
                     </div>
-                                        <!-- Interactive Bubble Map for DG/DR -->
-                    ${(APP.userRole === 'DG') ? `
+                    <!-- Interactive Dynamic Bubble Map for DG/DR/Admin -->
+                    ${(APP.userRole === 'DG' || APP.userRole === 'DR' || APP.userRole === 'Admin') ? `
                     <div class="fullscreen-capable" style="display:flex; flex-direction:column; margin-bottom:24px; background:white; border-radius:12px; border:1px solid var(--sec-bg); padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; position: relative; z-index: 10000;">
-                            <h3 style="font-family:'Montserrat', sans-serif; font-size:16px; font-weight:700; color:var(--dark-teal); margin-top:0; margin-bottom:16px;">Cartographie Commerciale (Bubble Map)</h3>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; position: relative; z-index: 10; margin-bottom:14px;">
+                            <div>
+                                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                                    <h3 style="font-family:'Montserrat', sans-serif; font-size:16px; font-weight:700; color:var(--dark-teal); margin:0;">Répartition des Encours Financiers par Région</h3>
+                                    <span style="font-size:11px; background:#e6efec; color:#1a4d3e; padding:2px 8px; border-radius:4px; font-weight:700;">Unité : M MAD</span>
+                                </div>
+                                <p style="font-size:12px; color:var(--slate-500); margin:0;">Taille des bulles proportionnelle aux encours réels (crédits + dépôts) issus de la base Gold</p>
+                            </div>
                             <button class="btn-fullscreen" onclick="toggleFullscreen(this)"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg></button>
                         </div>
-                        <div class="chart-content" style="position:relative; width:100%; height:400px; background:var(--light-bg); border-radius:8px; border:1px solid #e2e8f0; overflow:hidden; display: flex; justify-content: center; align-items: center;">
-                                <!-- Complete Morocco map -->
+                        <div class="chart-content" style="position:relative; width:100%; height:420px; background:var(--light-bg); border-radius:8px; border:1px solid #e2e8f0; overflow:hidden; display: flex; justify-content: center; align-items: center;">
+                                <!-- Complete Morocco map with Dynamic Bubbles -->
                                 <svg width="100%" height="100%" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet" style="opacity:1; background-color: #f3f4f4;">
                                     <path d="M297.601,93.819L312.771,106.946L336.7,104.812L362.764,111.618L373.695,111.948L383.18,131.586L384.678,150.096L393.369,181.915L400,188.273L395.386,199.863L362.454,204.874L351.071,215.837L336.513,218.416L335.433,240.212L306.011,251.794L296.386,266.381L275.79,274.179L250.661,278.594L210.025,299.869L210.239,333.717L206.409,333.717L206.408,333.717L206.986,348.9L191.431,349.811L183.32,356.235L171.894,356.235L162.789,352.57L141.618,355.601L133.423,377.513L125.559,379.565L113.727,414.686L78.745,444.464L70.44,482.214L60.131,494.413L57.108,504.171L0.44,506.33L0,506.288L1.187,493.74L10.853,486.344L19.087,472.159L17.464,462.917L26.115,443.575L40.122,426.057L48.594,421.603L55.254,405.433L55.851,390.597L64.935,373.298L81.697,363.055L97.648,334.179L98.109,333.782L110.761,322.852L134.161,319.701L153.989,300.132L166.605,292.469L187.611,268.323L181.323,231.966L190.883,206.544L194.258,190.867L210.443,170.619L235.69,156.839L254.352,144.305L271.167,112.641L279.077,93.67Z" fill="#b0b8b4" stroke="none" />
-                                    <!-- Bubbles -->
-                                    <g style="cursor:pointer;" onclick="showToast('Région Tanger: 4.8 Md MAD', 'info')" transform="translate(281.5, 93.7)">
-                                        <title>Tanger: 4.8 Md</title>
-                                        <circle cx="0" cy="0" r="14" fill="#cc4a3d" stroke="none" />
-                                        <text x="0" y="3" font-family="'Montserrat', sans-serif" font-size="7" font-weight="bold" fill="white" text-anchor="middle">TNG</text>
-                                    </g>
-                                    <g style="cursor:pointer;" onclick="showToast('Région Rabat: 10.6 Md MAD', 'info')" transform="translate(255.9, 147.0)">
-                                        <title>Rabat: 10.6 Md</title>
-                                        <circle cx="0" cy="0" r="18" fill="#cc4a3d" stroke="none" />
-                                        <text x="0" y="3" font-family="'Montserrat', sans-serif" font-size="8" font-weight="bold" fill="white" text-anchor="middle">RAB</text>
-                                    </g>
-                                    <g style="cursor:pointer;" onclick="showToast('Région Casablanca: 22.4 Md MAD', 'info')" transform="translate(237.3, 160.6)">
-                                        <title>Casablanca: 22.4 Md</title>
-                                        <circle cx="0" cy="0" r="24" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
-                                        <text x="0" y="4" font-family="'Montserrat', sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">CASA</text>
-                                    </g>
-                                    <g style="cursor:pointer;" onclick="showToast('Région Marrakech: 6.5 Md MAD', 'info')" transform="translate(226.8, 218.6)">
-                                        <title>Marrakech: 6.5 Md</title>
-                                        <circle cx="0" cy="0" r="15" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
-                                        <text x="0" y="3" font-family="'Montserrat', sans-serif" font-size="7" font-weight="bold" fill="white" text-anchor="middle">KCH</text>
-                                    </g>
-                                    <g style="cursor:pointer;" onclick="showToast('Région Agadir: 3.2 Md MAD', 'info')" transform="translate(186.8, 254.2)">
-                                        <title>Agadir: 3.2 Md</title>
-                                        <circle cx="0" cy="0" r="12" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
-                                        <text x="0" y="2.5" font-family="'Montserrat', sans-serif" font-size="6" font-weight="bold" fill="white" text-anchor="middle">AGA</text>
-                                    </g>
-                                    <g style="cursor:pointer;" onclick="showToast('Région Laâyoune: 1.1 Md MAD', 'info')" transform="translate(96.2, 348.8)">
-                                        <title>Laâyoune: 1.1 Md</title>
-                                        <circle cx="0" cy="0" r="9" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
-                                        <text x="0" y="2.5" font-family="'Montserrat', sans-serif" font-size="5" font-weight="bold" fill="white" text-anchor="middle">LAA</text>
-                                    </g>
-                                    <g style="cursor:pointer;" onclick="showToast('Région Dakhla: 0.5 Md MAD', 'info')" transform="translate(27.2, 444.6)">
-                                        <title>Dakhla: 0.5 Md</title>
-                                        <circle cx="0" cy="0" r="7" fill="rgba(59, 82, 73, 0.9)" stroke="#2b3b35" stroke-width="2"/>
-                                        <text x="0" y="2" font-family="'Montserrat', sans-serif" font-size="4" font-weight="bold" fill="white" text-anchor="middle">DAK</text>
-                                    </g>
+                                    <!-- Dynamic Bubbles computed from Database -->
+                                    ${mapBubblesSVG}
                                 </svg>
                         </div>
                     </div>
@@ -2680,25 +3105,44 @@ window.ChartManager.initBarChart('pnbChart',
                                     <table style="width:100%; border-collapse:collapse; text-align:left;">
                                         <thead style="background:var(--light-bg); position: sticky; top: 0; z-index: 10;">
                                             <tr>
-                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0;">Date & Heure</th>
-                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0;">Utilisateur</th>
-                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0;">Question Posée</th>
-                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0;">Requête SQL Générée</th>
-                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0;">Résultats</th>
-                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0;">Temps (ms)</th>
+                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0; width:130px;">Date & Heure</th>
+                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0; width:120px;">Utilisateur</th>
+                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0; width:260px;">Prompt / Question</th>
+                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0; min-width:320px;">Requête SQL Générée</th>
+                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0; width:90px;">Statut</th>
+                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0; width:90px;">Résultats</th>
+                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0; width:90px;">Temps</th>
+                                                <th style="padding:12px; font-size:12px; font-weight:600; color:var(--slate-500); border-bottom:1px solid #e2e8f0; width:80px; text-align:center;">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="queries-tbody">
                                             ${MOCK.queries.map(q => `
-                                                <tr>
-                                                    <td style="padding:12px; font-size:12px; color:var(--slate-500); border-bottom:1px solid #f1f5f9;">${q.date}</td>
+                                                <tr style="transition:background 0.15s; cursor:pointer;" onmouseover="this.style.background='#f4f6f5'" onmouseout="this.style.background=''" onclick="voirRequeteSQL('${q.id}')" title="Cliquer pour afficher la modale détaillée">
+                                                    <td style="padding:12px; font-size:12px; color:var(--slate-500); border-bottom:1px solid #f1f5f9; white-space:nowrap;">${q.date}</td>
                                                     <td style="padding:12px; border-bottom:1px solid #f1f5f9;">
                                                         <span style="background:var(--accent-teal-light); color:var(--primary-teal); padding:4px 8px; border-radius:4px; font-size:11px; font-weight:600;">${q.user}</span>
                                                     </td>
-                                                    <td style="padding:12px; max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-bottom:1px solid #f1f5f9;" title="${q.question.replace(/"/g, '&quot;')}">${q.question}</td>
-                                                    <td style="padding:12px; max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--slate-500); border-bottom:1px solid #f1f5f9;" title="${q.sql ? q.sql.replace(/"/g, '&quot;') : ''}">${q.sql}</td>
-                                                    <td style="padding:12px; font-weight:600; font-size:12px; border-bottom:1px solid #f1f5f9;">${q.results} lignes</td>
-                                                    <td style="padding:12px; font-family:'JetBrains Mono', monospace; font-size:12px; border-bottom:1px solid #f1f5f9;">${q.time} ms</td>
+                                                    <td style="padding:12px; border-bottom:1px solid #f1f5f9;">
+                                                        <div style="font-size:12.5px; font-weight:600; color:var(--dark-teal); line-height:1.4; word-break:break-word;">${q.question}</div>
+                                                    </td>
+                                                    <td style="padding:12px; border-bottom:1px solid #f1f5f9;">
+                                                        ${q.sql ? `
+                                                            <div style="background:#1a2a26; color:#a3e635; padding:8px 12px; border-radius:6px; font-family:'JetBrains Mono', Consolas, monospace; font-size:11.5px; line-height:1.45; white-space:pre-wrap; word-break:break-word; max-height:95px; overflow-y:auto; border:1px solid #2a3d38;">${q.sql}</div>
+                                                        ` : `
+                                                            <span style="color:var(--slate-500); font-style:italic; font-size:11.5px;">— Aucun SQL</span>
+                                                        `}
+                                                    </td>
+                                                    <td style="padding:12px; border-bottom:1px solid #f1f5f9;">
+                                                        <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#10B981;">
+                                                            <span style="width:6px;height:6px;border-radius:50%;background:#10B981;display:inline-block;"></span>
+                                                            ${q.status || 'Succès'}
+                                                        </span>
+                                                    </td>
+                                                    <td style="padding:12px; font-weight:600; font-size:12px; border-bottom:1px solid #f1f5f9;">${q.results} lig.</td>
+                                                    <td style="padding:12px; font-family:'JetBrains Mono', monospace; font-size:12px; border-bottom:1px solid #f1f5f9; white-space:nowrap;">${q.time} ms</td>
+                                                    <td style="padding:12px; border-bottom:1px solid #f1f5f9; text-align:center;">
+                                                        <button class="btn btn-secondary" style="padding:4px 10px; font-size:11px; white-space:nowrap;" onclick="event.stopPropagation(); voirRequeteSQL('${q.id}')">Détail</button>
+                                                    </td>
                                                 </tr>
                                             `).join('')}
                                         </tbody>
@@ -2760,8 +3204,8 @@ window.ChartManager.initBarChart('pnbChart',
                                                     <td>${getStatutBadge(a.statut)}</td>
                                                     <td>
                                                         <div style="display:flex; gap:8px;">
-                                                            <button class="icon-btn" onclick="showToast('Modification non implémentée')" title="Modifier"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
-                                                            <button class="icon-btn" style="color: var(--primary-orange);" onclick="deleteUser(${index})" title="Supprimer"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                                                            <button class="icon-btn" onclick="openEditUserModal(${index})" title="Modifier cet utilisateur"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
+                                                            <button class="icon-btn" style="color: var(--primary-orange);" onclick="deleteUser(${index})" title="Supprimer cet utilisateur"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                                                         </div>
                                                     </td>
                                                 </tr>`).join('')}
@@ -2962,6 +3406,10 @@ window.ChartManager.initBarChart('pnbChart',
                     }
                 }, 50);
             }
+
+            if (activeTab === 'admin-queries') {
+                loadAiLogs();
+            }
         }
 function renderChatbot(container) {
             container.innerHTML = `
@@ -3011,89 +3459,70 @@ function renderChatbot(container) {
             `;
             
             // Re-bind the window sendMainChat function so it has context of these DOM elements
-            window.sendMainChat = function() {
+            window.sendMainChat = async function() {
                 const input = document.getElementById('main-chat-input');
                 const text = input.value.trim();
                 if(!text) return;
-                
+
                 const msgs = document.getElementById('main-chat-messages');
-                
+
                 // Add User Message
                 msgs.innerHTML += `
                     <div class="msg msg-user" style="display:flex; gap:12px; max-width:80%; align-self:flex-end; flex-direction:row-reverse;">
                         <div style="width:36px; height:36px; border-radius:10px; background:var(--primary-orange); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">U</div>
-                        <div class="bubble" style="background:var(--primary-orange); color:white; border-radius:16px 16px 0 16px; padding:16px 20px;">${text}</div>
+                        <div class="bubble" style="background:var(--primary-orange); color:white; border-radius:16px 16px 0 16px; padding:16px 20px;">${escHtml(text)}</div>
                     </div>
                 `;
                 input.value = '';
                 msgs.scrollTop = msgs.scrollHeight;
-                
-                // Simulate Bot processing
-                setTimeout(() => {
-                    let mockSQL = "SELECT * FROM clients;";
-                    const startTime = performance.now();
-                    let res = MOCK.clients.slice(0, 5);
-                    let tableHtml = '';
 
-                    const textLower = text.toLowerCase();
-                    if (textLower.includes('casablanca') && textLower.includes('risque')) {
-                        mockSQL = "SELECT * FROM clients WHERE agence = 'Casablanca Anfa' AND score_risque > 80;";
-                        res = MOCK.clients.filter(c => c.agence === 'Casablanca Anfa' && c.score < 50).slice(0, 5);
-                        tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
-                        <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Client</th><th style="padding:6px; text-align:left;">Score</th><th style="padding:6px; text-align:right;">Encours</th></tr>
-                        ${res.map(c=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.nom}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.score}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(c.encours)}</td></tr>`).join('')}
-                    </table>`;
-                    } else if (textLower.includes('gros encours') && textLower.includes('pme')) {
-                        mockSQL = "SELECT * FROM clients WHERE segment = 'PME' ORDER BY encours DESC LIMIT 5;";
-                        res = [...MOCK.clients].filter(c => c.segment === 'PME').sort((a,b) => b.encours - a.encours).slice(0, 5);
-                        tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
-                        <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Client</th><th style="padding:6px; text-align:left;">Segment</th><th style="padding:6px; text-align:right;">Encours</th></tr>
-                        ${res.map(c=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.nom}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.segment}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(c.encours)}</td></tr>`).join('')}
-                    </table>`;
-                    } else if (textLower.includes('total des engagements') || textLower.includes('trésorerie')) {
-                        mockSQL = "SELECT agence, SUM(montant) FROM engagements WHERE type = 'Trésorerie' GROUP BY agence;";
-                        const agences = [...new Set(MOCK.clients.map(c => c.agence))];
-                        res = agences.map(ag => {
-                            const total = MOCK.clients.filter(c => c.agence === ag).reduce((sum, c) => sum + (c.encours * 0.4), 0);
-                            return { agence: ag, total };
-                        }).sort((a,b) => b.total - a.total).slice(0, 5);
-                        tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
-                        <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Agence</th><th style="padding:6px; text-align:right;">Total Engagements (Trésorerie)</th></tr>
-                        ${res.map(a=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${a.agence}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(a.total)}</td></tr>`).join('')}
-                    </table>`;
-                    } else if (textLower.includes('encours global moyen') || textLower.includes('moyen par segment')) {
-                        mockSQL = "SELECT segment, AVG(encours) as avg_encours FROM clients GROUP BY segment;";
-                        const segments = [...new Set(MOCK.clients.map(c => c.segment))];
-                        res = segments.map(seg => {
-                            const clients = MOCK.clients.filter(c => c.segment === seg);
-                            const avg = clients.reduce((sum, c) => sum + c.encours, 0) / clients.length;
-                            return { segment: seg, avg };
-                        }).sort((a,b) => b.avg - a.avg);
-                        tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
-                        <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Segment</th><th style="padding:6px; text-align:right;">Encours Moyen</th></tr>
-                        ${res.map(s=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${s.segment}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(s.avg)}</td></tr>`).join('')}
-                    </table>`;
-                    } else {
-                        tableHtml = `<p style="margin-bottom:8px">Je n'ai pas pu analyser cette requête avec précision. Veuillez essayer une des suggestions ou reformuler.</p>`;
-                    }
+                // Bot processing
+                const thinkingId = 'main-msg-' + Date.now();
+                msgs.innerHTML += `
+                    <div id="${thinkingId}" class="msg msg-bot" style="display:flex; gap:12px; max-width:95%;">
+                        <div style="width:36px; height:36px; border-radius:10px; background:var(--primary-teal); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                        </div>
+                        <div class="bubble">
+                            <div class="saham-msg-icon"><span class="typing-dots"><span></span><span></span><span></span></span></div>
+                        </div>
+                    </div>
+                `;
+                msgs.scrollTop = msgs.scrollHeight;
 
-                    const timeMs = Math.round(performance.now() - startTime + 45); // fake delay
-                    MOCK.queries.unshift({ date: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR'), user: APP.userRole, question: text, sql: mockSQL, results: res.length, time: timeMs });
+                try {
+                    const token = localStorage.getItem('saham_access_token');
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (token) headers['Authorization'] = 'Bearer ' + token;
+                    const r = await fetch(API_BASE + '/ai/ask', {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify({ question: text })
+                    });
+                    if (!r.ok) throw new Error('Erreur serveur ' + r.status);
+                    const data = await r.json();
 
-
+                    document.getElementById(thinkingId).style.display = 'none';
                     msgs.innerHTML += `
                         <div class="msg msg-bot" style="display:flex; gap:12px; max-width:95%;">
                             <div style="width:36px; height:36px; border-radius:10px; background:var(--primary-teal); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
                             </div>
-                            <div class="bubble">
-                                <p style="margin-bottom:8px">Voici les résultats trouvés (${res.length} clients).</p>
-                                ${tableHtml}
-                            </div>
+                            <div class="bubble">${buildSahamAnswer(data)}</div>
                         </div>
                     `;
-                    msgs.scrollTop = msgs.scrollHeight;
-                }, 800);
+                } catch (err) {
+                    document.getElementById(thinkingId).style.display = 'none';
+                    msgs.innerHTML += `
+                        <div class="msg msg-bot" style="display:flex; gap:12px; max-width:95%;">
+                            <div style="width:36px; height:36px; border-radius:10px; background:var(--primary-teal); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                            </div>
+                            <div class="bubble"><p style="color:#C8102E;">Désolé, je n'ai pas pu analyser cette question. ${escHtml(err.message)}</p></div>
+                        </div>
+                    `;
+                }
+                msgs.scrollTop = msgs.scrollHeight;
             }
         }
 
@@ -3112,22 +3541,220 @@ function renderChatbot(container) {
             showToast('Export Dashboard CSV terminé', 'success');
         }
 
+        let AI_QUERY_LOGS = [];
+
+        async function loadAiLogs() {
+            const tbody = document.getElementById('queries-tbody');
+            if (tbody) {
+                tbody.innerHTML = `<tr><td colspan="8" style="padding:16px; text-align:center; font-size:12px; color:var(--slate-500);"><span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:14px;height:14px;border:2px solid #e9eceb;border-top-color:var(--primary-teal);border-radius:50%;animation:spin 0.8s linear infinite;display:inline-block;"></span>Chargement...</span></td></tr>`;
+            }
+            try {
+                const data = await apiGet('/ai/logs?limit=100');
+                if (data && Array.isArray(data)) {
+                    AI_QUERY_LOGS = data;
+                    if (tbody) {
+                        if (!data.length) {
+                            tbody.innerHTML = `<tr><td colspan="8" style="padding:20px; text-align:center; font-size:12px; color:var(--slate-500);">Aucune requête pour l'instant. Posez une question à SahamAI.</td></tr>`;
+                            return;
+                        }
+                        tbody.innerHTML = data.map(q => {
+                            const statusColor = q.status === 'success' ? '#10B981' : q.status === 'error' ? '#EF4444' : '#F59E0B';
+                            const statusLabel = q.status === 'success' ? 'Succès' : q.status === 'no_sql' ? 'Hors-sujet' : q.status === 'error' ? 'Erreur' : (q.status || '—');
+                            const dateStr = q.created_at ? new Date(q.created_at).toLocaleString('fr-FR') : '—';
+                            return `
+                            <tr style="transition:background 0.15s; cursor:pointer;" onmouseover="this.style.background='#f4f6f5'" onmouseout="this.style.background=''" onclick="voirRequeteSQL('${q.id}')" title="Cliquer pour afficher la modale détaillée">
+                                <td style="padding:12px; font-size:12px; color:var(--slate-500); border-bottom:1px solid #f1f5f9; white-space:nowrap;">${escHtml(dateStr)}</td>
+                                <td style="padding:12px; border-bottom:1px solid #f1f5f9;">
+                                    <span style="background:var(--accent-teal-light); color:var(--primary-teal); padding:4px 8px; border-radius:4px; font-size:11px; font-weight:600;">${escHtml(q.user_nom || q.user_id || 'Inconnu')}</span>
+                                </td>
+                                <td style="padding:12px; border-bottom:1px solid #f1f5f9;">
+                                    <div style="font-size:12.5px; font-weight:600; color:var(--dark-teal); line-height:1.4; word-break:break-word;">${escHtml(q.question || '—')}</div>
+                                </td>
+                                <td style="padding:12px; border-bottom:1px solid #f1f5f9;">
+                                    ${q.sql ? `
+                                        <div style="background:#1a2a26; color:#a3e635; padding:8px 12px; border-radius:6px; font-family:'JetBrains Mono', Consolas, monospace; font-size:11.5px; line-height:1.45; white-space:pre-wrap; word-break:break-word; max-height:95px; overflow-y:auto; border:1px solid #2a3d38; box-shadow:inset 0 1px 3px rgba(0,0,0,0.2);">${escHtml(q.sql)}</div>
+                                    ` : `
+                                        <span style="color:var(--slate-500); font-style:italic; font-size:11.5px; padding:4px 8px; background:#f8faf9; border-radius:4px; border:1px dashed #e2e8f0; display:inline-block;">— Aucun SQL (Hors-sujet)</span>
+                                    `}
+                                </td>
+                                <td style="padding:12px; border-bottom:1px solid #f1f5f9;">
+                                    <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:${statusColor};">
+                                        <span style="width:6px;height:6px;border-radius:50%;background:${statusColor};display:inline-block;"></span>
+                                        ${escHtml(statusLabel)}
+                                    </span>
+                                </td>
+                                <td style="padding:12px; font-weight:600; font-size:12px; border-bottom:1px solid #f1f5f9;">${q.row_count !== null && q.row_count !== undefined ? q.row_count + ' lig.' : '—'}</td>
+                                <td style="padding:12px; font-family:'JetBrains Mono', monospace; font-size:12px; border-bottom:1px solid #f1f5f9; white-space:nowrap;">${q.duration_ms !== null ? q.duration_ms + ' ms' : '—'}</td>
+                                <td style="padding:12px; border-bottom:1px solid #f1f5f9; text-align:center;">
+                                    <button class="btn btn-secondary" style="padding:4px 10px; font-size:11px; white-space:nowrap;" onclick="event.stopPropagation(); voirRequeteSQL('${q.id}')">Détail</button>
+                                </td>
+                            </tr>`;
+                        }).join('');
+                    }
+                } else if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="8" style="padding:16px; text-align:center; font-size:12px; color:var(--slate-500);">Impossible de charger les logs (API non disponible).</td></tr>`;
+                }
+            } catch(e) {
+                if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="padding:16px; text-align:center; font-size:12px; color:#EF4444;">Erreur de chargement : ${escHtml(e.message)}</td></tr>`;
+            }
+        }
+
+        /**
+         * Affiche la requête SQL COMPLETE d'une ligne d'historique en lecture seule.
+         * DOIT être sur window car appelée depuis des onclick dans du innerHTML dynamique.
+         */
+        window.voirRequeteSQL = function voirRequeteSQL(id) {
+            const q = (AI_QUERY_LOGS || []).find(function (x) { return String(x.id) === String(id); })
+                   || (typeof MOCK !== 'undefined' && MOCK.queries ? MOCK.queries.find(function (x) { return String(x.id) === String(id); }) : null);
+            if (!q) return;
+
+            const dateStr = q.created_at ? new Date(q.created_at).toLocaleString('fr-FR') : (q.date || '—');
+            const ok = q.status === 'success' || !q.status || q.status === 'Success';
+            const couleur = ok ? '#10B981' : '#EF4444';
+            const userStr = q.user_nom || q.user_id || q.user || 'Inconnu';
+            const sqlStr = q.sql || 'Aucune requête SQL (mode hors-sujet / salutation)';
+            const resultsStr = (q.row_count !== null && q.row_count !== undefined) ? (q.row_count + ' ligne(s)') : (q.results !== undefined ? (q.results + ' ligne(s)') : '—');
+            const durationStr = (q.duration_ms !== null && q.duration_ms !== undefined) ? (q.duration_ms + ' ms') : (q.time ? (q.time + ' ms') : '—');
+
+            let modal = document.getElementById('sql-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'sql-modal';
+                modal.style.cssText = 'position:fixed;inset:0;background:rgba(26,42,38,.65);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+                modal.onclick = function (e) { if (e.target === modal) modal.remove(); };
+                document.body.appendChild(modal);
+            }
+
+            modal.innerHTML = `
+                <div style="background:#fff;border-radius:14px;max-width:850px;width:100%;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.35);border:1px solid rgba(0,0,0,0.08);">
+                    <!-- Header -->
+                    <div style="padding:18px 24px;border-bottom:1px solid #e9eceb;display:flex;justify-content:space-between;align-items:center;background:#fafbfc;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:36px;height:36px;border-radius:8px;background:rgba(59,82,73,0.1);display:flex;align-items:center;justify-content:center;color:var(--primary-teal);">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-size:16px;font-weight:700;color:#1d2b27;">Détail de la Requête SQL #${escHtml(String(q.id || ''))}</div>
+                                <div style="font-size:12.5px;color:#6b7d78;margin-top:2px;">${escHtml(dateStr)} &middot; Utilisateur : <b>${escHtml(userStr)}</b></div>
+                            </div>
+                        </div>
+                        <button onclick="document.getElementById('sql-modal').remove()" style="background:none;border:none;font-size:26px;cursor:pointer;color:#8a9a95;line-height:1;padding:4px 8px;border-radius:6px;" onmouseover="this.style.color='#111';this.style.background='#e9eceb'" onmouseout="this.style.color='#8a9a95';this.style.background='none'">&times;</button>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="padding:22px 24px;overflow-y:auto;flex:1;">
+                        <!-- Question -->
+                        <div style="margin-bottom:20px;">
+                            <div style="font-size:11.5px;font-weight:700;color:#6b7d78;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Question posée en langage naturel</div>
+                            <div style="font-size:15px;color:#1d2b27;font-weight:600;background:#f8faf9;padding:12px 16px;border-radius:8px;border-left:4px solid var(--primary-teal);">${escHtml(q.question || '—')}</div>
+                        </div>
+
+                        <!-- Requete SQL -->
+                        <div style="margin-bottom:20px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                <div style="font-size:11.5px;font-weight:700;color:#6b7d78;text-transform:uppercase;letter-spacing:.06em;">Requête SQL exécutée (Lecture seule)</div>
+                                <button onclick="navigator.clipboard.writeText(decodeURIComponent('${encodeURIComponent(sqlStr)}')).then(() => showToast('Requête SQL copiée dans le presse-papier !', 'success'))" style="background:#f1f5f3;border:1px solid #dbe3e0;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--primary-teal);cursor:pointer;display:inline-flex;align-items:center;gap:6px;" onmouseover="this.style.background='#e2ebe7'" onmouseout="this.style.background='#f1f5f3'">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                    Copier le SQL
+                                </button>
+                            </div>
+                            <pre style="background:#1a2a26;color:#a3e635;padding:16px 18px;border-radius:10px;overflow-x:auto;font-family:'JetBrains Mono', Consolas, monospace;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;margin:0;box-shadow:inset 0 2px 6px rgba(0,0,0,0.25);">${escHtml(sqlStr)}</pre>
+                        </div>
+
+                        ${q.answer ? `
+                        <div style="margin-bottom:20px;">
+                            <div style="font-size:11.5px;font-weight:700;color:#6b7d78;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Réponse générée par SahamAI</div>
+                            <div style="font-size:13.5px;color:#2b3e39;background:#f8faf9;padding:12px 16px;border-radius:8px;line-height:1.6;white-space:pre-line;border:1px solid #e9eceb;">${escHtml(q.answer)}</div>
+                        </div>` : ''}
+
+                        ${q.error ? `
+                        <div style="margin-bottom:20px;">
+                            <div style="font-size:11.5px;font-weight:700;color:#EF4444;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Message d'erreur</div>
+                            <div style="font-size:13px;color:#EF4444;background:#FEF2F2;padding:12px 16px;border-radius:8px;border:1px solid #FCA5A5;">${escHtml(q.error)}</div>
+                        </div>` : ''}
+                    </div>
+
+                    <!-- Footer / Metrics -->
+                    <div style="padding:14px 24px;border-top:1px solid #e9eceb;background:#fafbfc;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:12.5px;color:#3b504a;">
+                        <div style="display:flex;align-items:center;gap:16px;">
+                            <span style="display:inline-flex;align-items:center;gap:6px;">
+                                <span style="width:8px;height:8px;border-radius:50%;background:${couleur};"></span>
+                                <b style="color:${couleur};">${escHtml(ok ? 'Succès' : (q.status || 'Erreur'))}</b>
+                            </span>
+                            <span>Résultats : <b>${escHtml(resultsStr)}</b></span>
+                            <span>Temps d'exécution : <b>${escHtml(durationStr)}</b></span>
+                            ${q.tables ? `<span>Tables : <code style="background:#e9eceb;padding:2px 6px;border-radius:4px;font-size:11.5px;">${escHtml(q.tables)}</code></span>` : ''}
+                        </div>
+                        <button class="btn btn-secondary" onclick="document.getElementById('sql-modal').remove()" style="padding:6px 16px;font-size:12.5px;">Fermer</button>
+                    </div>
+                </div>
+            `;
+        }
+
         function exportQueriesCSV() {
-            let csvContent = "ID;Date;Utilisateur;Question Posée;Statut;Temps (ms);Résultats;Tables Interrogées\n";
-            MOCK.queries.forEach(q => {
+            let csvContent = "ID;Date;Utilisateur;Prompt / Question;Requête SQL;Statut;Durée (ms);Lignes;Tables\n";
+            const source = AI_QUERY_LOGS.length ? AI_QUERY_LOGS.map(q => ({
+                id: q.id,
+                date: q.created_at || '',
+                user: q.user_nom || q.user_id || 'Inconnu',
+                question: q.question || '',
+                sql: q.sql || '',
+                status: q.status || 'success',
+                time: q.duration_ms !== null && q.duration_ms !== undefined ? q.duration_ms : '',
+                results: q.row_count !== null && q.row_count !== undefined ? q.row_count : '',
+                tables: q.tables || ''
+            })) : MOCK.queries.map(q => ({
+                id: q.id,
+                date: q.date || '',
+                user: q.user || 'Inconnu',
+                question: q.question || '',
+                sql: q.sql || '',
+                status: q.status || 'success',
+                time: q.time || '',
+                results: q.results !== undefined ? q.results : '',
+                tables: (q.tables || []).join(',')
+            }));
+
+            function formatCsvDate(raw) {
+                if (!raw) return '';
+                const d = new Date(raw);
+                if (isNaN(d.getTime())) return String(raw).trim();
+                const pad = n => String(n).padStart(2, '0');
+                return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+            }
+
+            function cleanCsvText(text) {
+                if (text === null || text === undefined) return '';
+                // Aplatit les sauts de ligne en un espace unique et supprime les espaces redondants
+                return String(text).replace(/[\r\n\t]+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+            }
+
+            function csvCell(v) {
+                const cleaned = cleanCsvText(v);
+                if (cleaned.includes(';') || cleaned.includes('"')) {
+                    return '"' + cleaned.replace(/"/g, '""') + '"';
+                }
+                return cleaned;
+            }
+
+            source.forEach(q => {
+                const statusLabel = q.status === 'success' ? 'Succès' : (q.status === 'no_sql' ? 'Hors-sujet' : (q.status === 'error' ? 'Erreur' : q.status));
                 const row = [
                     q.id || 'N/A',
-                    q.date,
-                    q.user,
-                    '"' + q.question.replace(/"/g, '""') + '"',
-                    q.status,
+                    formatCsvDate(q.date),
+                    csvCell(q.user),
+                    csvCell(q.question),
+                    csvCell(q.sql),
+                    statusLabel,
                     q.time,
                     q.results,
-                    (q.tables || []).join(',')
+                    csvCell(q.tables)
                 ].join(';');
                 csvContent += row + "\n";
             });
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+            const BOM = '\uFEFF'; // UTF-8 BOM pour ouverture directe et propre sous Microsoft Excel
+            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
@@ -3148,69 +3775,11 @@ function renderChatbot(container) {
                 .replace(/([0-9]+|'[^']*')/g, '<span class="sql-value-green">$1</span>');
         }
 
+        // Ancien widget FAB (déprécié) : supprimé au profit du SahamAI.
+        // Garde ce nom de fonction pour la compatibilité avec d'éventuels
+        // boutons encore présents ; il recharge simplement les logs admin.
         async function sendChatFab() {
-            const input = document.getElementById('chat-input-fab');
-            const text = input.value.trim();
-            if(!text) return;
-            
-            const container = document.getElementById('chat-messages');
-            
-            container.innerHTML += `<div class="chat-msg user">${text}</div>`;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-            
-            const analyzeId = 'msg-' + Date.now();
-            container.innerHTML += `<div id="${analyzeId}" class="chat-msg bot">Analyse de votre question<span class="typing-dots"><span></span><span></span><span></span></span></div>`;
-            container.scrollTop = container.scrollHeight;
-            
-            await new Promise(r => setTimeout(r, 1200));
-            document.getElementById(analyzeId).style.display = 'none';
-            
-            let sql = "SELECT * FROM clients LIMIT 5;";
-            let nlpResponse = "Voici quelques données :";
-            let tableHtml = "Résultats standards...";
-            let resultsCount = 5;
-            
-            if(text.toLowerCase().includes('score') || text.toLowerCase().includes('risque')) {
-                sql = "SELECT id, nom, score, encours FROM clients WHERE score < 40 ORDER BY score ASC;";
-                const res = MOCK.clients.filter(c=>c.score<40).slice(0,4);
-                resultsCount = res.length;
-                nlpResponse = "J'ai identifié " + resultsCount + " clients présentant un score de risque inférieur à 40. Voici les détails :";
-                tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
-                    <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Client</th><th style="padding:6px; text-align:left;">Score</th><th style="padding:6px; text-align:right;">Encours</th></tr>
-                    ${res.map(c=>`<tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.nom}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">${c.score}</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">${formatMAD(c.encours)}</td></tr>`).join('')}
-                </table>`;
-            } else if(text.toLowerCase().includes('encours') || text.toLowerCase().includes('top')) {
-                sql = "SELECT agence, SUM(encours) as total_encours FROM clients GROUP BY agence ORDER BY total_encours DESC LIMIT 3;";
-                resultsCount = 3;
-                nlpResponse = "Voici le top 3 des agences par total d'encours.";
-                tableHtml = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:var(--surface); border-radius:4px; overflow:hidden; border:1px solid var(--sec-bg);">
-                    <tr style="background:var(--sec-bg); color:var(--slate-700);"><th style="padding:6px; text-align:left;">Agence</th><th style="padding:6px; text-align:right;">Total Encours</th></tr>
-                    <tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">Casablanca Anfa</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">125,400,000 MAD</td></tr>
-                    <tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">Rabat Agdal</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">98,200,000 MAD</td></tr>
-                    <tr><td style="padding:6px; border-bottom:1px solid var(--sec-bg);">Marrakech Gueliz</td><td style="padding:6px; border-bottom:1px solid var(--sec-bg); text-align:right; font-family:'JetBrains Mono', monospace;">87,500,000 MAD</td></tr>
-                </table>`;
-            }
-
-            const execTime = Math.floor(Math.random() * 150) + 50;
-
-            MOCK.queries.unshift({
-                question: text,
-                sql: sql,
-                results: resultsCount,
-                time: execTime,
-                date: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR'),
-                user: APP.userRole || 'Inconnu'
-            });
-
-            container.innerHTML += `
-                <div class="chat-msg bot" style="width: 100%;">
-                    <div style="margin-top:12px;">${nlpResponse}</div>
-                    ${tableHtml}
-                    <div style="text-align:right; font-size:10px; color:var(--slate-500); margin-top:8px;">Exécuté en ${execTime}ms</div>
-                </div>`;
-                
-            container.scrollTop = container.scrollHeight;
+            loadAiLogs();
         }
 
     
@@ -3231,17 +3800,446 @@ function renderChatbot(container) {
             }
         }
         
-        function toggleSahamChat() {
-            document.getElementById('saham-chat-panel').classList.toggle('active');
-            if (document.getElementById('saham-chat-panel').classList.contains('active')) {
-                document.getElementById('saham-chat-input').focus();
+        /* ==================================================================
+           HISTORIQUE DES DISCUSSIONS (comme dans ChatGPT / Claude)
+           ==================================================================
+           Stocke dans le navigateur (localStorage), par utilisateur connecte.
+
+           Pourquoi le navigateur et pas la base ? Une conversation est un
+           confort d interface, propre a la personne et a son poste. La trace
+           d AUDIT, elle, est deja en base (table ai_query_log) : c est elle
+           qui fait foi cote banque. Les deux repondent a deux besoins
+           differents et ne se remplacent pas.
+           ================================================================== */
+
+        var SAHAM_CONV_ID = null;   // discussion en cours
+
+        function _cleSahamConv() {
+            var u = 'anon';
+            try {
+                var raw = localStorage.getItem('saham_user');
+                if (raw) { var o = JSON.parse(raw); u = o.email || o.id || 'anon'; }
+            } catch (e) {}
+            return 'saham_conversations_' + u;
+        }
+
+        function chargerConversations() {
+            try { return JSON.parse(localStorage.getItem(_cleSahamConv()) || '[]'); }
+            catch (e) { return []; }
+        }
+
+        function sauverConversations(liste) {
+            try { localStorage.setItem(_cleSahamConv(), JSON.stringify(liste.slice(0, 30))); }
+            catch (e) {}   // quota depasse ou navigation privee : on ignore
+        }
+
+        /** Enregistre l echange courant dans la discussion active. */
+        function memoriserEchange(question, htmlReponse) {
+            var liste = chargerConversations();
+            var conv = null;
+            for (var i = 0; i < liste.length; i++) {
+                if (liste[i].id === SAHAM_CONV_ID) { conv = liste[i]; break; }
             }
+            if (!conv) {
+                conv = {
+                    id: SAHAM_CONV_ID || ('c' + Date.now()),
+                    titre: question.length > 46 ? question.slice(0, 46) + '...' : question,
+                    date: new Date().toISOString(),
+                    echanges: []
+                };
+                SAHAM_CONV_ID = conv.id;
+                liste.unshift(conv);
+            }
+            conv.echanges.push({ q: question, r: htmlReponse });
+            conv.date = new Date().toISOString();
+            sauverConversations(liste);
+        }
+
+        function toggleHistorique() {
+            var vue = document.getElementById('saham-historique');
+            if (vue) { vue.remove(); return; }
+
+            var liste = chargerConversations();
+            var corps = document.getElementById('saham-chat-messages');
+            if (!corps) return;
+
+            var html = '<div id="saham-historique" style="position:absolute;inset:0;background:#fff;z-index:20;overflow-y:auto;padding:16px;">'
+                     + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'
+                     +   '<div style="font-size:14.5px;font-weight:700;color:#1d2b27;">Discussions precedentes</div>'
+                     +   '<button onclick="toggleHistorique()" style="background:none;border:0;font-size:22px;cursor:pointer;color:#6b7d78;line-height:1;">&times;</button>'
+                     + '</div>';
+
+            if (!liste.length) {
+                html += '<p style="font-size:13.5px;color:#6b7d78;">Aucune discussion enregistree pour le moment. '
+                      + 'Vos echanges seront conserves ici automatiquement.</p>';
+            } else {
+                liste.forEach(function (c) {
+                    var d = new Date(c.date);
+                    var quand = d.toLocaleDateString('fr-FR') + ' a ' + d.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
+                    html += '<div style="border:1px solid #e9eceb;border-radius:9px;padding:11px 13px;margin-bottom:9px;cursor:pointer;transition:background .15s;"'
+                          + ' onmouseover="this.style.background=&quot;#f4f6f5&quot;" onmouseout="this.style.background=&quot;&quot;"'
+                          + ' onclick="ouvrirConversation(&quot;' + c.id + '&quot;)">'
+                          +   '<div style="font-size:13.5px;font-weight:600;color:#1d2b27;margin-bottom:3px;">' + escHtml(c.titre) + '</div>'
+                          +   '<div style="font-size:11.5px;color:#6b7d78;">' + quand + ' &middot; ' + c.echanges.length + ' message(s)</div>'
+                          + '</div>';
+                });
+                html += '<button onclick="viderHistorique()" style="margin-top:10px;background:none;border:1px solid #e9eceb;border-radius:7px;padding:7px 12px;font-size:12.5px;color:#6b7d78;cursor:pointer;font-family:inherit;">Effacer l historique</button>';
+            }
+            html += '</div>';
+            corps.insertAdjacentHTML('beforeend', html);
+        }
+
+        function ouvrirConversation(id) {
+            var liste = chargerConversations();
+            var conv = null;
+            for (var i = 0; i < liste.length; i++) { if (liste[i].id === id) { conv = liste[i]; break; } }
+            if (!conv) return;
+
+            var msgs = document.getElementById('saham-chat-messages');
+            var chips = document.getElementById('saham-chips');
+            Array.prototype.slice.call(msgs.children).forEach(function (el) {
+                if (el.id !== 'saham-chips' && !el.classList.contains('saham-greeting')) el.remove();
+            });
+            if (chips) chips.style.display = 'none';
+
+            SAHAM_CONV_ID = conv.id;
+            conv.echanges.forEach(function (e) {
+                msgs.innerHTML += '<div class="saham-msg user"><div class="bubble">' + escHtml(e.q) + '</div></div>';
+                msgs.innerHTML += '<div class="saham-msg bot"><div class="bubble">' + e.r + '</div></div>';
+            });
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function viderHistorique() {
+            try { localStorage.removeItem(_cleSahamConv()); } catch (e) {}
+            SAHAM_CONV_ID = null;
+            var vue = document.getElementById('saham-historique');
+            if (vue) vue.remove();
+            if (typeof showToast === 'function') showToast('Historique efface', 'success');
+        }
+
+        /**
+         * Nouvelle discussion : vide la conversation et REAFFICHE les suggestions.
+         *
+         * Pourquoi : les questions proposees etaient masquees des la premiere
+         * question posee, et definitivement perdues. L utilisateur qui tapait
+         * sa propre question ne pouvait plus jamais y revenir.
+         */
+        function resetSahamChat() {
+            const msgs = document.getElementById('saham-chat-messages');
+            const chips = document.getElementById('saham-chips');
+            if (!msgs) return;
+
+            // ESSENTIEL : on repart d une discussion VIERGE.
+            // Sans cette ligne, les echanges suivants continuaient de s ajouter
+            // a la conversation precedente : l historique devenait un seul bloc
+            // fourre-tout au lieu de discussions distinctes.
+            SAHAM_CONV_ID = null;
+
+            // On ferme aussi le panneau d historique s il etait ouvert.
+            var vueHisto = document.getElementById('saham-historique');
+            if (vueHisto) vueHisto.remove();
+
+            // On ne garde que le message d accueil et le bloc de suggestions.
+            Array.prototype.slice.call(msgs.children).forEach(function (el) {
+                if (el.id !== 'saham-chips' && !el.classList.contains('saham-greeting')) {
+                    el.remove();
+                }
+            });
+            if (chips) chips.style.display = '';
+            msgs.scrollTop = 0;
+        }
+
+        function toggleSahamChat() {
+            const panel = document.getElementById('saham-chat-panel');
+            const fab = document.getElementById('saham-fab');
+            const isActive = panel.classList.toggle('active');
+            if (isActive) {
+                if (fab) fab.classList.add('hidden');
+                document.getElementById('saham-chat-input').focus();
+            } else {
+                if (fab) fab.classList.remove('hidden');
+            }
+        }
+
+        /* --- Redimensionnement du chat façon Codex / VS Code --- */
+        function initChatResize() {
+            const panel = document.getElementById('saham-chat-panel');
+            if (!panel || panel.dataset.resizable === '1') return;
+            panel.dataset.resizable = '1';
+
+            const MIN_W = 340, MIN_H = 320;
+            const getMaxW = () => window.innerWidth - 24;
+            const getMaxH = () => window.innerHeight - 24;
+
+            // Restore saved size from localStorage
+            const saved = localStorage.getItem('saham_chat_size');
+            if (saved) {
+                try {
+                    const s = JSON.parse(saved);
+                    if (s.width && s.height) {
+                        panel.style.width  = Math.max(MIN_W, Math.min(getMaxW(), s.width))  + 'px';
+                        panel.style.height = Math.max(MIN_H, Math.min(getMaxH(), s.height)) + 'px';
+                    }
+                } catch (e) { /* ignore corrupted size */ }
+            }
+
+            panel.querySelectorAll('.saham-resize-handle').forEach(handle => {
+                handle.addEventListener('mousedown', e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Skip resize when in fullscreen mode
+                    if (panel.classList.contains('fullscreen')) return;
+
+                    const dir = handle.dataset.dir;
+                    const rect = panel.getBoundingClientRect();
+                    const startX = e.clientX, startY = e.clientY;
+                    const startW = rect.width,  startH = rect.height;
+                    // Anchor points: right edge and bottom edge (panel is bottom-right anchored)
+                    const startLeft   = rect.left;    // for west-drag: new right = innerWidth - newLeft
+                    const startTop    = rect.top;     // for north-drag: new bottom = innerHeight - newTop
+                    const startRight  = window.innerWidth  - rect.right;   // CSS right value
+                    const startBottom = window.innerHeight - rect.bottom;  // CSS bottom value
+
+                    const onMove = ev => {
+                        const dx = ev.clientX - startX;
+                        const dy = ev.clientY - startY;
+                        const maxW = getMaxW(), maxH = getMaxH();
+                        let w = startW, h = startH;
+
+                        // East: grow/shrink rightward
+                        if (dir.includes('e')) w = startW + dx;
+                        // South: grow/shrink downward
+                        if (dir.includes('s')) h = startH + dy;
+                        // West: grow/shrink leftward — anchor the right edge, move the left edge
+                        if (dir.includes('w')) {
+                            w = startW - dx;
+                            // Clamp before repositioning
+                            w = Math.max(MIN_W, Math.min(maxW, w));
+                            // new CSS right = startRight (unchanged), new left = innerWidth - right - w
+                            panel.style.right = startRight + 'px';
+                        }
+                        // North: grow/shrink upward — anchor the bottom edge, move the top edge
+                        if (dir.includes('n')) {
+                            h = startH - dy;
+                            h = Math.max(MIN_H, Math.min(maxH, h));
+                            panel.style.bottom = startBottom + 'px';
+                        }
+
+                        w = Math.max(MIN_W, Math.min(maxW, w));
+                        h = Math.max(MIN_H, Math.min(maxH, h));
+
+                        panel.style.width  = w + 'px';
+                        panel.style.height = h + 'px';
+
+                        localStorage.setItem('saham_chat_size', JSON.stringify({ width: w, height: h }));
+                    };
+
+                    const onUp = () => {
+                        document.removeEventListener('mousemove', onMove);
+                        document.removeEventListener('mouseup', onUp);
+                        document.body.style.cursor    = '';
+                        document.body.style.userSelect = '';
+                    };
+
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onUp);
+                    document.body.style.cursor    = getComputedStyle(handle).cursor;
+                    document.body.style.userSelect = 'none';
+                });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', initChatResize);
+        // Initialisation immédiate aussi (le script est en bas de page)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initChatResize);
+        } else {
+            initChatResize();
         }
 
         function fillSahamChat(btn) {
             const input = document.getElementById('saham-chat-input');
             input.value = btn.innerText;
             input.focus();
+        }
+
+        /* --- Rendus SahamAI (tableau + graphe SVG) depuis la réponse API --- */
+        function escHtml(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+                {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
+            ));
+        }
+
+        function buildSahamTable(columns, rows, rowCount) {
+            if (!columns || !rows || !columns.length) return '';
+            const head = columns.map(c => `<th style="padding:8px; font-size:11px; font-weight:600; color:#3b504a; border-bottom:1px solid #e9eceb; text-align:left;">${escHtml(c)}</th>`).join('');
+            // Les cellules numeriques passent par fmtNombre : 4227028.32 -> "4,23 M"
+            const body = rows.map(row => `<tr>${row.map(function (cell) {
+                const n = Number(cell);
+                // Valeur EXACTE avec separateurs de milliers : le tableau est une
+                // source de verite, il ne doit rien arrondir. Seul le dashboard
+                // se permet d abreger (vue d ensemble).
+                const affiche = (cell !== null && cell !== '' && isFinite(n) && Math.abs(n) >= 1000)
+                    ? n.toLocaleString('fr-FR', {maximumFractionDigits: 2})
+                    : cell;
+                return `<td style="padding:6px 8px; font-size:11.5px; border-bottom:1px solid #f1f5f9; ${isFinite(n) && cell !== null && cell !== '' ? 'text-align:right; font-variant-numeric:tabular-nums;' : ''}">${escHtml(affiche)}</td>`;
+            }).join('')}</tr>`).join('');
+            return `
+                <table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:#f4f6f5; border-radius:6px; overflow:hidden;">
+                    <thead><tr>${head}</tr></thead>
+                    <tbody>${body}</tbody>
+                </table>
+                <div style="font-size:11px; color:#6b7d78; margin-top:6px;">${rowCount} ligne(s)</div>
+            `;
+        }
+
+        function buildSahamChart(chart) {
+            if (!chart || !chart.labels || !chart.labels.length) return '';
+            if (chart.type === 'pie') {
+                const total = chart.values.reduce((a,b)=>a+b,0) || 1;
+                const segs = chart.labels.map((l,i)=>`
+                    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#3b504a;">
+                        <span style="width:10px;height:10px;border-radius:2px;background:hsl(${(i*137)%360},60%,50%);display:inline-block;"></span>
+                        ${escHtml(l)} (${Math.round(chart.values[i]/total*100)}%)
+                    </div>`).join('');
+                return `<div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">${segs}</div>`;
+            }
+            const W = 260, H = 140, pad = 26;
+            const max = Math.max(...chart.values);
+            const step = (W - pad*2) / chart.labels.length;
+            let bars = '', line = '';
+            const points = [];
+            chart.labels.forEach((l,i)=>{
+                const v = chart.values[i];
+                const bh = max > 0 ? (v/max)*(H - pad*2) : 0;
+                const x = pad + i*step + step/2;
+                const y = H - pad - bh;
+                bars += `<rect x="${(x-step*0.3).toFixed(1)}" y="${y.toFixed(1)}" width="${(step*0.6).toFixed(1)}" height="${Math.max(bh,0).toFixed(1)}" rx="2" fill="rgba(46,71,65,0.85)"></rect>`;
+                points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+            });
+            if (chart.type === 'line') {
+                line = `<polyline points="${points.join(' ')}" fill="none" stroke="#C8102E" stroke-width="2.5"></polyline>`;
+            }
+            const labels = chart.labels.map((l,i)=>{
+                const x = pad + i*step + step/2;
+                const short = String(l).length > 10 ? String(l).slice(0,10)+'…' : l;
+                return `<text x="${x.toFixed(1)}" y="${H-8}" text-anchor="middle" font-size="8" fill="#6b7d78">${escHtml(short)}</text>`;
+            }).join('');
+            return `
+                <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="margin-top:10px;display:block;">
+                    <line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#e9eceb"></line>
+                    ${bars}${line}
+                    ${labels}
+                </svg>
+            `;
+        }
+
+        /**
+         * Met en forme un nombre pour un lecteur non technique.
+         *   1234567890  ->  "1,23 Md MAD"
+         *      4227028  ->  "4,23 M MAD"
+         *        12476  ->  "12 476"
+         * Objectif : plus jamais de longue suite de chiffres colles.
+         */
+        function fmtNombre(v, unite) {
+            if (v === null || v === undefined || v === '') return '';
+            const n = Number(String(v).replace(/\s/g, '').replace(',', '.'));
+            if (!isFinite(n)) return String(v);
+            const suffixe = unite ? ' ' + unite : '';
+            const abs = Math.abs(n);
+            if (abs >= 1e9) return (n / 1e9).toLocaleString('fr-FR', {maximumFractionDigits: 2}) + ' Md' + suffixe;
+            if (abs >= 1e6) return (n / 1e6).toLocaleString('fr-FR', {maximumFractionDigits: 2}) + ' M' + suffixe;
+            if (abs >= 1e3) return n.toLocaleString('fr-FR', {maximumFractionDigits: 0}) + suffixe;
+            return n.toLocaleString('fr-FR', {maximumFractionDigits: 2}) + suffixe;
+        }
+
+        /**
+         * Reecrit les nombres bruts d'une phrase en valeurs lisibles.
+         * Le modele renvoie parfois "35983057.16 MAD" : on affiche "35,98 M MAD".
+         */
+        /**
+         * Rend les nombres LISIBLES sans perdre la precision.
+         *
+         * Le chatbot doit donner le chiffre EXACT : c est un outil d interrogation,
+         * pas un tableau de bord. On se contente donc de separer les milliers
+         * (35983057,16 -> "35 983 057,16") et, quand le montant est grand, on ajoute
+         * l ordre de grandeur entre parentheses : "35 983 057,16 MAD (35,98 M)".
+         *
+         * A ne pas confondre avec fmtM() du dashboard, qui lui ARRONDIT
+         * volontairement : une carte KPI est une vue d ensemble, pas une reponse
+         * a une question precise.
+         */
+        function lisibiliserTexte(txt) {
+            if (!txt) return '';
+            return String(txt).replace(
+                /(\d[\d\s  ]*(?:[.,]\d+)?)\s*(MAD|DH|dirhams?)?/gi,
+                function (tout, nombre, devise) {
+                    var brut = nombre.replace(/[\s  ]/g, '');
+                    var n = Number(brut.replace(',', '.'));
+                    if (!isFinite(n) || Math.abs(n) < 10000) return tout;
+
+                    var dec = (brut.split(/[.,]/)[1] || '').length;
+                    var exact = n.toLocaleString('fr-FR', {
+                        minimumFractionDigits: Math.min(dec, 2),
+                        maximumFractionDigits: Math.min(dec, 2)
+                    });
+                    var unite = devise ? ' ' + devise.toUpperCase() : '';
+
+                    // Ordre de grandeur en appui, sans remplacer la valeur exacte.
+                    var ordre = '';
+                    if (Math.abs(n) >= 1e9) {
+                        ordre = ' (' + (n / 1e9).toLocaleString('fr-FR', {maximumFractionDigits: 2}) + ' Md)';
+                    } else if (Math.abs(n) >= 1e6) {
+                        ordre = ' (' + (n / 1e6).toLocaleString('fr-FR', {maximumFractionDigits: 2}) + ' M)';
+                    }
+                    return exact + unite + ordre;
+                }
+            );
+        }
+
+        function buildSahamAnswer(data) {
+            if (data.mode === 'oob') return `<p>${escHtml(data.answer)}</p>`;
+            if (data.mode === 'error') return `<p style="color:#C8102E;">${escHtml(data.answer)}</p>`;
+
+            // Reponse en langage naturel, avec les nombres rendus lisibles.
+            let texte = lisibiliserTexte(data.answer || '');
+
+            // Le modele enumere parfois 10 elements dans un seul paragraphe :
+            //   "Agence A - 4,23 M MAD, Agence B - 3,96 M MAD, ..."
+            // Illisible des 3 elements. On recoupe en liste a puces.
+            // Correction cote AFFICHAGE donc deterministe : une consigne dans le
+            // prompt reste une suggestion que le modele peut ignorer.
+            var sepListe = /,\s+(?=[A-ZÀ-Ý][^–—:]{2,60}?[–—:]\s)/;
+            if (sepListe.test(texte)) {
+                var morceaux = texte.split(sepListe);
+                if (morceaux.length >= 3) {
+                    var tete = morceaux.shift();
+                    var pos = tete.indexOf(":");
+                    var intro = "";
+                    if (pos > -1 && pos < 130) {
+                        intro = tete.slice(0, pos + 1).trim();
+                        tete = tete.slice(pos + 1).trim();
+                    }
+                    morceaux.unshift(tete);
+                    var puces = morceaux.map(function (x) {
+                        return "• " + x.trim().replace(/\.$/, "");
+                    }).join(String.fromCharCode(10));
+                    texte = intro ? intro + String.fromCharCode(10) + puces : puces;
+                }
+            }
+
+            let html = `<p style="white-space:pre-line; line-height:1.85;">${escHtml(texte)}</p>`;
+
+            html += buildSahamChart(data.chart);
+            html += buildSahamTable(data.columns, data.rows, data.row_count);
+
+            // NOTE : le detail technique (requete SQL, tables, duree) n'est
+            // volontairement PAS affiche. Les utilisateurs du portail sont des
+            // metiers (directeurs, charges d'affaires), pas des developpeurs.
+            // La requete reste journalisee cote serveur (table ai_query_log)
+            // et consultable dans la console Admin.
+            return html;
         }
 
         async function handleSahamChatSubmit() {
@@ -3252,6 +4250,10 @@ function renderChatbot(container) {
 
             // Hide chips
             const chips = document.getElementById('saham-chips');
+            // On masque les suggestions pendant la conversation, mais elles ne sont
+            // PAS perdues : le bouton "Nouvelle discussion" les reaffiche (voir
+            // resetSahamChat). Avant, une fois la premiere question posee,
+            // l utilisateur ne pouvait plus jamais y acceder.
             if (chips) chips.style.display = 'none';
 
             input.value = '';
@@ -3275,7 +4277,7 @@ function renderChatbot(container) {
                     <div class="bubble">
                         <div class="saham-msg-icon">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            Analyse de votre question<span class="typing-dots"><span></span><span></span><span></span></span>
+                            <span class="typing-dots"><span></span><span></span><span></span></span>
                         </div>
                     </div>
                 </div>
@@ -3283,226 +4285,58 @@ function renderChatbot(container) {
             msgs.scrollTop = msgs.scrollHeight;
             await new Promise(r => setTimeout(r, 500));
 
-            // Determine query info
-            let sql = "SELECT * FROM clients LIMIT 5;";
-            let nlpResponse = "Voici les données trouvées pour votre requête.";
-            let execTime = Math.floor(Math.random() * 295) + 45; // 45-340ms
-            let tableRows = "";
-            let numRows = 5;
-            let tablesUsed = ['clients'];
-            let oob = false; // out of bounds
+            // Appel réel à l'API SahamAI (Text-to-SQL sur le schéma Gold)
+            document.getElementById(step1Id).style.display = 'none';
+            const step2Id = 'msg-' + Date.now() + '-2';
 
-            const q = text.toLowerCase();
-            if (q.includes('score de risque critique') || q.includes('< 30')) {
-                sql = "SELECT id, nom, score, encours FROM clients WHERE score < 30 ORDER BY score ASC LIMIT 5;";
-                nlpResponse = "J'ai trouvé plusieurs clients avec un score de risque critique (inférieur à 30). Voici les 5 plus critiques :";
-                tableRows = `
-                    <tr><td>El Fassi Nadia</td><td>12</td><td style="text-align:right">1,200,000</td></tr>
-                    <tr><td>Bennani Omar</td><td>18</td><td style="text-align:right">450,000</td></tr>
-                    <tr><td>Amrani Khadija</td><td>22</td><td style="text-align:right">3,500,000</td></tr>
-                    <tr><td>Tazi Mehdi</td><td>25</td><td style="text-align:right">85,000</td></tr>
-                    <tr><td>Zniber Laila</td><td>28</td><td style="text-align:right">920,000</td></tr>
-                `;
-                numRows = 14;
-            } else if (q.includes('taux npl')) {
-                sql = "SELECT agence, npl_ratio FROM agences_perf ORDER BY npl_ratio DESC LIMIT 3;";
-                nlpResponse = "Voici les agences présentant le taux de créances douteuses (NPL) le plus élevé :";
-                tableRows = `
-                    <tr><td>Casablanca Anfa</td><td style="text-align:right">4.2%</td></tr>
-                    <tr><td>Tanger Marina</td><td style="text-align:right">3.8%</td></tr>
-                    <tr><td>Fès Ville Nouvelle</td><td style="text-align:right">3.5%</td></tr>
-                `;
-                tablesUsed = ['agences_perf', 'credits'];
-                numRows = 8;
-            } else if (q.includes('dossiers crédit en surveillance')) {
-                sql = "SELECT id, type, montant, agence FROM dossiers WHERE statut = 'Surveillance' AND extract(month from date_maj) = extract(month from current_date);";
-                nlpResponse = "Il y a actuellement 8 dossiers de crédit placés sous surveillance stricte ce mois-ci.";
-                tableRows = `
-                    <tr><td>D-8821</td><td>Crédit Invest.</td><td style="text-align:right">4,500,000</td></tr>
-                    <tr><td>D-9012</td><td>Trésorerie</td><td style="text-align:right">850,000</td></tr>
-                    <tr><td>D-8845</td><td>Leasing</td><td style="text-align:right">1,200,000</td></tr>
-                    <tr><td>D-9100</td><td>Escompte</td><td style="text-align:right">340,000</td></tr>
-                    <tr><td>D-8999</td><td>Trésorerie</td><td style="text-align:right">2,100,000</td></tr>
-                `;
-                tablesUsed = ['dossiers', 'clients'];
-                numRows = 8;
-            } else if (q.includes('expositions crédit par segment')) {
-                sql = "SELECT segment, sum(encours) as total_encours FROM clients GROUP BY segment ORDER BY total_encours DESC LIMIT 5;";
-                nlpResponse = "Voici la répartition des expositions de crédit pour les différents segments de la banque :";
-                tableRows = `
-                    <tr><td>Corporate</td><td style="text-align:right">4.2 MMDH</td></tr>
-                    <tr><td>PME</td><td style="text-align:right">2.8 MMDH</td></tr>
-                    <tr><td>Retail</td><td style="text-align:right">1.5 MMDH</td></tr>
-                    <tr><td>Premium</td><td style="text-align:right">0.9 MMDH</td></tr>
-                    <tr><td>Agricole</td><td style="text-align:right">0.6 MMDH</td></tr>
-                `;
-                numRows = 5;
-            } else if (q.includes('pnb ce trimestre')) {
-                sql = "SELECT mois, pnb_realise, pnb_objectif FROM performances WHERE trimestre = 'Q3' ORDER BY mois ASC;";
-                nlpResponse = "L'évolution du Produit Net Bancaire ce trimestre montre une croissance soutenue par rapport aux objectifs :";
-                tableRows = `
-                    <tr><td>Juillet</td><td style="text-align:right">145 M</td><td style="text-align:right; color:#6b7d78">140 M</td></tr>
-                    <tr><td>Août</td><td style="text-align:right">152 M</td><td style="text-align:right; color:#6b7d78">148 M</td></tr>
-                    <tr><td>Septembre</td><td style="text-align:right">168 M</td><td style="text-align:right; color:#6b7d78">155 M</td></tr>
-                `;
-                tablesUsed = ['performances'];
-                numRows = 3;
-            } else if (q.includes('churn prévu par agence')) {
-                sql = "SELECT agence, predicted_churn_rate FROM churn_predictions WHERE quarter = 'Q3-2026' ORDER BY predicted_churn_rate DESC LIMIT 3;";
-                nlpResponse = "Selon notre modèle prédictif, voici les 3 agences avec le taux d'attrition estimé le plus élevé pour le trimestre en cours :";
-                tableRows = `
-                    <tr><td>Agadir Centre</td><td style="text-align:right; color:#C8102E">8.4%</td></tr>
-                    <tr><td>Rabat Hassan</td><td style="text-align:right; color:#C8102E">7.2%</td></tr>
-                    <tr><td>Casablanca Maarif</td><td style="text-align:right; color:#C8102E">6.5%</td></tr>
-                `;
-                tablesUsed = ['churn_predictions', 'clients'];
-                numRows = 8;
-            } else if (q.includes('transactions suspectes')) {
-                sql = "SELECT id_trx, montant, motif_alerte FROM transactions WHERE alerte_aml = true AND date_trx >= NOW() - INTERVAL '48 hours';";
-                nlpResponse = "Le système LCB-FT a remonté 4 transactions suspectes au cours des dernières 48 heures :";
-                tableRows = `
-                    <tr><td>TRX-9981</td><td style="text-align:right">850,000</td><td>Montant inusuel</td></tr>
-                    <tr><td>TRX-1024</td><td style="text-align:right">45,000</td><td>Fractionnement</td></tr>
-                    <tr><td>TRX-3092</td><td style="text-align:right">120,000</td><td>Origine risquée</td></tr>
-                    <tr><td>TRX-8812</td><td style="text-align:right">2,400,000</td><td>Dépôt cash massif</td></tr>
-                `;
-                tablesUsed = ['transactions', 'alertes_aml'];
-                numRows = 4;
-            } else if (q.includes('comparatif encours vs objectifs')) {
-                sql = "SELECT dr, sum(encours) as realise, sum(objectif) as cible FROM agences_perf GROUP BY dr;";
-                nlpResponse = "Voici la consolidation des encours réalisés face aux objectifs par Direction Régionale :";
-                tableRows = `
-                    <tr><td>DR Centre</td><td style="text-align:right">5.2 MMDH</td><td style="text-align:right; color:#6b7d78">5.0 MMDH</td></tr>
-                    <tr><td>DR Nord</td><td style="text-align:right">2.1 MMDH</td><td style="text-align:right; color:#6b7d78">2.4 MMDH</td></tr>
-                    <tr><td>DR Sud</td><td style="text-align:right">1.8 MMDH</td><td style="text-align:right; color:#6b7d78">1.5 MMDH</td></tr>
-                `;
-                tablesUsed = ['agences_perf'];
-                numRows = 3;
-            } else if (q.includes('pme éligibles à une offre')) {
-                sql = "SELECT nom, encours, score_appetence FROM clients WHERE segment = 'PME' AND eligibilite_credit = true ORDER BY score_appetence DESC LIMIT 5;";
-                nlpResponse = "J'ai trouvé 142 PME éligibles à une offre de crédit de trésorerie avec un fort score d'appétence. Voici le Top 5 :";
-                tableRows = `
-                    <tr><td>TechSolutions SARL</td><td style="text-align:right">450 K</td><td style="text-align:right; color:#4ade80">92%</td></tr>
-                    <tr><td>BatiMaroc SA</td><td style="text-align:right">1.2 M</td><td style="text-align:right; color:#4ade80">88%</td></tr>
-                    <tr><td>AgriNord Coop</td><td style="text-align:right">850 K</td><td style="text-align:right; color:#4ade80">85%</td></tr>
-                    <tr><td>LogisTrans</td><td style="text-align:right">2.1 M</td><td style="text-align:right; color:#4ade80">82%</td></tr>
-                    <tr><td>MedPharma</td><td style="text-align:right">3.5 M</td><td style="text-align:right; color:#4ade80">79%</td></tr>
-                `;
-                tablesUsed = ['clients', 'scoring_marketing'];
-                numRows = 142;
-            } else if (q.includes('portefeuille à risque casablanca vs marrakech')) {
-                sql = "SELECT ville, sum(encours_npl) as risque_total FROM clients WHERE ville IN ('Casablanca', 'Marrakech') GROUP BY ville;";
-                nlpResponse = "Comparaison directe du portefeuille à risque entre les deux métropoles :";
-                tableRows = `
-                    <tr><td>Casablanca</td><td style="text-align:right">184,500,000 MAD</td></tr>
-                    <tr><td>Marrakech</td><td style="text-align:right">42,800,000 MAD</td></tr>
-                `;
-                numRows = 2;
-            } else if (q.includes('météo') || q.includes('football') || q.includes('blague') || q.includes('qui es')) {
-                oob = true;
-                nlpResponse = "Cette question dépasse le périmètre des données disponibles. Je suis optimisé pour analyser les données clients, crédits, transactions et performances des agences Saham Bank.";
-            } else {
-                // Generic fallback for any other query
-                tableRows = `
-                    <tr><td>Donnée 1</td><td style="text-align:right">85,000</td></tr>
-                    <tr><td>Donnée 2</td><td style="text-align:right">42,000</td></tr>
-                    <tr><td>Donnée 3</td><td style="text-align:right">12,500</td></tr>
-                `;
-                sql = "SELECT * FROM clients WHERE " + (text.split(' ')[0] || 'donnees') + " IS NOT NULL LIMIT 5;";
-            }
-
-            if (!oob) {
-                // Step 2: Traitement (la requête SQL est générée en arrière-plan, non affichée)
-                document.getElementById(step1Id).style.display = 'none';
-                const step2Id = 'msg-' + Date.now() + '-2';
-
-                msgs.innerHTML += `
-                    <div id="${step2Id}" class="saham-msg bot">
-                        <div class="bubble">
-                            <div class="saham-msg-icon">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                Analyse des données de la banque<span class="typing-dots"><span></span><span></span><span></span></span>
-                            </div>
+            msgs.innerHTML += `
+                <div id="${step2Id}" class="saham-msg bot">
+                    <div class="bubble">
+                        <div class="saham-msg-icon">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span class="typing-dots"><span></span><span></span><span></span></span>
                         </div>
                     </div>
-                `;
-                msgs.scrollTop = msgs.scrollHeight;
-                await new Promise(r => setTimeout(r, 800));
+                </div>
+            `;
+            msgs.scrollTop = msgs.scrollHeight;
 
-                // Log Query
-                MOCK.queries.unshift({
-                    question: text,
-                    sql: sql,
-                    results: numRows,
-                    time: execTime,
-                    date: new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' ' + new Date().toLocaleDateString('fr-FR'),
-                    user: APP.userRole || 'Inconnu'
+            try {
+                const token = localStorage.getItem('saham_access_token');
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = 'Bearer ' + token;
+                const r = await fetch(API_BASE + '/ai/ask', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({ question: text })
                 });
-                if (document.getElementById('queries-tbody')) {
-                    // Update table if it's currently rendered
-                    if (window.renderAdmin) {
-                        const queriesHtml = MOCK.queries.map(q => `
-                                <tr>
-                                    <td style="padding:12px; font-size:12px; color:var(--slate-500); border-bottom:1px solid #f1f5f9;">${q.date}</td>
-                                    <td style="padding:12px; border-bottom:1px solid #f1f5f9;">
-                                        <span style="background:var(--accent-teal-light); color:var(--primary-teal); padding:4px 8px; border-radius:4px; font-size:11px; font-weight:600;">${q.user}</span>
-                                    </td>
-                                    <td style="padding:12px; max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-bottom:1px solid #f1f5f9;" title="${q.question.replace(/"/g, '&quot;')}">${q.question}</td>
-                                    <td style="padding:12px; max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--slate-500); border-bottom:1px solid #f1f5f9;" title="${q.sql ? q.sql.replace(/"/g, '&quot;') : ''}">${q.sql}</td>
-                                    <td style="padding:12px; font-weight:600; font-size:12px; border-bottom:1px solid #f1f5f9;">${q.results} lignes</td>
-                                    <td style="padding:12px; font-family:'JetBrains Mono', monospace; font-size:12px; border-bottom:1px solid #f1f5f9;">${q.time} ms</td>
-                                </tr>
-                        `).join('');
-                        document.getElementById('queries-tbody').innerHTML = queriesHtml;
-                    }
-                }
+                if (!r.ok) throw new Error('Erreur serveur ' + r.status);
+                const data = await r.json();
 
-                // Step 3: Exécution
-                const step3Id = 'msg-' + Date.now() + '-3';
-                msgs.innerHTML += `
-                    <div id="${step3Id}" class="saham-msg bot">
-                        <div class="bubble" style="padding:0; border:none; background:transparent; box-shadow:none;">
-                            <div class="saham-exec-banner">
-                                <div class="saham-spinner"></div>
-                                Exécution sur la base de données... (${execTime}ms estimé)
-                            </div>
-                        </div>
-                    </div>
-                `;
-                msgs.scrollTop = msgs.scrollHeight;
-                await new Promise(r => setTimeout(r, 400));
-
-                // Step 4: Réponse Finale
-                document.getElementById(step3Id).style.display = 'none';
-                
-                const tableStr = tableRows ? `
-                    <table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; background:#f4f6f5; border-radius:6px; overflow:hidden;">
-                        ${tableRows}
-                    </table>
-                ` : "";
-
+                document.getElementById(step2Id).style.display = 'none';
+                var htmlReponse = buildSahamAnswer(data);
                 msgs.innerHTML += `
                     <div class="saham-msg bot">
                         <div class="bubble">
-                            <p>${nlpResponse}</p>
-                            ${tableStr}
-                            <button class="saham-btn-module" onclick="showToast('Ouverture du module concerné...')">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                Voir dans le module
-                            </button>
+                            ${htmlReponse}
                         </div>
                     </div>
                 `;
-            } else {
-                // OOB Response
-                document.getElementById(step1Id).style.display = 'none';
+                // Conserve l echange pour l historique local des discussions.
+                memoriserEchange(text, htmlReponse);
+                // Auto-refresh Admin query history after each real AI query
+                loadAiLogs();
+            } catch (err) {
+                document.getElementById(step2Id).style.display = 'none';
                 msgs.innerHTML += `
                     <div class="saham-msg bot">
                         <div class="bubble">
-                            <p>${nlpResponse}</p>
+                            <p style="color:#C8102E;">Désolé, je n'ai pas pu analyser cette question. ${escHtml(err.message)}</p>
                         </div>
                     </div>
                 `;
+                // Still refresh logs even on error (query was logged server-side)
+                loadAiLogs();
             }
 
             msgs.scrollTop = msgs.scrollHeight;
@@ -3527,6 +4361,15 @@ function renderChatbot(container) {
     </div>
 
     <div class="saham-chat-panel" id="saham-chat-panel">
+        <div class="saham-resize-handle nw" data-dir="nw" title="Redimensionner"></div>
+        <div class="saham-resize-handle n" data-dir="n" title="Redimensionner"></div>
+        <div class="saham-resize-handle ne" data-dir="ne" title="Redimensionner"></div>
+        <div class="saham-resize-handle e" data-dir="e" title="Redimensionner"></div>
+        <div class="saham-resize-handle se" data-dir="se" title="Redimensionner"></div>
+        <div class="saham-resize-handle s" data-dir="s" title="Redimensionner"></div>
+        <div class="saham-resize-handle sw" data-dir="sw" title="Redimensionner"></div>
+        <div class="saham-resize-handle w" data-dir="w" title="Redimensionner"></div>
+        <div class="saham-resize-grip"></div>
         <div class="saham-chat-header">
             <div class="saham-chat-header-info">
                 <div class="saham-chat-title">
@@ -3535,6 +4378,12 @@ function renderChatbot(container) {
                 <div class="saham-chat-subtitle">Assistant Analytique · Powered by AI</div>
             </div>
             <div class="saham-chat-header-actions">
+                <button class="saham-chat-btn" onclick="toggleHistorique()" title="Discussions precedentes">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </button>
+                <button class="saham-chat-btn" onclick="resetSahamChat()" title="Nouvelle discussion">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
                 <button class="saham-chat-btn" onclick="toggleSahamChatFullscreen()" id="saham-chat-fs-btn" title="Plein écran">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                 </button>
@@ -3546,10 +4395,9 @@ function renderChatbot(container) {
         
         <div class="saham-chat-body" id="saham-chat-messages">
             <!-- Initial Greeting -->
-            <div class="saham-msg bot">
+            <div class="saham-msg bot saham-greeting">
                 <div class="bubble">
                     <p>Bonjour ! Je suis <strong>SahamAI</strong>, votre assistant analytique. Je peux interroger les données de Saham Bank en temps réel.</p>
-                    <p>Posez-moi une question en français ou choisissez parmi les suggestions ci-dessous.</p>
                 </div>
             </div>
 

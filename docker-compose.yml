@@ -34,8 +34,13 @@ services:
       LOG_LEVEL: INFO
       LOG_FILE: app.log
       RATE_LIMIT_PER_MINUTE: 60
-      LLM_PROVIDER: mock
-      GROQ_API_KEY: ""
+      # LLM_PROVIDER : "groq" (cloud, rapide) | "ollama" (local) | "mock" (sans IA)
+      # Par defaut on tente groq ; si GROQ_API_KEY est absente, le code bascule
+      # automatiquement sur le mock (repli gracieux) au lieu de planter.
+      # Pour activer l'IA reelle : creer un fichier .env a cote de ce docker-compose
+      # contenant  GROQ_API_KEY=gsk_xxxxx  (voir backend/.env.example).
+      LLM_PROVIDER: ${LLM_PROVIDER:-groq}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
       GROQ_MODEL: llama-3.3-70b-versatile
       OLLAMA_BASE_URL: http://localhost:11434
       OLLAMA_MODEL: llama3.2:3b

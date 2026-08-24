@@ -1,9 +1,11 @@
 id,email,nom,role,is_active,hashed_password
-USR-00001,amine.jai@sahambank.ma,Amine Jai,AR,true,a_remplacer_par_bcrypt
-USR-00002,khalid.zniber@sahambank.ma,Khalid Zniber,ADMIN,true,a_remplacer_par_bcrypt
-USR-00003,driss.bennani@sahambank.ma,Driss Bennani,DG,true,a_remplacer_par_bcrypt
-USR-00004,soukaina.el.amrani@sahambank.ma,Soukaina El Amrani,CA,true,a_remplacer_par_bcrypt
-USR-00005,mohamed.berrada@sahambank.ma,Mohamed Berrada,ADMIN,true,a_remplacer_par_bcrypt
-USR-00006,rachid.bencheikh@sahambank.ma,Rachid Bencheikh,DR,true,a_remplacer_par_bcrypt
-USR-00007,asmaa.el.fassi@sahambank.ma,Asmaa El Fassi,ADMIN,true,a_remplacer_par_bcrypt
-USR-00008,noureddine.zniber@sahambank.ma,Noureddine Zniber,DR,true,a_remplacer_par_bcrypt
+USR-00001,mohamed.fikri@sahambank.ma,Mohamed Fikri,AR,true,a_remplacer_par_bcrypt
+USR-00002,salma.benjelloun@sahambank.ma,Salma Benjelloun,CA,true,a_remplacer_par_bcrypt
+USR-00003,omar.alaoui@sahambank.ma,Omar Alaoui,DG,true,a_remplacer_par_bcrypt
+USR-00004,imane.balafrej@sahambank.ma,Imane Balafrej,CA,true,a_remplacer_par_bcrypt
+USR-00005,noureddine.balafrej@sahambank.ma,Noureddine Balafrej,AR,true,a_remplacer_par_bcrypt
+USR-00006,samira.slaoui@sahambank.ma,Samira Slaoui,ADMIN,true,a_remplacer_par_bcrypt
+USR-00007,hicham.guedira@sahambank.ma,Hicham Guedira,ADMIN,true,a_remplacer_par_bcrypt
+USR-00008,said.el.amrani@sahambank.ma,Said El Amrani,CA,true,a_remplacer_par_bcrypt
+USR-00009,mehdi.hakim@sahambank.ma,Mehdi Hakim,ADMIN,true,a_remplacer_par_bcrypt
+USR-00010,abdellah.bennani@sahambank.ma,Abdellah Bennani,AR,true,a_remplacer_par_bcrypt

@@ -50,6 +50,12 @@ VILLES = [
     ("Meknes", "Fes-Meknes"),
     ("Kenitra", "Rabat-Sale-Kenitra"),
     ("Tetouan", "Tanger-Tetouan-Al Hoceima"),
+    ("Laayoune", "Laayoune-Sakia El Hamra"),
+    ("Dakhla", "Dakhla-Oued Ed-Dahab"),
+    ("Beni Mellal", "Beni Mellal-Khenifra"),
+    ("Nador", "L'Oriental"),
+    ("Errachidia", "Draa-Tafilalet"),
+    ("Ouarzazate", "Draa-Tafilalet"),
 ]
 
 PRENOMS_M = ["Mohamed", "Ahmed", "Hassan", "Abdellah", "Youssef", "Omar", "Khalid", "Hicham", "Rachid", "Mehdi", "Karim", "Amine", "Noureddine", "Said", "Driss"]
@@ -119,15 +125,63 @@ def generate_agences(count=10):
         rows.append(r)
     return rows
 
+VILLE_ECONOMIC_FACTOR = {
+    "Casablanca": 2.6,   # Capitale économique & financière (leader indiscutable)
+    "Rabat": 1.6,        # Capitale administrative
+    "Tanger": 1.35,      # Hub industriel & portuaire
+    "Marrakech": 1.15,   # Tourisme & commerce
+    "Agadir": 0.90,      # Souss-Massa (Pêche, agro)
+    "Fes": 0.80,         # Fès historique & artisanat
+    "Meknes": 0.70,      # Meknès agro-industrie
+    "Kenitra": 0.65,     # Kénitra zone franche
+    "Oujda": 0.55,       # Oriental
+    "Tetouan": 0.50,     # Tétouan
+    "Nador": 0.45,       # Port Nador West Med
+    "Beni Mellal": 0.40, # Tadla
+    "Ouarzazate": 0.30,  # Sud
+    "Errachidia": 0.28,  # Tafilalet
+    "Laayoune": 0.25,    # Sahara
+    "Dakhla": 0.22,      # Sud
+}
+
+VILLE_AGENCY_WEIGHTS = {
+    "Casablanca": 0.32,  # 32% des clients nationaux
+    "Rabat": 0.16,       # 16% des clients
+    "Tanger": 0.12,      # 12% des clients
+    "Marrakech": 0.10,   # 10% des clients
+    "Agadir": 0.06,
+    "Fes": 0.05,
+    "Meknes": 0.04,
+    "Kenitra": 0.03,
+    "Oujda": 0.03,
+    "Tetouan": 0.02,
+    "Nador": 0.02,
+    "Beni Mellal": 0.02,
+    "Ouarzazate": 0.01,
+    "Errachidia": 0.01,
+    "Laayoune": 0.005,
+    "Dakhla": 0.005,
+}
+
 def generate_clients(count=500, agences=None):
     if agences is None:
-        agences = [{"id": "AG-001"}]
-    agence_ids = [a["id"] for a in agences]
+        agences = [{"id": "AG-001", "ville": "Casablanca"}]
+
+    # Calculer les poids de sélection pour chaque agence selon sa ville
+    ag_weights = [VILLE_AGENCY_WEIGHTS.get(a.get("ville", ""), 0.02) for a in agences]
+
     rows = []
     for i in range(count):
+        selected_agence = random.choices(agences, weights=ag_weights, k=1)[0]
+        v_name = selected_agence.get("ville", "Casablanca")
+        econ_factor = VILLE_ECONOMIC_FACTOR.get(v_name, 1.0)
+
         segment = random.choices(SEGMENTS, weights=SEGMENT_WEIGHTS, k=1)[0]
         score = max(0, min(100, int(random.gauss(SCORE_MEAN[segment], 18))))
-        encours = round(random.uniform(ENCOURS_MIN[segment], ENCOURS_MAX[segment]), 2)
+
+        # L'encours client reflète la puissance économique de la région
+        encours_base = random.uniform(ENCOURS_MIN[segment], ENCOURS_MAX[segment])
+        encours = round(encours_base * econ_factor, 2)
 
         # Statut coherent avec le score SAUF anomalies
         if score >= 60:
@@ -144,7 +198,7 @@ def generate_clients(count=500, agences=None):
             "id": f"CLI-{10001+i}",
             "nom": random_name(),
             "segment": segment,
-            "agence_id": random.choice(agence_ids),
+            "agence_id": selected_agence["id"],
             "encours": encours,
             "score": score,
             "statut": status,
@@ -162,27 +216,39 @@ def generate_clients(count=500, agences=None):
 def generate_engagements(count=2000, clients=None):
     if clients is None:
         clients = [{"id": "CLI-10001", "segment": "Particuliers", "agence_id": "AG-001"}]
+
+    # Créer un lookup client -> agence_id
     rows = []
     # Seasonal multiplier: higher in Q4, lower in Q1
     season_mult = {1: 0.7, 2: 0.75, 3: 0.85, 4: 1.0, 5: 0.95, 6: 1.1,
                    7: 1.05, 8: 0.8, 9: 1.0, 10: 1.2, 11: 1.3, 12: 1.4}
-    # Target ~8 engagements per month per agency across 48 months × 10 agencies
-    # But spread naturally across time
+
     for i in range(count):
         client = random.choice(clients)
         credit_type = random.choices(CREDIT_TYPES, weights=CREDIT_WEIGHTS, k=1)[0]
 
-        # Montant coherent avec le type de credit
+        # Facteur économique du client basé sur son agence
+        aid = client.get("agence_id", "AG-001")
+        # Récupérer l'indice d'agence pour déduire la ville approximative
+        try:
+            ag_idx = int(aid.split("-")[1]) - 1
+            ville_name = VILLES[ag_idx][0] if 0 <= ag_idx < len(VILLES) else "Casablanca"
+        except Exception:
+            ville_name = "Casablanca"
+
+        econ_factor = VILLE_ECONOMIC_FACTOR.get(ville_name, 1.0)
+
+        # Montant coherent avec le type de credit & la taille économique
         if credit_type == "Mourabaha Immo":
-            montant_base = random.gauss(600000, 200000)
+            montant_base = random.gauss(600000 * econ_factor, 180000 * econ_factor)
         elif credit_type == "Ijara":
-            montant_base = random.gauss(400000, 150000)
+            montant_base = random.gauss(400000 * econ_factor, 140000 * econ_factor)
         elif credit_type == "Mourabaha Auto":
-            montant_base = random.gauss(250000, 80000)
+            montant_base = random.gauss(250000 * (0.8 + 0.2 * econ_factor), 70000)
         elif credit_type == "Credit Tresorerie":
-            montant_base = random.gauss(300000, 150000)
+            montant_base = random.gauss(300000 * econ_factor, 120000 * econ_factor)
         else:  # Investissement PME
-            montant_base = random.gauss(1500000, 500000)
+            montant_base = random.gauss(1500000 * econ_factor, 450000 * econ_factor)
 
         # Duree coherente avec le type
         if credit_type in ["Mourabaha Immo", "Ijara"]:
@@ -204,7 +270,7 @@ def generate_engagements(count=2000, clients=None):
         day = random.randint(1, 28)
         # Apply seasonality to montant
         season = season_mult[month]
-        montant = round(max(20000, montant_base * season), 2)
+        montant = round(max(25000, montant_base * season), 2)
         date_depot = datetime(year, month, day, random.randint(8, 17), random.randint(0, 59), random.randint(0, 59)).strftime("%Y-%m-%d %H:%M:%S")
 
         r = {
@@ -290,19 +356,19 @@ def main():
     print("Generation des donnees Saham Bank (avec anomalies)...\n")
 
     print("1 - Agences...")
-    agences = generate_agences(10)
+    agences = generate_agences(16)
     save_csv("agences.csv", agences)
 
     print("2 - Clients...")
-    clients = generate_clients(500, agences)
+    clients = generate_clients(800, agences)
     save_csv("clients.csv", clients)
 
     print("3 - Engagements...")
-    engagements = generate_engagements(2000, clients)
+    engagements = generate_engagements(3200, clients)
     save_csv("engagements.csv", engagements)
 
     print("4 - Utilisateurs...")
-    users = generate_users(8)
+    users = generate_users(10)
     save_csv("users.csv", users)
 
     print("5 - Qualite CRM...")

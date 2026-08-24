@@ -63,3 +63,14 @@ def test_risque_par_classe(client, require_db, auth_header):
     r = client.get("/gold/risque-par-classe", headers=auth_header)
     assert r.status_code == 200
     assert isinstance(r.json(), list)
+
+
+def test_encours_par_region(client, require_db, auth_header):
+    r = client.get("/gold/encours-par-region", headers=auth_header)
+    assert r.status_code == 200
+    rows = r.json()
+    assert isinstance(rows, list)
+    assert len(rows) > 0
+    assert "total_volume" in rows[0]
+    assert "ville" in rows[0]
+

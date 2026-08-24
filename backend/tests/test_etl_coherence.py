@@ -41,7 +41,8 @@ def test_fact_risque_couvre_48_mois(db_engine, require_db):
 def test_fact_risque_nb_lignes(db_engine, require_db):
     with db_engine.connect() as conn:
         n = conn.execute(text("SELECT COUNT(*) FROM fact_risque")).scalar()
-        assert n == 476 * 48, f"fact_risque = {n} lignes, attendu {476 * 48}"
+        nb_clients = conn.execute(text("SELECT COUNT(*) FROM dim_client")).scalar()
+        assert n == nb_clients * 48, f"fact_risque = {n} lignes, attendu {nb_clients * 48}"
 
 
 def test_bronze_vs_silver_clients(db_engine, require_db):
