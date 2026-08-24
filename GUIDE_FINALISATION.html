@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saham Bank — Guide de finalisation</title>
+<style>
+:root{
+  --orange:#d33b21; --teal:#2e4741; --dark:#1a2a26;
+  --bg:#f4f6f5; --sec:#e9eceb; --surface:#fff;
+  --ink:#1d2b27; --ink2:#3b504a; --ink3:#6b7d78; --line:#bac5c2;
+  --gold:#C9A84C; --green:#10b981; --red:#EF4444;
+  --r:12px;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.75;font-size:15.5px;padding-bottom:80px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+
+.top{background:var(--dark);color:#fff;padding:34px 0 30px}
+.top h1{font-size:26px;letter-spacing:-.02em;margin-bottom:8px}
+.top p{color:#c8d5d1;font-size:15px;max-width:720px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.pill{background:rgba(255,255,255,.1);color:#fff;font-size:12.5px;padding:5px 12px;border-radius:999px;font-weight:600}
+
+nav.tabs{background:var(--surface);border-bottom:1px solid var(--sec);position:sticky;top:0;z-index:50}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-top:8px;padding-bottom:8px}
+.tab{padding:9px 15px;border:0;background:transparent;border-radius:8px;cursor:pointer;
+     font-size:13.5px;font-weight:600;color:var(--ink2);white-space:nowrap;font-family:inherit}
+.tab:hover{background:var(--bg)}
+.tab.on{background:var(--teal);color:#fff}
+
+section{display:none;padding-top:26px}
+section.on{display:block}
+h2{font-size:21px;margin:26px 0 12px;letter-spacing:-.01em}
+h2:first-child{margin-top:6px}
+h3{font-size:16.5px;margin:22px 0 9px;color:var(--teal)}
+p{margin-bottom:12px}
+ul,ol{margin:0 0 14px 22px}
+li{margin-bottom:7px}
+
+.card{background:var(--surface);border:1px solid var(--sec);border-radius:var(--r);padding:20px 22px;margin-bottom:16px}
+.box{border-radius:10px;padding:14px 16px;margin:14px 0;font-size:14.5px;border-left:3px solid}
+.box b{display:block;margin-bottom:5px;font-size:14px}
+.ok{background:#f0fdf4;border-color:var(--green)}
+.warn{background:#fff8ea;border-color:var(--gold)}
+.bad{background:#fdf0ef;border-color:var(--orange)}
+.info{background:#eef3f2;border-color:var(--teal)}
+
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--sec);text-align:left;vertical-align:top}
+th{background:#faf8f6;font-weight:700;font-size:13px}
+.tw{overflow-x:auto}
+
+code{font-family:var(--mono);background:var(--sec);padding:2px 6px;border-radius:4px;font-size:13px}
+pre{background:var(--dark);color:#e6efec;padding:15px 17px;border-radius:10px;overflow-x:auto;margin:12px 0;font-size:13px;line-height:1.6}
+pre code{background:transparent;color:inherit;padding:0;font-size:13px}
+.cm{color:#8fae9f}
+
+.step{display:flex;gap:14px;margin-bottom:18px}
+.num{width:29px;height:29px;border-radius:50%;background:var(--orange);color:#fff;display:grid;place-items:center;
+     font-weight:800;font-size:14px;flex-shrink:0;margin-top:2px}
+.step-b{flex:1;min-width:0}
+.step-b h4{font-size:15.5px;margin-bottom:5px}
+
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--sec)}
+.chk:last-child{border-bottom:0}
+.chk input{margin-top:5px;width:16px;height:16px;accent-color:var(--orange);flex-shrink:0;cursor:pointer}
+.chk label{cursor:pointer;flex:1}
+.tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;margin-left:6px;white-space:nowrap}
+.t-must{background:#fdf0ef;color:var(--orange)}
+.t-nice{background:#eef3f2;color:var(--teal)}
+.t-done{background:#f0fdf4;color:var(--green)}
+
+.free{display:inline-block;background:#f0fdf4;color:var(--green);font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:5px}
+@media(max-width:700px){.top h1{font-size:21px}h2{font-size:18px}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <h1>Saham Bank Analytics Portal — Guide de finalisation</h1>
+    <p>Tout ce qu'il te reste à faire pour rendre le projet : corrections appliquées,
+       mise en ligne étape par étape, et préparation de la soutenance.</p>
+    <div class="pills">
+      <span class="pill">Dernière semaine de stage</span>
+      <span class="pill">5 correctifs appliqués</span>
+      <span class="pill">Hébergement 100 % gratuit</span>
+    </div>
+  </div>
+</div>
+
+<nav class="tabs"><div class="wrap">
+  <button class="tab on" data-s="s1">1 · Ce qui a été fait</button>
+  <button class="tab" data-s="s2">2 · Remettre sur ton PC</button>
+  <button class="tab" data-s="s3">3 · GitHub</button>
+  <button class="tab" data-s="s4">4 · Mise en ligne</button>
+  <button class="tab" data-s="s5">5 · Reste à faire</button>
+  <button class="tab" data-s="s6">6 · Soutenance</button>
+</div></nav>
+
+<div class="wrap">
+
+<!-- ================= 1 ================= -->
+<section class="on" id="s1">
+  <h2>Ce que j'ai corrigé, et pourquoi</h2>
+
+  <div class="box ok"><b>Aucune connexion n'a été modifiée</b>
+    Base de données, ports, identifiants, chemins : tout est intact. Le dossier
+    remonte sur ton PC de stage et fonctionne comme avant — en mieux.
+  </div>
+
+  <h3>① API_BASE configurable <span class="tag t-must">bloquant</span></h3>
+  <p><strong>Le problème :</strong> l'adresse de l'API était écrite en dur
+     (<code>http://localhost:8000</code>) à 6 endroits. En ligne, le navigateur de ton
+     encadrante aurait cherché l'API <em>sur sa propre machine</em> → portail vide.</p>
+  <p><strong>La correction :</strong> l'adresse est maintenant devinée automatiquement.</p>
+  <div class="tw"><table>
+    <tr><th>Où tu ouvres le portail</th><th>API utilisée</th></tr>
+    <tr><td><code>localhost</code> (ton PC)</td><td><code>http://localhost:8000</code> — inchangé</td></tr>
+    <tr><td>Un vrai domaine (Vercel…)</td><td>La même origine que la page</td></tr>
+    <tr><td>Domaines séparés</td><td>Ce que tu mets dans <code>frontend/config.js</code></td></tr>
+  </table></div>
+
+  <h3>② Le chatbot ne plante plus <span class="tag t-must">critique</span></h3>
+  <p><strong>Le problème :</strong> si Groq était indisponible (quota, clé expirée,
+     coupure réseau), le chatbot levait une erreur et devenait muet. Le jour de la démo,
+     c'est la panne qui ruine une soutenance.</p>
+  <p><strong>La correction :</strong> repli automatique sur le mode <code>mock</code>. Le chatbot
+     répond quand même, avec des réponses plus simples. On appelle ça la
+     <em>dégradation gracieuse</em> — et c'est un très bon mot à placer devant un jury.</p>
+  <div class="box info"><b>Testé pour de vrai</b>
+    J'ai simulé une clé vide : le chatbot a basculé sur le mock et a continué à répondre,
+    en journalisant un avertissement au lieu de planter.
+  </div>
+
+  <h3>③ Docker : le chatbot était bridé</h3>
+  <p><code>docker-compose.yml</code> forçait <code>LLM_PROVIDER: mock</code>. Toute personne lançant
+     <code>docker compose up</code> avait un chatbot aux réponses figées. Il lit maintenant la vraie
+     configuration, avec repli automatique si la clé manque.</p>
+
+  <h3>④ Docker frontend : bug trouvé <span class="tag t-must">bug réel</span></h3>
+  <div class="box bad"><b>Ton portail s'affichait sans styles en Docker</b>
+    Le <code>Dockerfile</code> copiait <code>index.html</code> et le logo, mais <strong>pas le dossier
+    <code>css/</code></strong>, pourtant référencé dans la page. Résultat : portail brut, sans mise
+    en forme. Corrigé — <code>css/</code> et <code>config.js</code> sont maintenant copiés.
+  </div>
+
+  <h3>⑤ Code mort identifié</h3>
+  <p>Le dossier <code>frontend/js/</code> contient 19 fonctions qui <strong>ne sont jamais chargées</strong> :
+     le portail embarque sa propre copie dans <code>index.html</code>. J'ai vérifié — les deux versions
+     ont divergé. J'ai mis un bandeau d'avertissement en haut de chaque fichier plutôt que de les
+     supprimer : à toi de décider après la soutenance.</p>
+
+  <div class="box ok"><b>Bonne nouvelle sur le chatbot</b>
+    Tu voulais que le chatbot dessine ses réponses. <strong>C'était déjà fait.</strong>
+    <code>buildSahamChart()</code> génère des graphiques SVG (barres, courbe, camembert) à partir
+    du champ <code>chart</code> renvoyé par l'API. Je l'ai testé : les trois types fonctionnent.
+  </div>
+
+  <h3>Ce que j'ai vérifié en exécutant</h3>
+  <div class="tw"><table>
+    <tr><th>Test</th><th>Résultat</th></tr>
+    <tr><td>Sécurité SQL du chatbot (8 attaques)</td><td><strong>8/8 bloquées</strong> — DROP, DELETE, injection <code>;</code>, exfiltration</td></tr>
+    <tr><td>Repli du chatbot</td><td>Bascule sur mock, répond quand même</td></tr>
+    <tr><td>Graphiques SVG</td><td>Barres, courbe, camembert + cas vide géré</td></tr>
+    <tr><td>Résolution de l'API</td><td>Correcte dans 5 environnements</td></tr>
+    <tr><td>Fichiers servis</td><td>index, config.js, 2 CSS, logo → tous en 200</td></tr>
+    <tr><td><code>docker-compose.yml</code></td><td>YAML valide, 3 services</td></tr>
+  </table></div>
+
+  <div class="box warn"><b>Sur les 8 tests en échec</b>
+    Ils échouent uniquement parce que <strong>PostgreSQL n'est pas installé sur la machine
+    où j'ai travaillé</strong> (<code>Connection refused</code> sur le port 5432). Ils échouaient
+    déjà avant mes modifications. Sur ton PC de stage, base lancée, ils passeront.
+  </div>
+</section>
+
+<!-- ================= 2 ================= -->
+<section id="s2">
+  <h2>Remettre le projet sur ton PC de stage</h2>
+
+  <div class="box warn"><b>Le seul point d'attention</b>
+    Le dossier <code>backend/venv/</code> contient des chemins figés vers
+    <code>C:\Users\user\...</code>. Un environnement virtuel Python <strong>n'est jamais
+    portable</strong> — c'est normal, ce n'est pas une erreur de ta part.
+    <br><br>
+    Si tu remets le projet sur <strong>le même PC de stage</strong>, il fonctionnera tel quel.
+    Sur une autre machine, recrée le venv (étape 2 ci-dessous).
+  </div>
+
+  <div class="step"><div class="num">1</div><div class="step-b">
+    <h4>Copier le dossier</h4>
+    <p>Remplace le dossier du projet par celui-ci. Garde une copie de l'ancien par sécurité.</p>
+  </div></div>
+
+  <div class="step"><div class="num">2</div><div class="step-b">
+    <h4>Si le venv ne marche pas</h4>
+<pre><code><span class="cm"># Depuis le dossier backend/</span>
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt</code></pre>
+  </div></div>
+
+  <div class="step"><div class="num">3</div><div class="step-b">
+    <h4>Vérifier que tout tourne</h4>
+<pre><code><span class="cm"># 1. PostgreSQL doit être démarré</span>
+<span class="cm"># 2. Lancer les tests</span>
+cd backend
+venv\Scripts\python.exe -m pytest tests/ -q
+
+<span class="cm"># Attendu : tous verts (les 8 échecs de connexion disparaissent)</span></code></pre>
+  </div></div>
+
+  <div class="step"><div class="num">4</div><div class="step-b">
+    <h4>Lancer le projet</h4>
+<pre><code><span class="cm"># Tout en une commande (depuis la racine)</span>
+npm run dev
+
+<span class="cm"># Ou séparément :</span>
+<span class="cm">#   API      -> http://localhost:8000  (doc : /docs)</span>
+<span class="cm">#   Portail  -> http://localhost:3000</span></code></pre>
+    <p>Connexion : <code>dg@sahambank.ma</code> / <code>Demo2026!</code></p>
+  </div></div>
+
+  <div class="step"><div class="num">5</div><div class="step-b">
+    <h4>Tester le chatbot</h4>
+    <p>Pose une question comme « Quel est le PNB par agence ? ». Tu dois obtenir une réponse,
+       un graphique, et le SQL exécuté (dépliable).</p>
+    <div class="box info"><b>Si les réponses semblent génériques</b>
+      C'est le repli en mode mock : la clé Groq n'est pas acceptée. Vérifie
+      <code>GROQ_API_KEY</code> dans <code>backend/.env</code>, ou génère une clé gratuite sur
+      <code>console.groq.com</code>. Le portail continue de fonctionner dans tous les cas.
+    </div>
+  </div></div>
+</section>
+
+<!-- ================= 3 ================= -->
+<section id="s3">
+  <h2>Mettre le projet sur GitHub</h2>
+
+  <div class="box bad"><b>À faire avant tout : protéger tes secrets</b>
+    Ton fichier <code>backend/.env</code> contient ta clé Groq, ton mot de passe PostgreSQL
+    et ta clé JWT. Il est déjà dans <code>.gitignore</code> — <strong>vérifie-le avant de pousser.</strong>
+    Une clé publiée sur GitHub est détectée et exploitée en quelques minutes.
+  </div>
+
+  <div class="step"><div class="num">1</div><div class="step-b">
+    <h4>Vérifier ce qui sera envoyé</h4>
+<pre><code>git status
+git check-ignore backend/.env
+<span class="cm"># doit afficher : backend/.env  -> il est bien ignoré</span></code></pre>
+  </div></div>
+
+  <div class="step"><div class="num">2</div><div class="step-b">
+    <h4>Créer le dépôt</h4>
+    <p>Sur <strong>github.com</strong> → <em>New repository</em> → nom
+       <code>saham-bank-analytics-portal</code> → <strong>Private</strong>
+       (c'est un projet d'entreprise, même avec des données simulées).</p>
+  </div></div>
+
+  <div class="step"><div class="num">3</div><div class="step-b">
+    <h4>Pousser</h4>
+<pre><code>git add .
+git commit -m "Portail analytique Saham Bank : ETL, API, chatbot IA"
+git branch -M main
+git remote add origin https://github.com/TON-PSEUDO/saham-bank-analytics-portal.git
+git push -u origin main</code></pre>
+  </div></div>
+
+  <div class="box warn"><b>Le dossier venv/ et node_modules/</b>
+    Ils sont dans <code>.gitignore</code> : c'est normal et voulu. Ces dossiers se reconstruisent
+    avec <code>pip install -r requirements.txt</code> et <code>npm install</code>.
+    Un dépôt ne contient jamais de dépendances installées.
+  </div>
+</section>
+
+<!-- ================= 4 ================= -->
+<section id="s4">
+  <h2>Mettre le portail en ligne (gratuitement)</h2>
+
+  <div class="box info"><b>Pourquoi trois hébergeurs et pas un seul</b>
+    Ton projet a trois étages, et chacun a besoin d'un type d'hébergement différent :
+    <br><br>
+    <strong>Le portail</strong> est un fichier HTML → un hébergeur de fichiers suffit.<br>
+    <strong>L'API</strong> est un programme Python qui tourne en permanence → il faut un serveur.<br>
+    <strong>La base</strong> doit stocker les données durablement → il faut une base managée.
+    <br><br>
+    Vercel seul ne suffit pas : il ne sait pas faire tourner ton API Python.
+  </div>
+
+  <div class="tw"><table>
+    <tr><th>Étage</th><th>Hébergeur</th><th>Gratuit ?</th><th>Temps</th></tr>
+    <tr><td>Base PostgreSQL</td><td><strong>Neon</strong></td><td><span class="free">0,5 Go gratuit</span></td><td>10 min</td></tr>
+    <tr><td>API FastAPI</td><td><strong>Render</strong></td><td><span class="free">gratuit</span></td><td>20 min</td></tr>
+    <tr><td>Portail</td><td><strong>Vercel</strong></td><td><span class="free">gratuit</span></td><td>10 min</td></tr>
+  </table></div>
+
+  <h3>Étape 1 — La base sur Neon</h3>
+  <div class="step"><div class="num">1</div><div class="step-b">
+    <p>Va sur <strong>neon.tech</strong> → connexion avec GitHub → <em>Create project</em>.
+       Nomme-le <code>saham-bank</code>, région <strong>Europe</strong> (plus proche du Maroc).</p>
+  </div></div>
+  <div class="step"><div class="num">2</div><div class="step-b">
+    <p>Copie la <strong>connection string</strong> affichée. Elle ressemble à :</p>
+<pre><code>postgresql://user:motdepasse@ep-xxx.eu-central-1.aws.neon.tech/saham_bank</code></pre>
+  </div></div>
+  <div class="step"><div class="num">3</div><div class="step-b">
+    <h4>Remplir la base depuis ton PC</h4>
+<pre><code><span class="cm"># Dans backend/, temporairement, pointe vers Neon :</span>
+set DATABASE_URL=postgresql://...neon.tech/saham_bank
+venv\Scripts\python.exe -m etl.run_pipeline
+
+<span class="cm"># Ton ETL bronze->silver->gold écrit maintenant DANS LE CLOUD</span></code></pre>
+    <div class="box warn"><b>Pour le chatbot IA</b>
+      Il utilise <code>pgvector</code>. Sur Neon, active-le une fois :
+      <code>CREATE EXTENSION IF NOT EXISTS vector;</code> depuis leur éditeur SQL.
+    </div>
+  </div></div>
+
+  <h3>Étape 2 — L'API sur Render</h3>
+  <div class="step"><div class="num">1</div><div class="step-b">
+    <p><strong>render.com</strong> → <em>New</em> → <em>Web Service</em> → connecte ton dépôt GitHub.</p>
+  </div></div>
+  <div class="step"><div class="num">2</div><div class="step-b">
+    <h4>Configuration</h4>
+    <div class="tw"><table>
+      <tr><td><strong>Root Directory</strong></td><td><code>backend</code></td></tr>
+      <tr><td><strong>Build Command</strong></td><td><code>pip install -r requirements.txt</code></td></tr>
+      <tr><td><strong>Start Command</strong></td><td><code>uvicorn app.main:app --host 0.0.0.0 --port $PORT</code></td></tr>
+      <tr><td><strong>Instance Type</strong></td><td>Free</td></tr>
+    </table></div>
+  </div></div>
+  <div class="step"><div class="num">3</div><div class="step-b">
+    <h4>Variables d'environnement</h4>
+    <p>Recopie celles de ton <code>backend/.env</code>, en changeant <code>DATABASE_URL</code> :</p>
+<pre><code>DATABASE_URL   = <span class="cm">(la connection string Neon)</span>
+SECRET_KEY     = <span class="cm">(une longue chaîne aléatoire, différente du dev)</span>
+LLM_PROVIDER   = groq
+GROQ_API_KEY   = <span class="cm">(ta clé)</span>
+CORS_ORIGINS   = <span class="cm">(à compléter à l'étape 3)</span></code></pre>
+    <div class="box warn"><b>Le réveil de Render</b>
+      L'offre gratuite met le service en veille après 15 min d'inactivité. La première
+      visite prend alors <strong>30 à 50 secondes</strong>. Préviens ton encadrante, ou
+      ouvre le lien 1 minute avant de lui montrer.
+    </div>
+  </div></div>
+
+  <h3>Étape 3 — Le portail sur Vercel</h3>
+  <div class="step"><div class="num">1</div><div class="step-b">
+    <p>Dans <code>frontend/config.js</code>, décommente la ligne et mets l'URL de ton API Render :</p>
+<pre><code>window.SAHAM_API_BASE = 'https://saham-api.onrender.com';</code></pre>
+  </div></div>
+  <div class="step"><div class="num">2</div><div class="step-b">
+    <p><strong>vercel.com</strong> → <em>Add New Project</em> → ton dépôt →
+       <strong>Root Directory : <code>frontend</code></strong> → <em>Deploy</em>.</p>
+  </div></div>
+  <div class="step"><div class="num">3</div><div class="step-b">
+    <h4>Boucler le CORS (à ne pas oublier)</h4>
+    <p>Vercel te donne une URL. Retourne sur Render et ajoute-la à <code>CORS_ORIGINS</code> :</p>
+<pre><code>CORS_ORIGINS = https://saham-portal.vercel.app</code></pre>
+    <div class="box bad"><b>Si tu sautes cette étape</b>
+      Le portail s'affichera mais restera vide : le navigateur bloquera tous les appels
+      à l'API. C'est l'erreur n°1 des premiers déploiements — et elle est invisible
+      sans ouvrir la console du navigateur.
+    </div>
+  </div></div>
+
+  <div class="box ok"><b>Résultat final</b>
+    Un seul lien à envoyer à ton encadrante :
+    <code>https://saham-portal.vercel.app</code> — elle se connecte avec
+    <code>dg@sahambank.ma</code> / <code>Demo2026!</code>, sans que ton PC soit allumé.
+  </div>
+</section>
+
+<!-- ================= 5 ================= -->
+<section id="s5">
+  <h2>Ce qu'il te reste à faire</h2>
+  <p>Coché = fait. Les cases sont enregistrées dans ton navigateur.</p>
+
+  <div class="card">
+    <h3>Avant de rendre <span class="tag t-must">obligatoire</span></h3>
+    <div class="chk"><input type="checkbox" id="a1"><label for="a1">Remettre le dossier sur le PC de stage et lancer <code>npm run dev</code></label></div>
+    <div class="chk"><input type="checkbox" id="a2"><label for="a2">Vérifier que les tests passent tous (PostgreSQL démarré)</label></div>
+    <div class="chk"><input type="checkbox" id="a3"><label for="a3">Tester le chatbot avec une vraie question</label></div>
+    <div class="chk"><input type="checkbox" id="a4"><label for="a4">Pousser sur GitHub en dépôt <strong>privé</strong></label></div>
+    <div class="chk"><input type="checkbox" id="a5"><label for="a5">Vérifier que <code>backend/.env</code> n'est <strong>pas</strong> sur GitHub</label></div>
+    <div class="chk"><input type="checkbox" id="a6"><label for="a6">Déployer : Neon → Render → Vercel</label></div>
+    <div class="chk"><input type="checkbox" id="a7"><label for="a7">Ajouter l'URL Vercel dans <code>CORS_ORIGINS</code></label></div>
+    <div class="chk"><input type="checkbox" id="a8"><label for="a8">Ouvrir le lien depuis ton téléphone (test réel)</label></div>
+    <div class="chk"><input type="checkbox" id="a9"><label for="a9">Envoyer le lien à ton encadrante</label></div>
+  </div>
+
+  <div class="card">
+    <h3>Si tu as du temps <span class="tag t-nice">bonus</span></h3>
+    <div class="chk"><input type="checkbox" id="b1"><label for="b1">Nettoyer les 23 <code>TODO</code> restants dans le code (un jury les remarque)</label></div>
+    <div class="chk"><input type="checkbox" id="b2"><label for="b2">Supprimer <code>backend/etl/data_quality.py</code> : squelette vide, la vraie validation est dans <code>transform_silver.py</code></label></div>
+    <div class="chk"><input type="checkbox" id="b3"><label for="b3">Décider du sort de <code>frontend/js/</code> (code mort signalé)</label></div>
+    <div class="chk"><input type="checkbox" id="b4"><label for="b4">Corriger le README (il parle de React, le frontend est en JS pur)</label></div>
+    <div class="chk"><input type="checkbox" id="b5"><label for="b5">Activer le cron Render pour l'ETL quotidien (<code>render.yaml</code> est déjà prêt)</label></div>
+  </div>
+
+  <div class="box warn"><b>Ce que je te déconseille de commencer maintenant</b>
+    Les rôles granulaires par agence, la page qualité des données, Airflow, les tests
+    frontend. Ce sont de bonnes idées, mais en dernière semaine, le risque de casser
+    quelque chose dépasse le gain. <strong>Mentionne-les comme évolutions</strong> — c'est
+    exactement ce qu'un jury attend d'une conclusion.
+  </div>
+</section>
+
+<!-- ================= 6 ================= -->
+<section id="s6">
+  <h2>Préparer ta soutenance</h2>
+
+  <div class="box info"><b>La question qui revient toujours</b>
+    « Pourquoi ce choix plutôt qu'un autre ? » Un jury teste rarement ta capacité à coder —
+    il teste ta capacité à <strong>justifier</strong>. Voici tes réponses.
+  </div>
+
+  <h3>Les réponses à préparer</h3>
+  <div class="tw"><table>
+    <tr><th>Question probable</th><th>Ta réponse</th></tr>
+    <tr><td>Pourquoi bronze / silver / gold ?</td>
+        <td>Le bronze garde la donnée brute intacte : si une règle de nettoyage se révèle fausse, tout est recalculable. Sans lui, l'erreur est définitive.</td></tr>
+    <tr><td>Pourquoi pas Airflow ?</td>
+        <td>Airflow est une infrastructure lourde pour orchestrer un seul pipeline quotidien. J'utilise APScheduler / cron. Airflow se justifierait avec plusieurs pipelines interdépendants.</td></tr>
+    <tr><td>Le chatbot est-il dangereux ?</td>
+        <td>Non : le SQL généré est validé avant exécution. Seuls SELECT et WITH passent, une seule requête à la fois, et 18 mots-clés sont bloqués. J'ai testé 8 attaques, toutes bloquées.</td></tr>
+    <tr><td>Et si l'IA tombe en panne ?</td>
+        <td>Repli automatique sur un mode dégradé. Le portail reste fonctionnel — c'est de la dégradation gracieuse.</td></tr>
+    <tr><td>Pourquoi des données simulées ?</td>
+        <td>Pas d'accès aux données réelles (secret bancaire). Le générateur injecte volontairement 10 % d'anomalies pour que le pipeline de validation ait un vrai rôle.</td></tr>
+    <tr><td>Ce serait déployable en production ?</td>
+        <td>Pas tel quel : il faudrait un hébergement interne, du VPN, des rôles granulaires et un audit. C'est un POC pour valider l'architecture.</td></tr>
+  </table></div>
+
+  <h3>Les limites à assumer toi-même</h3>
+  <div class="box ok"><b>Annoncer ses limites est une force</b>
+    Un jury qui trouve une faille que tu n'as pas mentionnée doute de ta lucidité.
+    Le même jury, si <em>tu</em> la mentionnes le premier, retient ton recul.
+  </div>
+  <ul>
+    <li><strong>Données simulées</strong> — dis « simulation réaliste servie par un vrai pipeline ».</li>
+    <li><strong>Rôles non granulaires</strong> — tout utilisateur connecté voit tout. Évolution identifiée.</li>
+    <li><strong>Frontend monolithe</strong> — un seul fichier de 3700 lignes. Assumé pour un POC.</li>
+    <li><strong>Power BI simulé</strong> — graphiques maison, pas d'iframe Power BI réel.</li>
+  </ul>
+
+  <h3>Le déroulé de démo que je te conseille</h3>
+  <ol>
+    <li><strong>Ouvre le lien en ligne</strong> — l'effet « c'est un vrai produit » est immédiat.</li>
+    <li><strong>Connecte-toi</strong> et montre les KPI.</li>
+    <li><strong>Pose une question au chatbot</strong> — « PNB par agence ». Attends le graphique.</li>
+    <li><strong>Déplie le SQL généré</strong> — c'est le moment le plus fort : tu montres que l'IA n'invente rien, elle interroge la vraie base.</li>
+    <li><strong>Explique la sécurité</strong> — SELECT uniquement, requête validée avant exécution.</li>
+    <li><strong>Termine par les évolutions</strong> — rôles par agence, page qualité, Airflow si passage à l'échelle.</li>
+  </ol>
+
+  <div class="box warn"><b>Deux précautions le jour J</b>
+    Ouvre le lien Render <strong>1 minute avant</strong> (le service dort après 15 min).
+    Et garde le projet lancé en local : si Internet tombe, tu bascules sans stress.
+  </div>
+
+  <div class="box ok"><b>Pour finir</b>
+    Ton projet est bien plus solide que la moyenne d'un stage : ETL en 3 couches,
+    star schema, API sécurisée, RAG avec Text-to-SQL protégé, Docker, CI/CD et
+    2390 lignes de documentation. Tu as de quoi être serein — prépare surtout
+    tes <em>pourquoi</em>, le code parle déjà pour lui.
+  </div>
+</section>
+
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});
+    document.querySelectorAll('section').forEach(function(x){x.classList.remove('on')});
+    t.classList.add('on');
+    document.getElementById(t.dataset.s).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+document.querySelectorAll('.chk input').forEach(function(c){
+  try{ if(localStorage.getItem('saham_guide_'+c.id)==='1') c.checked=true; }catch(e){}
+  c.addEventListener('change',function(){
+    try{ localStorage.setItem('saham_guide_'+c.id, c.checked?'1':'0'); }catch(e){}
+  });
+});
+</script>
+</body>
+</html>

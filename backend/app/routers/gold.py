@@ -22,12 +22,38 @@ async def kpis():
         SELECT
             COUNT(DISTINCT fc.client_id) as total_clients,
             COALESCE(SUM(fc.montant), 0) as total_encours,
+            (SELECT COALESCE(SUM(pnb), 0) FROM fact_performance) as total_pnb,
+            (SELECT COALESCE(SUM(encours_depots), 0) FROM fact_performance) as total_depots,
             (SELECT COALESCE(AVG(npl_ratio), 0) FROM fact_performance) as npl_moyen,
             COUNT(DISTINCT fa.agence_id) as total_agences
         FROM fact_engagement fc
         JOIN dim_agence fa ON fc.agence_id = fa.agence_id
     """)
     return row[0] if row else {}
+
+
+@router.get("/clients")
+async def clients():
+    return run_sql("""
+        SELECT client_id as id, nom, segment, agence_id, ville,
+               encours_actuel as encours, score_actuel as score, statut_actuel as statut
+        FROM dim_client
+        ORDER BY encours_actuel DESC
+        LIMIT 100
+    """)
+
+
+@router.get("/engagements")
+async def engagements():
+    return run_sql("""
+        SELECT fe.engagement_id as ref, dc.nom as client, dtc.libelle as type,
+               fe.montant, fe.duree_mois as duree, fe.taux, fe.score, fe.statut
+        FROM fact_engagement fe
+        LEFT JOIN dim_client dc ON fe.client_id = dc.client_id
+        LEFT JOIN dim_type_credit dtc ON fe.type_credit_id = dtc.type_credit_id
+        ORDER BY fe.montant DESC
+        LIMIT 100
+    """)
 
 
 @router.get("/pnb-mensuel")
@@ -109,3 +135,18 @@ async def qualite_agences():
         JOIN dim_agence da ON fq.agence_id = da.agence_id
         GROUP BY da.nom ORDER BY satisfaction_moyenne DESC
     """)
+
+
+@router.get("/encours-par-region")
+async def encours_par_region():
+    return run_sql("""
+        SELECT da.agence_id, da.nom as agence, da.ville, da.region,
+               COALESCE(SUM(fp.encours_credits), 0) as encours_credits,
+               COALESCE(SUM(fp.encours_depots), 0) as encours_depots,
+               COALESCE(SUM(fp.encours_credits + fp.encours_depots), 0) as total_volume
+        FROM dim_agence da
+        LEFT JOIN fact_performance fp ON da.agence_id = fp.agence_id
+        GROUP BY da.agence_id, da.nom, da.ville, da.region
+        ORDER BY total_volume DESC
+    """)
+

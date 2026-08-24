@@ -251,6 +251,18 @@ class SilverTransformer:
         else:
             qualite["note_satisfaction_client"] = note
 
+        d_val = qualite.get("date")
+        if not d_val or str(d_val).strip() == "":
+            errors.append("Date CRM vide")
+            qualite["date"] = None
+        else:
+            try:
+                datetime.strptime(str(d_val).strip(), "%Y-%m-%d")
+                qualite["date"] = str(d_val).strip()
+            except ValueError:
+                errors.append(f"Format date invalide: {d_val}")
+                qualite["date"] = None
+
         return self._add_tech_cols(qualite, len(errors) == 0, errors)
 
     def deduplicate(self, data: List[Dict[str, Any]], key: str) -> List[Dict[str, Any]]:

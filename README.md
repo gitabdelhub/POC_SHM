@@ -1,135 +1,142 @@
-# Saham Bank Analytics Portal
+﻿# SahamBI — Analytics Platform
 
-POC de portail d'analyse pour Saham Bank : ETL (Bronze → Silver → Gold),
-API FastAPI et frontend web vanilla (un seul fichier `index.html`).
+A full-stack business intelligence platform for Saham Bank, built with FastAPI, PostgreSQL, and a vanilla JS single-page application. Includes a Medallion ETL pipeline (Bronze → Silver → Gold), an AI-powered SQL chatbot, and an interactive analytics dashboard.
 
-## Démarrage rapide avec Docker (recommandé)
+---
 
-Prérequis : [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+## Stack
 
-```bash
-docker compose up --build
-```
+| Layer | Technology |
+|---|---|
+| Backend | Python 3.11, FastAPI, SQLAlchemy, Pydantic v2 |
+| Database | PostgreSQL 15 |
+| ETL | Custom Medallion pipeline (Bronze / Silver / Gold) |
+| AI | LangChain, OpenAI GPT-4o, pgvector (RAG + Text-to-SQL) |
+| Frontend | Vanilla JS SPA, SVG charts, SVG bubble map |
+| Auth | JWT (access + refresh tokens), role-based access control |
+| Tests | pytest, 36 tests |
 
-Au premier démarrage, le conteneur `api` initialise la base PostgreSQL
-(schéma + données ETL complètes + comptes de démo) automatiquement. Ensuite :
+---
 
-- Portail web : http://localhost:3000
-- API + documentation interactive : http://localhost:8000/docs
-- API health : http://localhost:8000/health
+## Getting Started
 
-> Le mot de passe PostgreSQL est configurables via la variable d'environnement
-> `POSTGRES_PASSWORD` (défaut : `postgre_abdel`).
-
-## Structure
-
-- `backend/` : ETL + API FastAPI (uvicorn)
-  - `etl/` : simulateur de données + pipeline Bronze → Silver → Gold
-  - `app/` : API FastAPI (`app.main:app`), routeurs, sécurité JWT
-  - `tests/` : suite pytest
-- `frontend/` : portail web (fichier unique `frontend/index.html` + logo)
-- `backend/app/scheduler.py` : planification légère du pipeline (APScheduler)
-- `render.yaml` : configuration de déploiement cloud (API + Cron ETL)
-
-## Prérequis
-
-- Python 3.12
-- PostgreSQL (base `saham_bank`, connexion configurée dans `backend/.env`)
-- Node.js (pour `npm run dev`)
-
-## Installation sur un autre poste (recommandé, lancement en 1 commande)
+**Prerequisites:** Python 3.11+, PostgreSQL 15, an OpenAI API key.
 
 ```bash
-# 1. Dépendances Node (concurrently) — node_modules n'est pas versionné
-npm install
-
-# 2. Environnement Python — backend/venv n'est pas versionné non plus
-cd backend
+# 1. Clone and set up the backend
+cd GOKU/backend
 python -m venv venv
-.\venv\Scripts\pip install -r requirements.txt
-cd ..
+venv\Scripts\activate          # Windows
+pip install -r requirements.txt
 
-# 3. Config de la base — copier backend/.env.example vers backend/.env
-#    et renseigner DATABASE_URL / POSTGRES_PASSWORD (créer la base "saham_bank").
+# 2. Configure environment
+copy .env.example .env
+# Edit .env: DATABASE_URL, OPENAI_API_KEY, SECRET_KEY
 
-# 4. Charger les données (ETL) + comptes démo
-cd backend
-.\venv\Scripts\python -m etl.run_pipeline
-.\venv\Scripts\python -m app.seed_demo
-cd ..
+# 3. Seed the database and run the ETL pipeline
+python -m etl.generate_data    # Generate synthetic data
+python -m etl.run_pipeline     # Bronze -> Silver -> Gold
 
-# 5. Lancer API + frontend ensemble
-npm run dev
+# 4. Start the API server
+uvicorn app.main:app --reload --port 8000
+
+# 5. Open the frontend
+# Open frontend/index.html in your browser, or:
+python -m http.server 5500     # from the frontend/ directory
 ```
 
-Puis ouvrir http://localhost:5500 (frontend) et http://localhost:8000/docs (API).
-`Ctrl+C` dans le terminal arrête les deux serveurs.
+---
 
-## Installation
+## Project Structure
+
+```
+GOKU/
+├── backend/
+│   ├── app/
+│   │   ├── main.py              # FastAPI app, CORS, router registration
+│   │   ├── database.py          # SQLAlchemy engine & session factory
+│   │   ├── models/              # ORM models (User, Agence, Client, ...)
+│   │   ├── routers/             # REST endpoints (auth, ai, gold, etl, ...)
+│   │   ├── services/rag/        # Text-to-SQL engine, LLM wrapper, embeddings
+│   │   └── core/                # JWT security, dependency injection
+│   ├── etl/
+│   │   ├── bronze/              # Raw data extraction & loading
+│   │   ├── silver/              # Validation, cleaning, normalization
+│   │   ├── gold/                # Aggregation into fact & dimension tables
+│   │   ├── generate_data.py     # Synthetic data generator (Faker)
+│   │   └── run_pipeline.py      # Orchestrator: Bronze -> Silver -> Gold
+│   └── tests/                   # pytest test suite (36 tests)
+└── frontend/
+    └── index.html               # Single-page application (all JS inline)
+```
+
+---
+
+## Architecture
+
+```
+Browser (SPA)
+    | JWT in localStorage
+    v
+FastAPI (port 8000)
+    +-- /auth      Login, refresh, user profile
+    +-- /ai        Text-to-SQL chatbot, query history logs
+    +-- /gold      KPIs, dashboard data (dim_*, fact_*)
+    +-- /agences   Agency CRUD
+    +-- /etl       Trigger pipeline runs
+         |
+         v
+PostgreSQL (saham_bank)
+    +-- Bronze tables    raw CSV snapshots
+    +-- Silver tables    validated, cleaned records
+    +-- Gold tables      fact_performance, fact_engagement,
+                         fact_risque, dim_agence, dim_client, ...
+```
+
+---
+
+## Key Features
+
+- **Medallion ETL** — Bronze (raw) → Silver (validated) → Gold (aggregated). Re-runnable, idempotent.
+- **AI Chatbot (SahamAI)** — Ask questions in French, get SQL + structured answer + optional chart. Every query is logged to i_query_log.
+- **Role-Based Access Control** — 5 roles (DG, DR, CA, AR, Admin). The admin panel manages per-module permissions; unauthorized routes display an access-denied screen instead of silently failing.
+- **Bubble Map** — SVG map of Morocco showing agency distribution by outstanding loans (Encours). Driven by live Gold data.
+- **Admin Console** — Full SQL query viewer (read-only modal, click any row), user management, permission matrix, CSV export with SQL column included.
+
+---
+
+## Environment Variables
+
+```env
+DATABASE_URL=postgresql://postgres:password@localhost:5432/saham_bank
+OPENAI_API_KEY=sk-...
+SECRET_KEY=your-secret-key-here
+ACCESS_TOKEN_EXPIRE_MINUTES=15
+REFRESH_TOKEN_EXPIRE_DAYS=7
+```
+
+---
+
+## Running Tests
 
 ```bash
 cd backend
-python -m venv venv
-.\venv\Scripts\pip install -r requirements.txt
+venv\Scripts\python.exe -m pytest -v
+# Expected: 36 passed
 ```
 
-## Génération des données (ETL)
+---
 
-```bash
-cd backend
-.\venv\Scripts\python -m etl.run_pipeline      # bronze + silver + gold
-```
+## Demo Credentials
 
-En conditions de production, le pipeline est relancé quotidiennement par le
-planificateur intégré (APScheduler) :
+| Role | Email | Password |
+|---|---|---|
+| DG | mehdi.tazi@sahambank.ma | Saham2024! |
+| Admin | admin@sahambank.ma | Admin2024! |
+| DR | youssef.berrada@sahambank.ma | Saham2024! |
 
-```bash
-cd backend
-$env:ETL_SCHEDULER_ENABLED="true"; $env:ETL_SCHEDULE_HOUR="2"   # daily à 02:00
-.\venv\Scripts\python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
+---
 
-Ou déclenché manuellement via l'API (JWT requis, rôles DG/ADMIN) :
+## License
 
-```bash
-curl -X POST http://localhost:8000/etl/run -H "Authorization: Bearer $TOKEN"
-```
-
-Pour le cloud (Render), voir `render.yaml` (Cron Job quotidien).
-
-## Démarrage de l'API
-
-```bash
-cd backend
-.\venv\Scripts\python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
-- Documentation interactive : http://localhost:8000/docs
-- Health : http://localhost:8000/health
-
-## Démarrage du frontend
-
-Le frontend est un fichier statique unique. Il suffit d'un serveur statique sur
-le dossier `frontend/` :
-
-```bash
-cd frontend
-python -m http.server 5500
-```
-
-Puis ouvrir http://localhost:5500
-
-> L'API est appelée via `API_BASE = 'http://localhost:8000'` (défini dans
-> `frontend/index.html`).
-
-## Tests
-
-```bash
-cd backend
-.\venv\Scripts\python -m pytest -q
-```
-
-## Comptes de démonstration
-
-Login préconfiguré : mot de passe `Demo2026!` pour tous les rôles démo
-(voir `backend/app/seed_demo.py`).
+Internal use only — Saham Bank. Not for public distribution.

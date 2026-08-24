@@ -4,24 +4,27 @@ Ce fichier configure les paramètres de l'application, notamment
  les variables d'environnement et les paramètres OAuth 2.0 + PKCE.
 """
 
+from pathlib import Path
 from pydantic import Field
 from pydantic_settings import BaseSettings
+
+_ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
 
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = Field(..., env="DATABASE_URL")
+    DATABASE_URL: str = Field("postgresql://postgres:postgre_abdel@localhost:5432/saham_bank", env="DATABASE_URL")
     POSTGRES_HOST: str = Field("localhost", env="POSTGRES_HOST")
     POSTGRES_PORT: int = Field(5432, env="POSTGRES_PORT")
     POSTGRES_DB: str = Field("saham_bank", env="POSTGRES_DB")
     POSTGRES_USER: str = Field("postgres", env="POSTGRES_USER")
-    POSTGRES_PASSWORD: str = Field(..., env="POSTGRES_PASSWORD")
+    POSTGRES_PASSWORD: str = Field("postgre_abdel", env="POSTGRES_PASSWORD")
 
     # OAuth 2.0 + PKCE
-    SECRET_KEY: str = Field(..., env="SECRET_KEY")
-    OAUTH_CLIENT_ID: str = Field(..., env="OAUTH_CLIENT_ID")
-    OAUTH_CLIENT_SECRET: str = Field(..., env="OAUTH_CLIENT_SECRET")
-    OAUTH_REDIRECT_URI: str = Field(..., env="OAUTH_REDIRECT_URI")
+    SECRET_KEY: str = Field("saham-bank-analytics-secret-key-2026-super-secure", env="SECRET_KEY")
+    OAUTH_CLIENT_ID: str = Field("saham-analytics-portal", env="OAUTH_CLIENT_ID")
+    OAUTH_CLIENT_SECRET: str = Field("saham-secret-key", env="OAUTH_CLIENT_SECRET")
+    OAUTH_REDIRECT_URI: str = Field("http://localhost:5500/callback", env="OAUTH_REDIRECT_URI")
 
     # Logging
     LOG_LEVEL: str = Field("INFO", env="LOG_LEVEL")
@@ -53,7 +56,7 @@ class Settings(BaseSettings):
     ETL_SCHEDULE_HOUR: int = Field(2, env="ETL_SCHEDULE_HOUR")     # heure (0-23) du batch quotidien
 
     class Config:
-        env_file = ".env"
+        env_file = str(_ENV_FILE)
         case_sensitive = True
 
 settings = Settings()

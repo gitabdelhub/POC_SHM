@@ -5,7 +5,7 @@ from loguru import logger
 
 from app.config import settings
 from app.database import engine, init_db
-from app.routers import agences, auth, clients, engagements, etl, gold
+from app.routers import agences, ai, auth, clients, engagements, etl, gold
 from app.scheduler import start_scheduler, stop_scheduler
 
 app = FastAPI(
@@ -71,6 +71,7 @@ app.include_router(engagements.router, prefix="/engagements", tags=["Engagements
 app.include_router(agences.router, prefix="/agences", tags=["Agences"])
 app.include_router(gold.router, prefix="/gold", tags=["Gold Warehouse"])
 app.include_router(etl.router, tags=["ETL"])
+app.include_router(ai.router, tags=["SahamAI"])
 
 if __name__ == "__main__":
     import uvicorn

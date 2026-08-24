@@ -4,8 +4,12 @@ Usage : npm run dev (via package.json) — remplace `python -m http.server` qui
 n'affiche rien à l'écran.
 """
 import http.server
+import os
+import pathlib
 import socketserver
 import webbrowser
+
+os.chdir(pathlib.Path(__file__).parent.resolve())
 
 PORT = 5500
 URL = f"http://localhost:{PORT}"
