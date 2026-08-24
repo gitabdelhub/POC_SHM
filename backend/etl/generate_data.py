@@ -166,19 +166,19 @@ VILLE_AGENCY_WEIGHTS = {
 def generate_clients(count=500, agences=None):
     if agences is None:
         agences = [{"id": "AG-001", "ville": "Casablanca"}]
-    
+
     # Calculer les poids de sélection pour chaque agence selon sa ville
     ag_weights = [VILLE_AGENCY_WEIGHTS.get(a.get("ville", ""), 0.02) for a in agences]
-    
+
     rows = []
     for i in range(count):
         selected_agence = random.choices(agences, weights=ag_weights, k=1)[0]
         v_name = selected_agence.get("ville", "Casablanca")
         econ_factor = VILLE_ECONOMIC_FACTOR.get(v_name, 1.0)
-        
+
         segment = random.choices(SEGMENTS, weights=SEGMENT_WEIGHTS, k=1)[0]
         score = max(0, min(100, int(random.gauss(SCORE_MEAN[segment], 18))))
-        
+
         # L'encours client reflète la puissance économique de la région
         encours_base = random.uniform(ENCOURS_MIN[segment], ENCOURS_MAX[segment])
         encours = round(encours_base * econ_factor, 2)
@@ -216,17 +216,17 @@ def generate_clients(count=500, agences=None):
 def generate_engagements(count=2000, clients=None):
     if clients is None:
         clients = [{"id": "CLI-10001", "segment": "Particuliers", "agence_id": "AG-001"}]
-    
+
     # Créer un lookup client -> agence_id
     rows = []
     # Seasonal multiplier: higher in Q4, lower in Q1
     season_mult = {1: 0.7, 2: 0.75, 3: 0.85, 4: 1.0, 5: 0.95, 6: 1.1,
                    7: 1.05, 8: 0.8, 9: 1.0, 10: 1.2, 11: 1.3, 12: 1.4}
-    
+
     for i in range(count):
         client = random.choice(clients)
         credit_type = random.choices(CREDIT_TYPES, weights=CREDIT_WEIGHTS, k=1)[0]
-        
+
         # Facteur économique du client basé sur son agence
         aid = client.get("agence_id", "AG-001")
         # Récupérer l'indice d'agence pour déduire la ville approximative
@@ -235,7 +235,7 @@ def generate_engagements(count=2000, clients=None):
             ville_name = VILLES[ag_idx][0] if 0 <= ag_idx < len(VILLES) else "Casablanca"
         except Exception:
             ville_name = "Casablanca"
-        
+
         econ_factor = VILLE_ECONOMIC_FACTOR.get(ville_name, 1.0)
 
         # Montant coherent avec le type de credit & la taille économique
