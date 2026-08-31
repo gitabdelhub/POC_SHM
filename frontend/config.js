@@ -2,4 +2,4 @@
    SAHAM BANK ANALYTICS PORTAL — Configuration d'environnement
    ========================================================================== */
 
-window.SAHAM_API_BASE = 'https://robin-neck-spotlight-springfield.trycloudflare.com';
+window.SAHAM_API_BASE = 'https://amber-ricky-alerts-transmit.trycloudflare.com';
