@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/(auth|gold|ai|agences|clients|engagements|etl|docs|openapi.json|test)(.*)",
-      "destination": "/api"
+      "source": "/(api|auth|gold|ai|agences|clients|engagements|etl|docs|test)(.*)",
+      "destination": "/api/index.py"
     },
     {
       "source": "/(.*)",

@@ -1,12 +1,9 @@
-from fastapi import FastAPI
+from http.server import BaseHTTPRequestHandler
 
-app = FastAPI()
-
-@app.get("/api/test")
-@app.get("/test")
-def test():
-    return {"status": "ok", "message": "FastAPI is running on Vercel"}
-
-@app.get("/docs")
-def docs_redirect():
-    return {"status": "docs_ok"}
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(b'{"status": "ok", "message": "Vercel Python is working"}')
+        return
