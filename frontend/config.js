@@ -2,4 +2,4 @@
    SAHAM BANK ANALYTICS PORTAL — Configuration d'environnement
    ========================================================================== */
 
-window.SAHAM_API_BASE = 'https://amber-ricky-alerts-transmit.trycloudflare.com';
+window.SAHAM_API_BASE = 'https://beliefs-targets-higher-pair.trycloudflare.com';
