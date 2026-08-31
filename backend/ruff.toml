@@ -1,0 +1,15 @@
+# Configuration ruff pour le backend Saham Bank.
+# Cible : pyflakes (F) + isort (I) + pycodestyle essentiel (E4/E7/E9/W).
+# On EXCLUT délibérément : Bugbear (B) qui signale `Depends(...)` FastAPI
+# (pattern idiomatique), et BLE (except nu) qui est volontaire dans les tests.
+
+line-length = 120
+target-version = "py312"
+
+[lint]
+select = ["E4", "E7", "E9", "F", "I", "W"]
+ignore = []
+
+[lint.per-file-ignores]
+# E402 : imports après le chargement du .env dans le conftest (intentionnel)
+"tests/conftest.py" = ["E402"]
