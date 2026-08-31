@@ -16,17 +16,10 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# CORS restreint : seules les origines de la config sont acceptées.
-# Par défaut localhost (dev). En prod on y ajoutera l'URL Vercel.
-allowed_origins = [
-    o.strip()
-    for o in settings.CORS_ORIGINS.split(",")
-    if o.strip()
-]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

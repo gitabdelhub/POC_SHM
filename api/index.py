@@ -1,9 +1,9 @@
-from http.server import BaseHTTPRequestHandler
+import sys
+from pathlib import Path
 
-class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
-        self.wfile.write(b'{"status": "ok", "message": "Vercel Python is working"}')
-        return
+# Ajouter le répertoire api au path Python
+current_dir = Path(__file__).resolve().parent
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
+
+from app.main import app

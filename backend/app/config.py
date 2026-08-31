@@ -11,7 +11,10 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 
 _ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
-_DEFAULT_DB = os.environ.get("DATABASE_URL", "postgresql://neondb_owner:npg_rLhnzU7GtKe1@ep-misty-moon-b1rekr93-pooler.c-5.eu-central-1.aws.neon.tech/neondb?sslmode=require")
+_DEFAULT_DB = os.environ.get(
+    "DATABASE_URL",
+    "postgresql+pg8000://neondb_owner:npg_rLhnzU7GtKe1@ep-misty-moon-b1rekr93-pooler.c-5.eu-central-1.aws.neon.tech/neondb"
+)
 
 
 class Settings(BaseSettings):

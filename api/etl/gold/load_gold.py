@@ -135,29 +135,29 @@ class GoldLoader:
         if not rows:
             return 0
         session = self.SessionLocal()
-        count = 0
-        for row in rows:
-            cols = list(row.keys())
-            placeholders = ", ".join([f":{c}" for c in cols])
-            col_names = ", ".join(cols)
-            updates = ", ".join([f"{c} = EXCLUDED.{c}" for c in cols if c != pk])
-            sql = text(f"""
-                INSERT INTO {table} ({col_names}) VALUES ({placeholders})
-                ON CONFLICT ({pk}) DO UPDATE SET {updates}
-            """)
-            try:
-                session.execute(sql, row)
-                count += 1
-            except Exception as e:
-                print(f"  [WARN] {table} {row.get(pk, '?')}: {e}")
+        cols = list(rows[0].keys())
+        placeholders = ", ".join([f":{c}" for c in cols])
+        col_names = ", ".join(cols)
+        updates = ", ".join([f"{c} = EXCLUDED.{c}" for c in cols if c != pk])
+        sql = text(f"""
+            INSERT INTO {table} ({col_names}) VALUES ({placeholders})
+            ON CONFLICT ({pk}) DO UPDATE SET {updates}
+        """)
         try:
+            # Insertion par lots de 500 pour une vitesse maximale
+            batch_size = 500
+            for i in range(0, len(rows), batch_size):
+                batch = rows[i:i + batch_size]
+                session.execute(sql, batch)
             session.commit()
+            print(f"  [OK] {table} : {len(rows)} lignes inserees en batch")
+            return len(rows)
         except Exception as e:
             session.rollback()
-            print(f"  [ERR] {table} commit: {e}")
+            print(f"  [ERR] {table} batch commit: {e}")
+            return 0
         finally:
             session.close()
-        return count
 
     def load_dim_date(self, rows: List[Dict[str, Any]]) -> int:
         return self._upsert_all("dim_date", rows, "date_id")

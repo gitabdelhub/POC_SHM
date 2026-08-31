@@ -4,11 +4,15 @@ from sqlalchemy.orm import sessionmaker
 
 from app.config import settings
 
+db_url = settings.DATABASE_URL
+connect_args = {}
+if "pg8000" in db_url or "sslmode=require" in db_url:
+    connect_args["ssl_context"] = True
+
 engine = create_engine(
-    settings.DATABASE_URL,
+    db_url,
+    connect_args=connect_args,
     pool_pre_ping=True,
-    pool_size=10,
-    max_overflow=20,
     echo=False
 )
 
