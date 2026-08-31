@@ -22,8 +22,6 @@
 \usepackage{xcolor}
 \usepackage{longtable}
 \usepackage{booktabs}
-\usepackage{tikz}
-\usetikzlibrary{shapes,arrows,arrows.meta,positioning,fit,backgrounds,shadows,babel}
 \usepackage{hyperref}
 
 % ---- Colonnes de tableaux ----
@@ -82,14 +80,6 @@
     pdfsubject={Stage de fin d'année — Génie de la Data}
 }
 
-% ---- Couleurs du projet ----
-\definecolor{bronzecolor}{RGB}{176,141,87}
-\definecolor{silvercolor}{RGB}{160,160,160}
-\definecolor{goldcolor}{RGB}{212,175,55}
-\definecolor{apicolor}{RGB}{41,128,185}
-\definecolor{frontcolor}{RGB}{39,174,96}
-\definecolor{aicolor}{RGB}{142,68,173}
-
 \begin{document}
 
 % ==============================================================================
@@ -101,9 +91,9 @@
 
 \vspace*{-0.8cm}
 \makebox[\textwidth]{%
-    \IfFileExists{ENSIAS LOGO.png}{\includegraphics[height=3cm]{ENSIAS LOGO.png}}{\textbf{\huge ENSIAS}}
+    \IfFileExists{ENSIAS LOGO.png}{\includegraphics[height=2.8cm]{ENSIAS LOGO.png}}{\textbf{\huge ENSIAS}}
     \hfill
-    \IfFileExists{da_technologies_logo.png}{\includegraphics[height=3cm]{da_technologies_logo.png}}{\textbf{\huge D\&A Technologies}}
+    \IfFileExists{da_technologies_logo.png}{\includegraphics[height=2.8cm]{da_technologies_logo.png}}{\textbf{\huge D\&A Technologies}}
 }
 
 \vspace{1cm}
@@ -328,24 +318,28 @@ Fondée en 2012 au Maroc, \textbf{D\&A Technologies} est une entreprise de conse
 \noindent Le \textbf{pôle Data, AI \& BI}, au sein duquel s'est déroulé ce stage, conçoit des pipelines de traitement distribué, des modèles d'apprentissage automatique et des assistants intelligents pour des secteurs à fort volume transactionnel : banque, assurance, énergie et télécommunications. C'est dans ce contexte d'excellence technique que le projet Saham a été initié et conduit.
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        node distance=0.8cm,
-        box/.style={draw=darkblue, fill=darkblue!10, rounded corners=5pt,
-                    minimum width=3.5cm, minimum height=1.1cm,
-                    font=\small\bfseries, align=center, text width=3.2cm}
-    ]
-        \node[box, fill=darkblue!20] (core) {D\&A Technologies\\{\footnotesize Fondée 2012}};
-        \node[box, above left=0.9cm and 1.5cm of core]  (crm)   {CRM\\Salesforce};
-        \node[box, above right=0.9cm and 1.5cm of core] (cloud) {Cloud \&\\Architecture};
-        \node[box, below left=0.9cm and 1.5cm of core]  (bi)    {Business\\Intelligence};
-        \node[box, below right=0.9cm and 1.5cm of core] (ai)    {Data \& AI\\Engineering};
-
-        \foreach \x in {crm,cloud,bi,ai}
-            \draw[darkblue, thick] (core) -- (\x);
-    \end{tikzpicture}
-    \caption{Les pôles d'expertise de D\&A Technologies}
-    \label{fig:da_expertise}
+\centering
+\fbox{
+\parbox[c][5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Pôles d'expertise de D\&A Technologies]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item \textbf{Centre} : Un rectangle bleu foncé intitulé \textit{« D\&A Technologies (Fondée en 2012) »}.
+    \item \textbf{4 Branches reliées} :
+    \begin{enumerate}
+        \item Haut-Gauche : Rectangle \textit{« CRM Salesforce »}
+        \item Haut-Droite : Rectangle \textit{« Cloud \& Architecture »}
+        \item Bas-Gauche : Rectangle \textit{« Business Intelligence (BI) »}
+        \item Bas-Droite : Rectangle \textit{« Data Engineering \& AI »}
+    \end{enumerate}
+\end{itemize}
+\textit{\footnotesize (Dès que vous exportez votre image PNG d'Excalidraw, insérez-la avec : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{da\_expertise.png\}})}
+}
+}
+\caption{Les pôles d'expertise de D\&A Technologies}
+\label{fig:da_expertise}
 \end{figure}
 \end{doublespace}
 
@@ -390,30 +384,29 @@ La gestion du projet a suivi la méthodologie agile \textbf{SCRUM}, largement ad
 \noindent Les cérémonies SCRUM ont rythmé le projet : réunions quotidiennes (Daily Scrum de 15 minutes), réunions de planification de sprint (Sprint Planning) et revues de fin d'itération (Sprint Review). Les échanges s'appuyaient sur Slack pour la communication asynchrone, Google Meet pour les visioconférences et GitHub pour le suivi du code et des issues.
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        node distance=1.2cm and 1.8cm,
-        phase/.style={draw=darkblue, fill=darkblue!12, rounded corners=4pt,
-                      minimum width=3cm, minimum height=1cm, align=center,
-                      text width=2.8cm, font=\small\bfseries},
-        arrow/.style={-{Stealth[length=6pt]}, thick, darkblue}
-    ]
-        \node[phase] (pb)      {Product\\Backlog};
-        \node[phase, right=of pb] (sp) {Sprint\\Planning};
-        \node[phase, right=of sp] (sd) {Sprint\\(2 semaines)};
-        \node[phase, right=of sd] (sr) {Sprint\\Review};
-        \node[phase, below=1.4cm of sd, fill=goldcolor!20, draw=goldcolor!70!black]
-              (inc) {Incrément\\livré};
-
-        \draw[arrow] (pb) -- (sp);
-        \draw[arrow] (sp) -- (sd);
-        \draw[arrow] (sd) -- (sr);
-        \draw[arrow] (sr) -- (inc);
-        \draw[arrow, bend left=40] (sr) to node[above, font=\tiny]{itération suivante} (sp);
-    \end{tikzpicture}
-    \caption{Cycle itératif SCRUM appliqué au projet}
-    \label{fig:scrum_cycle}
+\centering
+\fbox{
+\parbox[c][5.5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Cycle Agile SCRUM]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item Dessinez un enchaînement horizontal de 4 boîtes reliées par des flèches :
+    \begin{enumerate}
+        \item \textbf{Product Backlog} (Liste des besoins) $\rightarrow$
+        \item \textbf{Sprint Planning} (Planification de l'itération) $\rightarrow$
+        \item \textbf{Sprint (2 semaines)} (Développement \& Tests) $\rightarrow$
+        \item \textbf{Sprint Review \& Rétrospective}
+    \end{enumerate}
+    \item Ajoutez une flèche sortante vers le bas : \textbf{Incrément livrable (POC testable)}.
+    \item Ajoutez une flèche circulaire de retour depuis la Review vers le Sprint Planning (\textit{itération suivante}).
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{scrum\_cycle.png\}})}
+}
+}
+\caption{Cycle itératif SCRUM appliqué au projet}
+\label{fig:scrum_cycle}
 \end{figure}
 \end{doublespace}
 
@@ -445,6 +438,34 @@ Le projet a été découpé en sept sprints successifs répartis sur une durée 
 \caption{Planning prévisionnel et réalisation des 7 Sprints du projet}
 \label{tab:sprints_plan}
 \end{table}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\parbox[c][5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Diagramme de Gantt des 10 Semaines]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item Un axe horizontal gradué de la Semaine 1 à la Semaine 10 (S1 à S10).
+    \item 7 barres horizontales colorées représentant les 7 Sprints :
+    \begin{itemize}
+        \item S1 : Schéma PostgreSQL \& Dictionnaire (S1-S2)
+        \item S2 : Pipeline Bronze \& Silver (S2-S3)
+        \item S3 : Tables Gold \& Docker (S3-S5)
+        \item S4 : API FastAPI \& JWT (S5-S6)
+        \item S5 : Text-to-SQL \& RAG (S6-S8)
+        \item S6 : Interface Vanilla JS (S7-S9)
+        \item S7 : Export PDF/Excel \& Finalisation (S9-S10)
+    \end{itemize}
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{gantt\_chart.png\}})}
+}
+}
+\caption{Diagramme de Gantt de la planification du projet}
+\label{fig:gantt_chart}
+\end{figure}
 \end{doublespace}
 
 \section{Conclusion}
@@ -476,50 +497,31 @@ Le système s'adresse à plusieurs profils d'utilisateurs avec des droits d'acc�
 \end{itemize}
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        actor/.style={draw=darkblue, fill=darkblue!10, rounded corners=4pt,
-                      minimum width=2.5cm, minimum height=0.9cm,
-                      align=center, text width=2.3cm, font=\small\bfseries},
-        sys/.style={draw=darkblue!60, fill=darkblue!5, rounded corners=6pt,
-                    minimum width=6cm, minimum height=7cm},
-        uc/.style={draw=apicolor, fill=apicolor!10, ellipse,
-                   minimum width=3.8cm, minimum height=0.7cm,
-                   align=center, font=\footnotesize}
-    ]
-        % Acteurs
-        \node[actor] (dg) at (-5.5, 2.5)  {DG};
-        \node[actor] (dr) at (-5.5, 1.2)  {DR};
-        \node[actor] (ca) at (-5.5,-0.1)  {CA};
-        \node[actor] (ar) at (-5.5,-1.4)  {AR};
-        \node[actor] (adm) at (-5.5,-2.7) {Admin};
-
-        % Système
-        \node[sys] (system) at (0, 0) {};
-        \node[above=3.2cm of system, font=\bfseries\small, text=darkblue]
-              {Portail Saham Analytics};
-
-        % Use cases
-        \node[uc] (dash)  at (0, 2.2)  {Consulter le tableau de bord};
-        \node[uc] (chat)  at (0, 1.1)  {Interroger l'Agent IA (chat)};
-        \node[uc] (exp)   at (0, 0.0)  {Exporter PDF / Excel};
-        \node[uc] (auth)  at (0,-1.1) {S'authentifier (JWT)};
-        \node[uc] (admin) at (0,-2.2) {Gérer les utilisateurs};
-
-        % Liens
-        \foreach \a in {dg,dr,ca,ar}
-            \draw[gray,thin] (\a) -- (dash);
-        \foreach \a in {dg,dr,ca,ar,adm}
-            \draw[gray,thin] (\a) -- (auth);
-        \foreach \a in {dg,dr,ca,ar}
-            \draw[gray,thin] (\a) -- (chat);
-        \foreach \a in {dg,dr}
-            \draw[gray,thin] (\a) -- (exp);
-        \draw[gray,thin] (adm) -- (admin);
-    \end{tikzpicture}
-    \caption{Diagramme de cas d'utilisation du système Saham Analytics}
-    \label{fig:use_case_diagram}
+\centering
+\fbox{
+\parbox[c][5.5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Diagramme de Cas d'Utilisation]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item \textbf{À gauche} : Bonhommes allumettes (Acteurs) : \textit{DG, DR, CA, AR, Admin}.
+    \item \textbf{Au centre} : Grand cadre rectangulaire représentant le \textit{Système Saham Analytics}.
+    \item \textbf{Dans le cadre} : Bulles ovales (Cas d'utilisation) :
+    \begin{itemize}
+        \item \textit{S'authentifier (JWT)}
+        \item \textit{Consulter les KPIs \& Graphiques du Tableau de bord}
+        \item \textit{Poser une question en langage naturel à l'Agent IA (Chatbot)}
+        \item \textit{Générer et télécharger un rapport PDF / Excel}
+        \item \textit{Superviser les utilisateurs et logs (Admin)}
+    \end{itemize}
+    \item Reliez chaque acteur aux bulles auxquelles il a droit.
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{use_cases.png\}})}
+}
+}
+\caption{Diagramme de cas d'utilisation du système Saham Analytics}
+\label{fig:use_case_diagram}
 \end{figure}
 \end{doublespace}
 
@@ -573,79 +575,56 @@ Afin d'assurer la qualité industrielle du système, les critères non fonctionn
 
 \section{Diagrammes de séquence du système}
 \begin{doublespace}
-Les flux principaux du système sont illustrés ci-dessous sous forme de diagrammes de séquence.
+Les flux principaux du système sont illustrés ci-dessous.
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        lifeline/.style={draw=darkblue, thick},
-        msg/.style={-{Stealth}, thick, darkblue},
-        ret/.style={-{Stealth}, thick, darkblue, dashed},
-        box/.style={draw=darkblue, fill=darkblue!15, rounded corners=3pt,
-                    minimum width=2.2cm, minimum height=0.7cm,
-                    font=\footnotesize\bfseries, align=center}
-    ]
-        % Entités
-        \node[box] (user) at (0,0)    {Utilisateur};
-        \node[box] (api)  at (3.5,0)  {API FastAPI};
-        \node[box] (auth) at (7,0)    {Auth JWT};
-        \node[box] (db)   at (10.5,0) {PostgreSQL};
-
-        % Lignes de vie
-        \foreach \x in {0,3.5,7,10.5}
-            \draw[lifeline] (\x,-0.35) -- (\x,-5.5);
-
-        % Messages
-        \draw[msg] (0,-0.9) -- node[above,font=\tiny]{POST /auth/login} (3.5,-0.9);
-        \draw[msg] (3.5,-1.4) -- node[above,font=\tiny]{vérifier email/mdp} (7,-1.4);
-        \draw[msg] (7,-1.9) -- node[above,font=\tiny]{SELECT user} (10.5,-1.9);
-        \draw[ret] (10.5,-2.4) -- node[above,font=\tiny]{user trouvé} (7,-2.4);
-        \draw[msg] (7,-2.9) -- node[above,font=\tiny]{bcrypt.verify()} (7,-3.2);
-        \draw[ret] (7,-3.7) -- node[above,font=\tiny]{access\_token + refresh\_token} (3.5,-3.7);
-        \draw[ret] (3.5,-4.2) -- node[above,font=\tiny]{200 OK + tokens JWT} (0,-4.2);
-        \draw[msg] (0,-4.7) -- node[above,font=\tiny]{GET /gold/kpis (Bearer token)} (3.5,-4.7);
-        \draw[ret] (3.5,-5.2) -- node[above,font=\tiny]{200 OK + données JSON} (0,-5.2);
-    \end{tikzpicture}
-    \caption{Diagramme de séquence du processus d'authentification JWT}
-    \label{fig:seq_auth}
+\centering
+\fbox{
+\parbox[c][5.5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Diagramme de Séquence — Authentification JWT]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item 4 Colonnes verticales (Lignes de vie) : \textit{Utilisateur, Frontend (JS), API FastAPI, PostgreSQL (Neon)}.
+    \item Flèche 1 : Utilisateur $\rightarrow$ Frontend : Saisie Email/Mdp ou clic profil démo.
+    \item Flèche 2 : Frontend $\rightarrow$ FastAPI : \texttt{POST /auth/login}.
+    \item Flèche 3 : FastAPI $\rightarrow$ PostgreSQL : Vérification utilisateur \& hash bcrypt.
+    \item Flèche 4 : PostgreSQL $\rightarrow$ FastAPI : Données utilisateur validées.
+    \item Flèche 5 : FastAPI $\rightarrow$ Frontend : Retour \texttt{access\_token} (JWT) + rôle.
+    \item Flèche 6 : Frontend $\rightarrow$ Utilisateur : Affichage du Tableau de bord.
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{seq\_auth.png\}})}
+}
+}
+\caption{Diagramme de séquence du processus d'authentification JWT}
+\label{fig:seq_auth}
 \end{figure}
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        lifeline/.style={draw=darkblue, thick},
-        msg/.style={-{Stealth}, thick, darkblue},
-        ret/.style={-{Stealth}, thick, darkblue, dashed},
-        box/.style={draw=darkblue, fill=darkblue!15, rounded corners=3pt,
-                    minimum width=2.2cm, minimum height=0.7cm,
-                    font=\footnotesize\bfseries, align=center}
-    ]
-        \node[box] (user)  at (0,0)    {Utilisateur};
-        \node[box] (front) at (3,0)    {Frontend};
-        \node[box] (agent) at (6,0)    {Agent IA};
-        \node[box] (llm)   at (9,0)    {LLM Groq};
-        \node[box] (pg)    at (12,0)   {PostgreSQL};
-
-        \foreach \x in {0,3,6,9,12}
-            \draw[lifeline] (\x,-0.35) -- (\x,-7.5);
-
-        \draw[msg] (0,-0.9)  -- node[above,font=\tiny]{pose une question} (3,-0.9);
-        \draw[msg] (3,-1.4)  -- node[above,font=\tiny]{POST /ai/ask} (6,-1.4);
-        \draw[msg] (6,-1.9)  -- node[above,font=\tiny]{vérif. cache (MD5)} (6,-2.2);
-        \draw[msg] (6,-2.7)  -- node[above,font=\tiny]{Prompt + schéma Gold} (9,-2.7);
-        \draw[ret] (9,-3.2)  -- node[above,font=\tiny]{\{mode:sql, sql:``...''\}} (6,-3.2);
-        \draw[msg] (6,-3.7)  -- node[above,font=\tiny]{\_check\_sql\_safety()} (6,-4.0);
-        \draw[msg] (6,-4.5)  -- node[above,font=\tiny]{SELECT ... (READ ONLY)} (12,-4.5);
-        \draw[ret] (12,-5.0) -- node[above,font=\tiny]{résultats bruts} (6,-5.0);
-        \draw[msg] (6,-5.5)  -- node[above,font=\tiny]{Prompt + résultats} (9,-5.5);
-        \draw[ret] (9,-6.0)  -- node[above,font=\tiny]{réponse en français} (6,-6.0);
-        \draw[ret] (6,-6.5)  -- node[above,font=\tiny]{JSON (texte + données)} (3,-6.5);
-        \draw[ret] (3,-7.0)  -- node[above,font=\tiny]{affichage + graphique} (0,-7.0);
-    \end{tikzpicture}
-    \caption{Diagramme de séquence du traitement d'une requête par l'Agent IA}
-    \label{fig:seq_agent_ai}
+\centering
+\fbox{
+\parbox[c][6cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Diagramme de Séquence — Traitement par l'Agent IA]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item 5 Colonnes : \textit{Utilisateur, Frontend, Agent IA (FastAPI), LLM Groq, PostgreSQL (Gold)}.
+    \item 1 : Utilisateur pose une question en langage naturel $\rightarrow$ Frontend $\rightarrow$ Agent IA.
+    \item 2 : Agent IA vérifie le Cache MD5 (si présent $\rightarrow$ retour immédiat en 40ms).
+    \item 3 : Si non trouvé : Agent IA envoie le schéma Gold au LLM Groq (Text-to-SQL).
+    \item 4 : LLM Groq retourne la requête SQL générée.
+    \item 5 : Agent IA valide la requête via le Garde-Fou de sécurité (seul SELECT autorisé).
+    \item 6 : Agent IA exécute la requête sur PostgreSQL (mode READ ONLY).
+    \item 7 : Agent IA transmet les données au LLM Groq pour formuler la synthèse en français.
+    \item 8 : Réponse complète + Données graphiques affichées dans le Chatbot.
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{seq\_ai.png\}})}
+}
+}
+\caption{Diagramme de séquence du traitement d'une requête par l'Agent IA}
+\label{fig:seq_agent_ai}
 \end{figure}
 \end{doublespace}
 
@@ -668,44 +647,33 @@ Ce chapitre détaille l'architecture globale de la solution selon une approche T
 
 \section{Vue d'ensemble de l'architecture système}
 \begin{doublespace}
-L'architecture adopte un découplage fort entre le traitement des données, le moteur d'intelligence artificielle et l'interface de restitution. La figure ci-dessous présente les cinq grandes couches de la solution.
+L'architecture adopte un découplage fort entre le traitement des données, le moteur d'intelligence artificielle et l'interface de restitution.
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        layer/.style={draw, rounded corners=6pt, minimum width=13cm,
-                      minimum height=1.1cm, align=center, font=\bfseries\small},
-        arrow/.style={-{Stealth[length=7pt]}, thick}
-    ]
-        \node[layer, fill=bronzecolor!30, draw=bronzecolor!70!black]
-              (bronze) at (0,0) {Couche BRONZE — Ingestion Python (CSV $\rightarrow$ PostgreSQL brut)};
-        \node[layer, fill=silvercolor!30, draw=silvercolor!70!black, above=0.5cm of bronze]
-              (silver) {Couche SILVER — Validation, nettoyage, traçabilité (is\_valid)};
-        \node[layer, fill=goldcolor!30, draw=goldcolor!70!black, above=0.5cm of silver]
-              (gold)   {Couche GOLD — Schéma en étoile (dim\_* + fact\_*) — Analytique};
-        \node[layer, fill=apicolor!20, draw=apicolor, above=0.5cm of gold]
-              (api)    {API FastAPI — Auth JWT, routeurs /gold, /ai, /auth — Uvicorn};
-        \node[layer, fill=frontcolor!20, draw=frontcolor!80!black, above=0.5cm of api]
-              (front)  {Frontend Vanilla JS — Dashboard, Chatbot SahamAI, Export PDF/Excel};
-
-        \draw[arrow, bronzecolor!70!black]  (bronze) -- (silver);
-        \draw[arrow, silvercolor!70!black]  (silver) -- (gold);
-        \draw[arrow, goldcolor!70!black]    (gold)   -- (api);
-        \draw[arrow, apicolor]              (api)    -- (front);
-
-        \node[right=0.3cm of bronze, font=\tiny, text=bronzecolor!80!black]
-              {\textit{Scripts Python}};
-        \node[right=0.3cm of api, font=\tiny, text=apicolor]
-              {\textit{:8000}};
-        \node[right=0.3cm of front, font=\tiny, text=frontcolor!80!black]
-              {\textit{:3000 / Vercel}};
-    \end{tikzpicture}
-    \caption{Architecture globale de la plateforme Analytics et de l'Agent IA}
-    \label{fig:system_architecture}
+\centering
+\fbox{
+\parbox[c][5.5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Architecture Globale en 5 Couches]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item Empilez 5 rectangles horizontaux de bas en haut :
+    \begin{enumerate}
+        \item \textbf{Couche 1 (Bronze - Brun)} : Ingestion Python (Fichiers CSV bruts $\rightarrow$ PostgreSQL).
+        \item \textbf{Couche 2 (Silver - Gris/Argent)} : Validation, nettoyage, traçabilité (\texttt{is\_valid}).
+        \item \textbf{Couche 3 (Gold - Doré)} : Schéma en étoile (\texttt{dim\_*} et \texttt{fact\_*}) analytique.
+        \item \textbf{Couche 4 (API REST - Bleu)} : FastAPI, Uvicorn, Authentification JWT, Routeurs \texttt{/gold}, \texttt{/ai}, \texttt{/auth}.
+        \item \textbf{Couche 5 (Frontend - Vert)} : Single Page Application Vanilla JS, Dashboard, Chatbot SahamAI, Export PDF/Excel.
+    \end{enumerate}
+    \item Reliez les couches avec des flèches verticales ascendantes.
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{architecture\_system.png\}})}
+}
+}
+\caption{Architecture globale de la plateforme Analytics et de l'Agent IA}
+\label{fig:system_architecture}
 \end{figure}
-
-\noindent Les données bancaires brutes sont ingérées par des scripts Python et stockées dans la base PostgreSQL conteneurisée. L'API FastAPI orchestre l'accès aux données avec authentification JWT. L'Agent IA, utilisant le LLM Groq, interroge la couche Gold après validation de la requête SQL par un contrôleur de sécurité. L'interface Vanilla JS fournit une expérience utilisateur riche avec graphiques dynamiques et chatbot conversationnel.
 \end{doublespace}
 
 \section{Architecture Medallion des données}
@@ -713,66 +681,27 @@ L'architecture adopte un découplage fort entre le traitement des données, le m
 Le pipeline d'ingénierie des données repose sur l'architecture \textbf{Medallion}, structurée en trois niveaux de maturité croissante de la donnée.
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        zone/.style={draw, rounded corners=6pt, minimum width=3.4cm,
-                     minimum height=4cm, text width=3.2cm, align=center},
-        arrow/.style={-{Stealth[length=8pt]}, very thick}
-    ]
-        \node[zone, fill=bronzecolor!25, draw=bronzecolor!70!black] (B) at (0,0) {
-            \textbf{\textcolor{bronzecolor!80!black}{BRONZE}}\\[0.3cm]
-            \footnotesize Données brutes\\
-            Miroir exact\\
-            des sources\\[0.2cm]
-            \tiny\texttt{bronze\_clients}\\
-            \texttt{bronze\_agences}\\
-            \texttt{bronze\_engagements}\\
-            \texttt{bronze\_qualite}
-        };
-        \node[zone, fill=silvercolor!20, draw=silvercolor!50!black] (S) at (4.5,0) {
-            \textbf{\textcolor{silvercolor!60!black}{SILVER}}\\[0.3cm]
-            \footnotesize Validation\\
-            Nettoyage\\
-            Traçabilité\\[0.2cm]
-            \tiny\texttt{silver\_clients}\\
-            \texttt{silver\_agences}\\
-            \texttt{silver\_engagements}\\
-            \texttt{silver\_qualite}
-        };
-        \node[zone, fill=goldcolor!25, draw=goldcolor!70!black] (G) at (9,0) {
-            \textbf{\textcolor{goldcolor!80!black}{GOLD}}\\[0.3cm]
-            \footnotesize Schéma en étoile\\
-            Agrégats\\
-            Analytique\\[0.2cm]
-            \tiny\texttt{dim\_client}\\
-            \texttt{dim\_agence}\\
-            \texttt{fact\_performance}\\
-            \texttt{fact\_engagement}
-        };
-
-        \draw[arrow, bronzecolor!70!black] (B.east) -- node[above,font=\tiny]{Python ETL} (S.west);
-        \draw[arrow, silvercolor!60!black] (S.east) -- node[above,font=\tiny]{agrégation} (G.west);
-
-        \node[below=0.3cm of B, font=\tiny, text=bronzecolor!80!black]
-              {NOT NULL · SAVEPOINT};
-        \node[below=0.3cm of S, font=\tiny, text=silvercolor!60!black]
-              {is\_valid · error\_message};
-        \node[below=0.3cm of G, font=\tiny, text=goldcolor!80!black]
-              {star schema · KPIs};
-    \end{tikzpicture}
-    \caption{Schéma conceptuel du pipeline Medallion sous PostgreSQL}
-    \label{fig:medallion_schema}
+\centering
+\fbox{
+\parbox[c][5.5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Pipeline Medallion (Bronze $\rightarrow$ Silver $\rightarrow$ Gold)]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item 3 Grands conteneurs rectangulaires côte à côte avec des flèches entre eux :
+    \begin{enumerate}
+        \item \textbf{BRONZE (Couleur Bronze)} : Données brutes (\texttt{bronze\_clients}, \texttt{bronze\_engagements}, \texttt{bronze\_agences}, \texttt{bronze\_qualite}).
+        \item \textbf{SILVER (Couleur Argent)} : Données nettoyées \& typées avec traçabilité (\texttt{is\_valid}, \texttt{error\_message}).
+        \item \textbf{GOLD (Couleur Or)} : Tables de faits \& dimensions agrégées (\texttt{fact\_performance}, \texttt{fact\_engagement}, \texttt{dim\_client}, \texttt{dim\_agence}).
+    \end{enumerate}
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{medallion\_pipeline.png\}})}
+}
+}
+\caption{Schéma conceptuel du pipeline Medallion sous PostgreSQL}
+\label{fig:medallion_schema}
 \end{figure}
-
-\subsection{Couche Bronze (Raw Data)}
-Cette zone d'atterrissage accueille les données brutes sous forme de tables miroirs des sources. Aucune transformation n'est appliquée à ce stade afin de préserver l'historique brut des opérations transactionnelles. Le mécanisme de \textbf{SAVEPOINT} SQL permet d'insérer les lignes valides tout en ignorant les lignes invalides sans interrompre le chargement.
-
-\subsection{Couche Silver (Cleansed Data)}
-La couche Silver effectue la standardisation des formats. Les opérations incluent le typage explicite des colonnes, le filtrage des doublons, la gestion des valeurs manquantes et le contrôle de l'intégrité référentielle. Chaque ligne est enrichie de deux colonnes de traçabilité : \texttt{is\_valid} (booléen) et \texttt{error\_message} (détail des anomalies).
-
-\subsection{Couche Gold (Curated Data)}
-La couche Gold constitue le niveau décisionnel final. Elle héberge un schéma en étoile (\textit{star schema}) avec des tables de dimensions et des tables de faits contenant les métriques précalculées (PNB, NIM, NPL ratio, encours).
 \end{doublespace}
 
 \section{Modèle logique de données de la couche Gold}
@@ -780,62 +709,29 @@ La couche Gold constitue le niveau décisionnel final. Elle héberge un schéma 
 La couche Gold organise les informations bancaires selon un schéma en étoile optimisé pour l'analyse décisionnelle rapide.
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\tiny,
-        table/.style={draw=darkblue, fill=darkblue!8, rounded corners=3pt,
-                      minimum width=3.2cm, text width=3cm, align=center, font=\tiny},
-        fact/.style={draw=goldcolor!80!black, fill=goldcolor!20, rounded corners=3pt,
-                     minimum width=3.2cm, text width=3cm, align=center, font=\tiny\bfseries},
-        fk/.style={-{Stealth}, gray, thick}
-    ]
-        % Tables de dimensions
-        \node[table, minimum height=1.8cm] (dc) at (-5,0) {
-            \textbf{dim\_client}\\[2pt]
-            \underline{client\_id (PK)}\\
-            nom, segment\\
-            encours\_actuel\\
-            score\_actuel, statut
-        };
-        \node[table, minimum height=1.8cm] (da) at (5,0) {
-            \textbf{dim\_agence}\\[2pt]
-            \underline{agence\_id (PK)}\\
-            nom, ville, région\\
-            directeur
-        };
-        \node[table, minimum height=1.8cm] (dd) at (0,-3.5) {
-            \textbf{dim\_date}\\[2pt]
-            \underline{date\_id (PK)}\\
-            année, mois\\
-            annee\_mois (YYYY-MM)
-        };
-        \node[table, minimum height=1.8cm] (dtc) at (0,3.5) {
-            \textbf{dim\_type\_credit}\\[2pt]
-            \underline{type\_id (PK)}\\
-            libellé, catégorie
-        };
-
-        % Table de faits centrale
-        \node[fact, minimum height=2.5cm] (fp) at (0,0) {
-            \textbf{fact\_performance}\\[2pt]
-            \underline{performance\_id (PK)}\\
-            agence\_id (FK)\\
-            date\_id (FK)\\
-            pnb, encours\_credits\\
-            npl\_ratio, nim
-        };
-
-        % Clés étrangères
-        \draw[fk] (fp.west) -- (dc.east);
-        \draw[fk] (fp.east) -- (da.west);
-        \draw[fk] (fp.south) -- (dd.north);
-        \draw[fk] (fp.north) -- (dtc.south);
-    \end{tikzpicture}
-    \caption{Modèle logique de données (schéma en étoile) de la couche Gold}
-    \label{fig:gold_data_model}
+\centering
+\fbox{
+\parbox[c][6cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Schéma en Étoile de la Couche Gold]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item \textbf{Au centre} : Table de faits \textbf{fact\_performance} (PK: \texttt{performance\_id}, FK: \texttt{agence\_id}, FK: \texttt{date\_id}, \texttt{pnb}, \texttt{encours\_credits}, \texttt{npl\_ratio}, \texttt{nim}).
+    \item \textbf{Autour (4 Dimensions reliées par des flèches)} :
+    \begin{itemize}
+        \item À gauche : \textbf{dim\_client} (PK: \texttt{client\_id}, nom, segment, encours, score).
+        \item À droite : \textbf{dim\_agence} (PK: \texttt{agence\_id}, nom, ville, région, directeur).
+        \item En haut : \textbf{dim\_type\_credit} (PK: \texttt{type\_id}, libellé, catégorie).
+        \item En bas : \textbf{dim\_date} (PK: \texttt{date\_id}, année, mois, annee\_mois).
+    \end{itemize}
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{star\_schema.png\}})}
+}
+}
+\caption{Modèle logique de données (schéma en étoile) de la couche Gold}
+\label{fig:gold_data_model}
 \end{figure}
-
-\noindent Le dictionnaire de données de la couche Gold rassemble les tables principales :
 
 \begin{table}[H]
 \centering
@@ -866,44 +762,30 @@ La couche Gold organise les informations bancaires selon un schéma en étoile o
 L'API REST est développée avec \textbf{FastAPI} et \textbf{Uvicorn}, assurant des performances élevées et une documentation automatique via Swagger UI (accessible sur \texttt{/docs}).
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        router/.style={draw=apicolor, fill=apicolor!15, rounded corners=4pt,
-                       minimum width=3cm, minimum height=0.8cm,
-                       align=center, font=\small},
-        main/.style={draw=apicolor, fill=apicolor!30, rounded corners=5pt,
-                     minimum width=3cm, minimum height=1.2cm,
-                     align=center, font=\small\bfseries},
-        arrow/.style={-{Stealth}, thick, apicolor}
-    ]
-        \node[main] (app) at (0,0) {FastAPI App\\{\footnotesize Uvicorn :8000}};
-
-        \node[router] (auth)  at (-5,-2)   {/auth\\login, refresh, me};
-        \node[router] (gold)  at (-2,-2)   {/gold\\kpis, pnb, credits};
-        \node[router] (ai)    at (1,-2)    {/ai\\ask, history, log};
-        \node[router] (admin) at (4,-2)    {/admin\\users, logs};
-
-        \foreach \r in {auth,gold,ai,admin}
-            \draw[arrow] (app.south) -- (\r.north);
-
-        \node[draw=gray, fill=gray!10, rounded corners=3pt,
-              minimum width=12cm, minimum height=0.8cm,
-              align=center, font=\small, below=2.2cm of app]
-              (mid) {Middleware JWT — \texttt{Depends(get\_current\_user)} sur toutes les routes protégées};
-
-        \draw[arrow, gray] (app.south east) -- ++(1,-0.5) -- ++(0,-1) -- (mid.north east);
-    \end{tikzpicture}
-    \caption{Architecture de l'API FastAPI avec authentification JWT}
-    \label{fig:fastapi_architecture}
-\end{figure}
-
-\noindent Le système d'authentification repose sur les tokens JWT :
+\centering
+\fbox{
+\parbox[c][5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Architecture des Routeurs FastAPI]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
 \begin{itemize}
-    \item \textbf{Login} : Vérification des identifiants (bcrypt), génération d'un access token (15 min) et refresh token (30 jours) ;
-    \item \textbf{Refresh} : Renouvellement automatique des tokens expirés sans redemander le mot de passe ;
-    \item \textbf{Protection} : Middleware FastAPI (\texttt{Depends}) pour valider le token sur chaque route protégée — une requête sans token valide reçoit une réponse \texttt{401 Unauthorized}.
+    \item Boîte principale en haut : \textbf{FastAPI Application (Port 8000)}.
+    \item 4 Routeurs branchés en dessous :
+    \begin{itemize}
+        \item \texttt{/auth} (login, refresh, me)
+        \item \texttt{/gold} (kpis, pnb, credits)
+        \item \texttt{/ai} (ask, history, logs)
+        \item \texttt{/admin} (users, audit)
+    \end{itemize}
+    \item Bandeau horizontal en dessous : \textbf{Middleware JWT \& RBAC} sécurisant les routes.
 \end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{fastapi\_routers.png\}})}
+}
+}
+\caption{Architecture de l'API FastAPI avec authentification JWT}
+\label{fig:fastapi_architecture}
+\end{figure}
 \end{doublespace}
 
 \section{Conception de l'agent IA autonome}
@@ -911,38 +793,27 @@ L'API REST est développée avec \textbf{FastAPI} et \textbf{Uvicorn}, assurant 
 L'agent intelligent est structuré selon une approche moderne de \textbf{Text-to-SQL} avec \textbf{Tool Calling}. Il évalue chaque demande, sélectionne dynamiquement l'outil approprié et interprète le résultat avant de formuler une réponse en langage naturel.
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        comp/.style={draw=aicolor, fill=aicolor!12, rounded corners=4pt,
-                     minimum width=3.5cm, minimum height=1cm,
-                     align=center, font=\small},
-        arrow/.style={-{Stealth}, thick, aicolor}
-    ]
-        \node[comp] (question) at (0,0)    {Question utilisateur};
-        \node[comp, fill=goldcolor!20, draw=goldcolor!80!black]
-              (cache) at (0,-1.6)  {Cache intelligent\\{\footnotesize TTL 5 min, clé MD5}};
-        \node[comp] (tc)     at (0,-3.2)   {Tool Calling\\{\footnotesize sélection de l'outil}};
-        \node[comp] (sql)    at (-3.5,-4.8) {Text-to-SQL\\{\footnotesize LLM Groq}};
-        \node[comp] (rag)    at (3.5,-4.8)  {RAG Documentaire\\{\footnotesize pgvector HNSW}};
-        \node[comp, fill=red!10, draw=red!50] (guard) at (-3.5,-6.4) {Garde-fou SQL\\{\footnotesize 4 défenses}};
-        \node[comp] (exec)   at (-3.5,-8.0) {Exécution\\{\footnotesize PostgreSQL READ ONLY}};
-        \node[comp] (format) at (0,-9.6)   {Formatage réponse\\{\footnotesize 2e appel LLM}};
-
-        \draw[arrow] (question) -- (cache);
-        \draw[arrow] (cache) -- node[right,font=\tiny]{cache miss} (tc);
-        \draw[arrow, goldcolor!80!black, bend right=30] (cache.east)
-              to node[right,font=\tiny]{cache hit} ++(2.5,0)
-              |- (format.east);
-        \draw[arrow] (tc) -- (sql);
-        \draw[arrow] (tc) -- (rag);
-        \draw[arrow] (sql) -- (guard);
-        \draw[arrow] (guard) -- node[right,font=\tiny]{SQL valide} (exec);
-        \draw[arrow] (exec) -- (format);
-        \draw[arrow] (rag) -- ++(0,-4.8) -- (format);
-    \end{tikzpicture}
-    \caption{Architecture de l'Agent IA avec Tool Calling, Cache et RAG}
-    \label{fig:ai_agent_architecture}
+\centering
+\fbox{
+\parbox[c][5.5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [SCHÉMA EXCALIDRAW : Moteur de Décision de l'Agent IA]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw :}
+\begin{itemize}
+    \item Flux vertical : \textbf{Question Utilisateur} $\rightarrow$ \textbf{Vérification Cache MD5 (TTL 5 min)}.
+    \item En cas de Cache Miss : \textbf{Module Tool Calling} orientant vers soit :
+    \begin{itemize}
+        \item \textit{Branche A (Text-to-SQL)} : LLM Groq $\rightarrow$ Garde-Fou SQL $\rightarrow$ PostgreSQL.
+        \item \textit{Branche B (RAG Documentaire)} : Recherche vectorielle dictionnaire de données.
+    \end{itemize}
+    \item Les deux branches convergent vers : \textbf{Formatage de la réponse en français \& Graphiques}.
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{ai\_agent\_flow.png\}})}
+}
+}
+\caption{Architecture de l'Agent IA avec Tool Calling, Cache et RAG}
+\label{fig:ai_agent_architecture}
 \end{figure}
 \end{doublespace}
 
@@ -1008,56 +879,9 @@ Le système intègre des fonctionnalités d'export professionnel pour la génér
 \end{itemize}
 \end{doublespace}
 
-\section{Interface utilisateur Vanilla JS}
-\begin{doublespace}
-L'interface frontend est développée en \textbf{Vanilla JavaScript} (Single Page Application) sans framework lourd, assurant légèreté, rapidité de chargement et absence de dépendances tierces.
-
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        font=\small,
-        module/.style={draw=frontcolor!80!black, fill=frontcolor!15, rounded corners=4pt,
-                       minimum width=3cm, minimum height=1cm,
-                       align=center, font=\small},
-        arrow/.style={-{Stealth}, thick, frontcolor!80!black}
-    ]
-        \node[module, minimum width=12cm, minimum height=0.9cm,
-              fill=frontcolor!30, draw=frontcolor] (main) at (0,0)
-              {Portail Saham — \texttt{index.html} (SPA Vanilla JS)};
-
-        \node[module] (dash)  at (-5,-2)   {Dashboard\\KPIs + graphiques};
-        \node[module] (chat)  at (-1.5,-2) {SahamAI\\Chatbot IA};
-        \node[module] (exp)   at (2,-2)    {Export\\PDF + Excel};
-        \node[module] (admin) at (5.5,-2)  {Admin\\Console};
-
-        \foreach \m in {dash,chat,exp,admin}
-            \draw[arrow] (main.south) -- (\m.north);
-
-        \node[draw=apicolor, fill=apicolor!10, rounded corners=4pt,
-              minimum width=12cm, minimum height=0.9cm,
-              align=center, font=\small, below=1.8cm of main]
-              (api) {API FastAPI — \texttt{http://[host]:8000} — endpoints /gold, /ai, /auth};
-
-        \foreach \m in {dash,chat,exp,admin}
-            \draw[arrow, dashed] (\m.south) |- (api.north);
-    \end{tikzpicture}
-    \caption{Architecture de l'interface utilisateur Vanilla JS}
-    \label{fig:frontend_architecture}
-\end{figure}
-
-\noindent Les composants frontend incluent :
-\begin{itemize}
-    \item \textbf{Tableau de bord principal} : Vue synthétique avec KPIs principaux (PNB, encours, NPL, satisfaction) et graphiques dynamiques (barres, courbes, camemberts) ;
-    \item \textbf{Chatbot SahamAI} : Interface conversationnelle avec suggestions de questions et historique des discussions ;
-    \item \textbf{Module PNB Commercial} : Graphiques filtrables par année, mois et jour avec bandeau de filtres actifs ;
-    \item \textbf{Admin Console} : Interface d'administration pour la gestion des utilisateurs et l'audit des requêtes SQL générées ;
-    \item \textbf{Boutons d'export} : Interface pour générer des rapports PDF et Excel à partir de l'historique de chat.
-\end{itemize}
-\end{doublespace}
-
 \section{Conclusion}
 \begin{doublespace}
-L'architecture technique combine la rigueur du pipeline Medallion, l'agilité de l'Agent IA autonome, la robustesse de l'API FastAPI et la richesse de l'interface Vanilla JS. Chaque couche est clairement définie, testable et indépendante, conformément aux exigences de maintenabilité et de scalabilité fixées. Le chapitre suivant présente la mise en œuvre pratique et les résultats obtenus.
+L'architecture technique combine la rigueur du pipeline Medallion, l'agilité de l'Agent IA autonome, la robustesse de l'API FastAPI et la richesse de l'interface Vanilla JS. Chaque couche est clairement définie, testable et indépendante. Le chapitre suivant présente la mise en œuvre pratique et les résultats obtenus.
 \end{doublespace}
 
 % ==============================================================================
@@ -1117,44 +941,11 @@ services:
 volumes:
   pgdata:
 \end{lstlisting}
-
-\noindent L'architecture Docker Compose déploie trois services interdépendants : la base PostgreSQL (\texttt{db}), l'API FastAPI (\texttt{api}) et le serveur web Nginx servant le frontend (\texttt{web}). Le mécanisme \texttt{healthcheck} garantit que l'API ne démarre qu'une fois la base de données pleinement opérationnelle.
 \end{doublespace}
 
 \section{Implémentation des pipelines Data Engineering}
 \begin{doublespace}
 Le pipeline ETL est orchestré par \texttt{run\_pipeline.py} et suit le flux Bronze $\rightarrow$ Silver $\rightarrow$ Gold de façon idempotente (relançable sans doublons).
-
-\begin{lstlisting}[language=python, caption={Transformation Gold : construction de la table de faits performance}]
-def build_fact_performance(self, dim_agences, dim_dates):
-    engagements = self._fetch_silver("silver_engagements")
-    rows = []
-    for am in sorted(set(d["annee_mois"] for d in dim_dates)):
-        yr, mo = int(am.split("-")[0]), int(am.split("-")[1])
-        date_id = yr * 10000 + mo * 100 + 1
-        season = SEASONAL_PNB.get(mo, 1.0)     # saisonnalite bancaire
-
-        for aid in [a["agence_id"] for a in dim_agences]:
-            ag_eng = [e for e in engagements if e.get("agence_id") == aid]
-            total_credits = sum(float(e.get("montant") or 0) for e in ag_eng)
-
-            # PNB = 3.5% de marge * coefficient saisonnier + bruit aleatoire
-            base_pnb = total_credits * 0.035 * season
-            pnb = round(base_pnb + base_pnb * random.uniform(-0.05, 0.05), 2)
-
-            rows.append({
-                "performance_id": f"PERF-{aid}-{am}",
-                "agence_id": aid,
-                "date_id": date_id,
-                "pnb": pnb,
-                "encours_credits": round(total_credits, 2),
-                "npl_ratio": round((npl_total / total_credits * 100) if total_credits > 0 else 0, 2),
-                "nim": round(total_credits * 0.045 * season, 2),
-            })
-    return rows
-\end{lstlisting}
-
-\noindent Le résultat typique d'un cycle ETL complet est le suivant :
 
 \begin{table}[H]
 \centering
@@ -1178,210 +969,58 @@ def build_fact_performance(self, dim_agences, dim_dates):
 \end{table}
 \end{doublespace}
 
-\section{Implémentation de l'API FastAPI et authentification JWT}
-\begin{doublespace}
-L'API FastAPI structure les endpoints fonctionnels avec protection JWT sur toutes les routes sensibles.
-
-\begin{lstlisting}[language=python, caption={Authentification JWT : création et vérification des tokens}]
-from fastapi import FastAPI, Depends
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def create_access_token(data: dict) -> str:
-    to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=15)
-    to_encode.update({"exp": expire, "type": "access"})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
-
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=401,
-        detail="Impossible de valider les identifiants"
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        user_id: str = payload.get("sub")
-        if user_id is None or payload.get("type") != "access":
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    user = get_user_by_id(user_id)
-    if user is None:
-        raise credentials_exception
-    return user
-\end{lstlisting}
-\end{doublespace}
-
-\section{Implémentation de l'Agent IA et du système de cache}
-\begin{doublespace}
-L'agent IA exploite le module Text-to-SQL avec le LLM Groq et un système de cache intelligent pour optimiser les performances sur les requêtes fréquentes.
-
-\begin{lstlisting}[language=python, caption={Système de cache intelligent avec TTL de 5 minutes}]
-_response_cache: Dict[str, Any] = {}
-_cache_ttl = 300  # 5 minutes
-
-def _get_cache_key(question: str, user_id: int) -> str:
-    """Cle de cache : hachage MD5 de (user_id + question normalisee)."""
-    key_str = f"{user_id}:{question.lower().strip()}"
-    return hashlib.md5(key_str.encode()).hexdigest()
-
-def _get_from_cache(cache_key: str) -> Optional[Dict[str, Any]]:
-    """Retourne la reponse mise en cache si encore valide."""
-    if cache_key in _response_cache:
-        cached = _response_cache[cache_key]
-        if time.time() - cached["timestamp"] < _cache_ttl:
-            return cached["response"]
-        del _response_cache[cache_key]   # expiration
-    return None
-\end{lstlisting}
-
-\begin{lstlisting}[language=python, caption={Tool Calling : outil de calcul de KPIs bancaires}]
-class ToolCallHandler:
-    def __init__(self, db: Session):
-        self.db = db
-        self.tools = {
-            "kpi_calculator":   self._kpi_calculator_tool,
-            "ranking_tool":     self._ranking_tool,
-            "trend_analyzer":   self._trend_analyzer_tool,
-            "comparison_tool":  self._comparison_tool,
-        }
-
-    def _kpi_calculator_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
-        kpi_queries = {
-            "pnb_total":    "SELECT COALESCE(SUM(pnb), 0) FROM fact_performance",
-            "npl_average":  "SELECT ROUND(AVG(npl_ratio), 2) FROM fact_performance",
-            "nim_average":  "SELECT ROUND(AVG(nim), 2) FROM fact_performance",
-        }
-        kpi_type = params.get("kpi_type", "")
-        if kpi_type not in kpi_queries:
-            return {"error": f"KPI inconnu : {kpi_type}"}
-        columns, rows = execute_read_only_sql(kpi_queries[kpi_type])
-        return {"success": True, "kpi_type": kpi_type, "value": rows[0][0]}
-\end{lstlisting}
-\end{doublespace}
-
-\section{Implémentation des fonctionnalités d'export professionnel}
-\begin{doublespace}
-Les fonctionnalités d'export utilisent \texttt{ReportLab} pour la génération PDF et \texttt{openpyxl} pour l'export Excel.
-
-\begin{lstlisting}[language=python, caption={Génération de rapport PDF professionnel avec ReportLab}]
-@router.post("/export/pdf")
-async def export_pdf(body: ExportRequest, user=Depends(get_current_user)):
-    """Genere un rapport PDF professionnel depuis l'historique de chat."""
-    from reportlab.lib.pagesizes import A4
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Table
-
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4)
-    story = []
-    story.append(Paragraph("SAHAM BANK — Rapport Analytique", title_style))
-    story.append(Paragraph(
-        f"Genere le {datetime.now().strftime('%d/%m/%Y')}", normal_style))
-
-    for msg in body.chat_history:
-        if msg.get('role') == 'user':
-            story.append(Paragraph(f"Question : {msg['content']}", heading_style))
-        elif msg.get('role') == 'assistant':
-            story.append(Paragraph(msg['content'], normal_style))
-            if msg.get('data', {}).get('rows'):
-                data = msg['data']
-                table_data = [data['columns']] + data['rows']
-                story.append(Table(table_data))
-
-    doc.build(story)
-    buffer.seek(0)
-    return StreamingResponse(buffer, media_type="application/pdf",
-        headers={"Content-Disposition": "attachment; filename=rapport_saham.pdf"})
-\end{lstlisting}
-\end{doublespace}
-
 \section{Présentation des interfaces utilisateur du portail}
 \begin{doublespace}
 L'interface web unifie les visualisations analytiques et l'assistant conversationnel dans un portail cohérent et intuitif.
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[font=\small]
-        % Maquette tableau de bord
-        \draw[darkblue, fill=darkblue!5, rounded corners=5pt, thick]
-              (0,0) rectangle (13,7.5);
-        \draw[darkblue!30, fill=darkblue!20]
-              (0,6.5) rectangle (13,7.5);
-        \node[font=\small\bfseries, text=white] at (6.5,7) 
-              {SAHAM BANK ANALYTICS PORTAL};
-        % KPIs
-        \foreach \x/\label/\val in {
-            1.2/PNB Total/35,98 M,
-            4.2/Encours/2,1 Md,
-            7.2/NPL Moyen/4,2\%,
-            10.2/Satisfaction/72/100
-        }{
-            \draw[goldcolor!70!black, fill=goldcolor!10, rounded corners=3pt]
-                  (\x-0.9,4.7) rectangle (\x+0.9,6.2);
-            \node[font=\tiny, text=gray] at (\x, 5.9) {\label};
-            \node[font=\footnotesize\bfseries, text=darkblue] at (\x, 5.4) {\val};
-        }
-        % Graphiques simulés
-        \draw[apicolor!40, fill=apicolor!10, rounded corners=3pt]
-              (0.2,0.2) rectangle (6.2,4.4);
-        \node[font=\tiny, text=gray] at (3.2,4.1) {Évolution PNB mensuelle};
-        \foreach \x/\h in {0.8/1.5, 1.5/2.2, 2.2/1.8, 2.9/2.8,
-                            3.6/2.4, 4.3/3.1, 5.0/2.6, 5.7/3.4}
-            \draw[apicolor!60, fill=apicolor!40]
-                  (\x,0.3) rectangle (\x+0.5,\h);
-        \draw[frontcolor!40, fill=frontcolor!10, rounded corners=3pt]
-              (6.5,0.2) rectangle (12.8,4.4);
-        \node[font=\tiny, text=gray] at (9.6,4.1) {Répartition crédits par type};
-        \draw[frontcolor!60, fill=frontcolor!30] (9.65,2.3) circle(1.8cm);
-    \end{tikzpicture}
-    \caption{Vue générale du tableau de bord analytique du Portail Saham (maquette)}
-    \label{fig:ui_dashboard}
+\centering
+\fbox{
+\parbox[c][5.5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [CAPTURE D'ÉCRAN / EXCALIDRAW : Tableau de Bord Analytique]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw ou capture d'écran :}
+\begin{itemize}
+    \item Barre supérieure avec le logo Saham et le titre \textit{« SAHAM BANK ANALYTICS PORTAL »}.
+    \item 4 Cartes d'indicateurs (KPIs) :
+    \begin{itemize}
+        \item PNB Total : \textbf{35,98 M MAD}
+        \item Encours Crédits : \textbf{2,1 Md MAD}
+        \item Taux NPL Moyen : \textbf{4,2\%}
+        \item Satisfaction Client : \textbf{72 / 100}
+    \end{itemize}
+    \item Deux graphiques principaux : Courbe d'évolution mensuelle du PNB et Diagramme circulaire de répartition des crédits.
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{ui\_dashboard.png\}})}
+}
+}
+\caption{Vue générale du tableau de bord analytique du Portail Saham}
+\label{fig:ui_dashboard}
 \end{figure}
 
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[font=\small]
-        % Interface chatbot
-        \draw[darkblue, fill=darkblue!5, rounded corners=5pt, thick]
-              (0,0) rectangle (13,7.5);
-        \draw[darkblue!30, fill=darkblue!20]
-              (0,6.5) rectangle (13,7.5);
-        \node[font=\small\bfseries, text=white] at (6.5,7)
-              {SahamAI — Assistant IA Conversationnel};
-        % Bulles de chat
-        \draw[gray!30, fill=gray!10, rounded corners=5pt]
-              (0.3,5.2) rectangle (7.5,6.2);
-        \node[font=\tiny, text=gray, align=left] at (3.9,5.7)
-              {Quel est le PNB total de la banque ?};
-        \draw[darkblue!20, fill=darkblue!10, rounded corners=5pt]
-              (5.5,3.5) rectangle (12.7,5.0);
-        \node[font=\tiny, text=darkblue, align=left] at (9.1,4.25)
-              {Le PNB total de Saham Bank s'élève à\\
-               \textbf{35 983 057,16 MAD} (35,98 M) pour\\
-               l'ensemble des agences sur la période.};
-        % Suggestions
-        \node[font=\tiny\bfseries, text=gray] at (2,3.0)
-              {Suggestions :};
-        \foreach \y/\q in {
-            2.4/Agences avec NPL le plus élevé,
-            1.9/Évolution PNB mensuelle 2026,
-            1.4/Clients à risque par segment
-        }
-            \draw[apicolor!40, fill=apicolor!8, rounded corners=3pt]
-                  (0.3,\y-0.25) rectangle (6.5,\y+0.25)
-                  node[midway,font=\tiny,text=apicolor] {\q};
-        % Barre de saisie
-        \draw[gray!50, rounded corners=3pt]
-              (0.3,0.3) rectangle (11.0,0.9);
-        \node[font=\tiny, text=gray] at (3,0.6) {Posez votre question...};
-        \draw[darkblue, fill=darkblue, rounded corners=3pt]
-              (11.2,0.3) rectangle (12.7,0.9);
-        \node[font=\tiny, text=white] at (11.95,0.6) {Envoyer};
-    \end{tikzpicture}
-    \caption{Interface de dialogue avec l'Agent IA conversationnel SahamAI (maquette)}
-    \label{fig:ui_chatbot}
+\centering
+\fbox{
+\parbox[c][5.5cm][c]{0.88\textwidth}{
+\centering
+\textbf{\large [CAPTURE D'ÉCRAN / EXCALIDRAW : Interface du Chatbot SahamAI]}\\[0.3cm]
+\small
+\textbf{Instructions pour votre dessin sur Excalidraw ou capture d'écran :}
+\begin{itemize}
+    \item Fenêtre de discussion avec bulles de conversation :
+    \begin{itemize}
+        \item Question utilisateur : \textit{« Quel est le PNB total de la banque ? »}
+        \item Réponse de SahamAI : Texte d'explication chiffré + Tableau récapitulatif.
+    \end{itemize}
+    \item Boutons de suggestions de questions en bas (\textit{« Top agences NPL », « Évolution PNB 2026 »}).
+    \item Barre de saisie en bas avec bouton d'envoi et bouton d'export PDF.
+\end{itemize}
+\textit{\footnotesize (Pour insérer votre image : \texttt{\textbackslash includegraphics[width=0.85\textbackslash textwidth]\{ui\_chatbot.png\}})}
+}
+}
+\caption{Interface de dialogue avec l'Agent IA conversationnel SahamAI}
+\label{fig:ui_chatbot}
 \end{figure}
 \end{doublespace}
 
@@ -1402,46 +1041,8 @@ L'implémentation a permis de valider la faisabilité technique de la solution. 
 Ce chapitre présente la stratégie de tests mise en place, les résultats des tests unitaires et d'intégration, ainsi que la validation fonctionnelle et sécuritaire de l'ensemble de la plateforme.
 \end{doublespace}
 
-\section{Stratégie de tests}
+\section{Stratégie de tests et résultats}
 \begin{doublespace}
-La stratégie de tests couvre plusieurs niveaux pour garantir la qualité du système :
-\begin{itemize}
-    \item \textbf{Tests unitaires} : Validation des composants individuels (fonctions de transformation ETL, validateurs SQL, fonctions JWT) ;
-    \item \textbf{Tests d'intégration} : Validation des interactions entre composants (API $\leftrightarrow$ Base de données) ;
-    \item \textbf{Tests fonctionnels} : Validation des scénarios utilisateurs complets (login, chatbot, export) ;
-    \item \textbf{Tests de performance} : Validation des temps de réponse sous charge ;
-    \item \textbf{Tests de sécurité} : Validation des défenses contre les injections SQL et les accès non autorisés.
-\end{itemize}
-
-\noindent L'outil utilisé est \textbf{pytest} avec le TestClient FastAPI, qui permet de tester les routes de l'API sans démarrer de serveur réel. Une fixture \texttt{conftest.py} centralise la connexion à la base de données et les comptes de démonstration.
-\end{doublespace}
-
-\section{Tests unitaires}
-\begin{doublespace}
-Les tests unitaires sont développés avec pytest et couvrent les modules critiques du système.
-
-\begin{lstlisting}[language=python, caption={Tests unitaires du validateur SQL}]
-def test_check_sql_safety_select_allowed():
-    """Une requete SELECT valide doit passer sans exception."""
-    sql = "SELECT * FROM fact_performance LIMIT 10"
-    try:
-        _check_sql_safety(sql)
-    except ValueError:
-        pytest.fail("Requete SELECT valide rejetee par erreur")
-
-def test_check_sql_safety_delete_blocked():
-    """Une requete DELETE doit etre bloquee."""
-    sql = "DELETE FROM fact_performance WHERE id = 1"
-    with pytest.raises(ValueError, match="SQL interdit"):
-        _check_sql_safety(sql)
-
-def test_check_sql_safety_drop_blocked():
-    """Une requete DROP doit etre bloquee."""
-    sql = "DROP TABLE fact_performance"
-    with pytest.raises(ValueError, match="SQL interdit"):
-        _check_sql_safety(sql)
-\end{lstlisting}
-
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{4cm}|p{3cm}|p{3cm}|p{3cm}|}
@@ -1464,91 +1065,6 @@ def test_check_sql_safety_drop_blocked():
 \caption{Résultats des tests unitaires (pytest)}
 \label{tab:unit_tests}
 \end{table}
-\end{doublespace}
-
-\section{Tests d'intégration}
-\begin{doublespace}
-Les tests d'intégration valident les interactions entre les différents composants du système.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|p{5cm}|p{3cm}|p{3cm}|p{2cm}|}
-    \hline
-    \textbf{Scénario} & \textbf{Attendu} & \textbf{Obtenu} & \textbf{Statut} \\
-    \hline
-    Connexion PostgreSQL & Connexion réussie & Connexion réussie & $\checkmark$ \\
-    \hline
-    Pipeline Bronze $\rightarrow$ Silver & Données nettoyées & Données nettoyées & $\checkmark$ \\
-    \hline
-    Pipeline Silver $\rightarrow$ Gold & Agrégations calculées & Agrégations calculées & $\checkmark$ \\
-    \hline
-    Authentification JWT & Token généré & Token généré & $\checkmark$ \\
-    \hline
-    API $\rightarrow$ Base de données & Requêtes exécutées & Requêtes exécutées & $\checkmark$ \\
-    \hline
-    Cache $\rightarrow$ Réponse & $<$ 50 ms & 42 ms & $\checkmark$ \\
-    \hline
-\end{tabular}
-\caption{Résultats des tests d'intégration}
-\label{tab:integration_tests}
-\end{table}
-\end{doublespace}
-
-\section{Tests fonctionnels}
-\begin{doublespace}
-\begin{table}[H]
-\centering
-\begin{tabular}{|p{4.5cm}|p{2.5cm}|p{4cm}|p{2cm}|}
-    \hline
-    \textbf{Scénario utilisateur} & \textbf{Utilisateur} & \textbf{Résultat} & \textbf{Statut} \\
-    \hline
-    Login avec identifiants valides & DG & Connexion réussie & $\checkmark$ \\
-    \hline
-    Interrogation PNB en langage naturel & DR & Réponse SQL correcte & $\checkmark$ \\
-    \hline
-    Génération de rapport PDF & CA & PDF généré avec succès & $\checkmark$ \\
-    \hline
-    Export Excel des données & AR & Excel généré avec succès & $\checkmark$ \\
-    \hline
-    Accès non autorisé (mauvais rôle) & Admin & Accès refusé (403) & $\checkmark$ \\
-    \hline
-    Question SQL malveillante (DELETE) & DG & Requête bloquée & $\checkmark$ \\
-    \hline
-\end{tabular}
-\caption{Résultats des tests fonctionnels}
-\label{tab:functional_tests}
-\end{table}
-\end{doublespace}
-
-\section{Tests de performance}
-\begin{doublespace}
-\begin{table}[H]
-\centering
-\begin{tabular}{|p{4.5cm}|p{3cm}|p{3cm}|p{2cm}|}
-    \hline
-    \textbf{Opération} & \textbf{Objectif} & \textbf{Temps mesuré} & \textbf{Statut} \\
-    \hline
-    Connexion PostgreSQL & $<$ 100 ms & 45 ms & $\checkmark$ \\
-    \hline
-    Authentification JWT & $<$ 200 ms & 120 ms & $\checkmark$ \\
-    \hline
-    Text-to-SQL (sans cache) & $<$ 3 000 ms & 1 850 ms & $\checkmark$ \\
-    \hline
-    Text-to-SQL (avec cache) & $<$ 100 ms & 42 ms & $\checkmark$ \\
-    \hline
-    Génération PDF & $<$ 5 000 ms & 3 200 ms & $\checkmark$ \\
-    \hline
-    Export Excel & $<$ 3 000 ms & 2 100 ms & $\checkmark$ \\
-    \hline
-\end{tabular}
-\caption{Résultats des tests de performance}
-\label{tab:performance_tests}
-\end{table}
-\end{doublespace}
-
-\section{Validation de la sécurité}
-\begin{doublespace}
-Huit attaques SQL ont été simulées manuellement pour valider l'efficacité des défenses mises en place. Toutes ont été bloquées.
 
 \begin{table}[H]
 \centering
@@ -1580,7 +1096,7 @@ Huit attaques SQL ont été simulées manuellement pour valider l'efficacité de
 
 \section{Conclusion}
 \begin{doublespace}
-Les tests ont démontré la robustesse du système avec un taux de réussite de 94\% pour les tests unitaires et 100\% pour les tests d'intégration, fonctionnels et de sécurité. Les performances sont conformes aux exigences non fonctionnelles définies en début de projet. La couverture de tests constitue une garantie de qualité pour les évolutions futures du système.
+Les tests ont démontré la robustesse du système avec un taux de réussite de 94\% pour les tests unitaires et 100\% pour les tests d'intégration, fonctionnels et de sécurité. Les performances sont conformes aux exigences non fonctionnelles définies en début de projet.
 \end{doublespace}
 
 % ==============================================================================
@@ -1598,13 +1114,6 @@ Ce chapitre présente le guide d'utilisation de la plateforme Saham Analytics, d
 \section{Première connexion et authentification}
 \begin{doublespace}
 L'accès à la plateforme nécessite une authentification sécurisée via JWT.
-
-\begin{enumerate}
-    \item Ouvrir le navigateur et accéder à l'URL du portail (locale ou en ligne) ;
-    \item Sélectionner le profil de connexion (DG, DR, CA, AR, Admin) ;
-    \item Le système authentifie l'utilisateur via le backend FastAPI (vérification bcrypt) ;
-    \item En cas de succès, un \textit{access token} (15 min) et un \textit{refresh token} (30 jours) sont générés et stockés localement.
-\end{enumerate}
 
 \begin{table}[H]
 \centering
@@ -1628,63 +1137,14 @@ L'accès à la plateforme nécessite une authentification sécurisée via JWT.
 \end{table}
 \end{doublespace}
 
-\section{Tableau de bord principal}
+\section{Tableau de bord et Chatbot SahamAI}
 \begin{doublespace}
-Le tableau de bord principal présente une vue synthétique des indicateurs clés en temps réel :
-\begin{itemize}
-    \item \textbf{KPIs principaux} : PNB total, encours crédits, NPL moyen, satisfaction client (données réelles depuis la couche Gold) ;
-    \item \textbf{Graphiques dynamiques} : Évolution temporelle du PNB, répartition géographique, performance par agence ;
-    \item \textbf{Filtres} : Sélection par période (année/mois/jour), région et agence ;
-    \item \textbf{Module PNB Commercial} : Vue analytique avancée avec sélecteur d'année et filtres combinables.
-\end{itemize}
-\end{doublespace}
-
-\section{Utilisation du chatbot SahamAI}
-\begin{doublespace}
-Le chatbot SahamAI permet d'interroger les données en langage naturel sans aucune connaissance SQL :
-
-\begin{enumerate}
-    \item Cliquer sur l'icône du chatbot ou accéder à l'onglet SahamAI ;
-    \item Poser une question en français ou cliquer sur une suggestion ;
-    \item L'agent génère automatiquement la requête SQL, l'exécute et formule une réponse ;
-    \item Les réponses incluent des graphiques lorsque les données s'y prêtent ;
-    \item L'historique des conversations est consultable via le bouton dédié.
-\end{enumerate}
-
-\textbf{Exemples de questions :}
-\begin{itemize}
-    \item « Quel est le PNB total de la banque ? »
-    \item « Quelles sont les agences avec le plus fort taux de NPL ? »
-    \item « Évolution du PNB mensuel en 2026 »
-    \item « Combien de clients sont en situation de défaut ? »
-    \item « Répartition des crédits par type de financement »
-\end{itemize}
-\end{doublespace}
-
-\section{Export professionnel PDF et Excel}
-\begin{doublespace}
-\begin{enumerate}
-    \item Après une session de chat, cliquer sur le bouton \textbf{Exporter PDF} ;
-    \item Le système génère un rapport professionnel incluant : en-tête Saham Bank, questions et réponses de la session, tableaux de données ;
-    \item Le fichier PDF est téléchargé automatiquement ;
-    \item Pour l'export Excel, utiliser le bouton \textbf{Exporter Excel} pour récupérer les données brutes au format \texttt{.xlsx}.
-\end{enumerate}
-\end{doublespace}
-
-\section{Console d'administration}
-\begin{doublespace}
-La console d'administration (réservée au profil Admin) permet de :
-\begin{itemize}
-    \item Gérer les utilisateurs (création, modification, activation/désactivation) ;
-    \item Configurer les rôles et permissions d'accès ;
-    \item Consulter les logs d'audit des requêtes IA (question, SQL exact, durée, utilisateur) ;
-    \item Superviser l'état du système et les performances.
-\end{itemize}
+Le tableau de bord principal présente une vue synthétique des indicateurs clés en temps réel (PNB total, encours crédits, NPL moyen, satisfaction client). Le chatbot SahamAI permet d'interroger les données en langage naturel sans aucune connaissance SQL.
 \end{doublespace}
 
 \section{Conclusion}
 \begin{doublespace}
-Ce guide utilisateur présente l'ensemble des fonctionnalités de la plateforme Saham Analytics. L'interface intuitive et les capacités d'analyse en langage naturel de l'agent SahamAI rendent l'outil accessible aux décideurs non techniques, tout en offrant des fonctionnalités avancées d'export et d'administration pour les équipes IT.
+Ce guide utilisateur présente l'ensemble des fonctionnalités de la plateforme Saham Analytics. L'interface intuitive et les capacités d'analyse en langage naturel de l'agent SahamAI rendent l'outil accessible aux décideurs non techniques.
 \end{doublespace}
 
 % ==============================================================================
@@ -1709,19 +1169,14 @@ Ce guide utilisateur présente l'ensemble des fonctionnalités de la plateforme 
     \item L'\textbf{interface Vanilla JS} offrant une expérience utilisateur riche sans dépendances lourdes.
 \end{enumerate}
 
-\noindent Ce travail a également été l'occasion d'approfondir des concepts avancés de Data Engineering (architecture Medallion, ETL idempotent, star schema) et d'AI Engineering (Text-to-SQL, RAG hybride, dégradation gracieuse, sécurité SQL).
-
 \noindent Plusieurs perspectives peuvent prolonger et enrichir ce travail :
 \begin{itemize}
     \item Déployer un orchestrateur de flux tel qu'\textbf{Apache Airflow} pour planifier les exécutions quotidiennes des pipelines Silver et Gold à grande échelle ;
-    \item Exploiter pleinement l'extension \textbf{pgvector} dans PostgreSQL pour centraliser les représentations vectorielles du module RAG et améliorer la pertinence des réponses documentaires ;
+    \item Exploiter pleinement l'extension \textbf{pgvector} dans PostgreSQL pour centraliser les représentations vectorielles du module RAG ;
     \item Mettre en place un cadre de \textbf{benchmarking automatisé} pour mesurer la précision des requêtes générées par l'agent IA (\textit{text-to-SQL accuracy}) ;
-    \item Intégrer des \textbf{alertes en temps réel} pour les dépassements de seuils de risque (NPL critique, encours anormal) ;
-    \item Développer une \textbf{application mobile} pour l'accès aux indicateurs en situation de déplacement ;
-    \item Étendre le système de Tool Calling avec des \textbf{connecteurs vers d'autres sources de données} (Salesforce CRM, fichiers Excel des agences).
+    \item Intégrer des \textbf{alertes en temps réel} pour les dépassements de seuils de risque ;
+    \item Développer une \textbf{application mobile} pour l'accès aux indicateurs en situation de déplacement.
 \end{itemize}
-
-\noindent En conclusion, ce projet illustre concrètement comment les technologies modernes de Data Engineering et d'Intelligence Artificielle peuvent transformer la façon dont une organisation financière accède à ses données et prend ses décisions stratégiques.
 \end{doublespace}
 
 % ==============================================================================
