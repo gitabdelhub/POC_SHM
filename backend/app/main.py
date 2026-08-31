@@ -33,26 +33,42 @@ app.add_middleware(
 
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
-logger.add(
-    settings.LOG_FILE,
-    rotation="500 MB",
-    retention="10 days",
-    level=settings.LOG_LEVEL
-)
+try:
+    logger.add(
+        settings.LOG_FILE,
+        rotation="500 MB",
+        retention="10 days",
+        level=settings.LOG_LEVEL
+    )
+except Exception:
+    pass
 
 
 @app.on_event("startup")
 async def startup_event():
     logger.info("Démarrage de l'application Saham Bank API")
-    init_db()
-    start_scheduler()
+    try:
+        init_db()
+    except Exception as e:
+        logger.warning(f"init_db bypass: {e}")
+    try:
+        if settings.ETL_SCHEDULER_ENABLED:
+            start_scheduler()
+    except Exception as e:
+        logger.warning(f"scheduler bypass: {e}")
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
     logger.info("Arrêt de l'application")
-    stop_scheduler()
-    engine.dispose()
+    try:
+        stop_scheduler()
+    except Exception:
+        pass
+    try:
+        engine.dispose()
+    except Exception:
+        pass
 
 
 @app.get("/")
