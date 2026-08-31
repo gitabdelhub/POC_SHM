@@ -1,12 +1,10 @@
 {
-  "rewrites": [
+  "version": 2,
+  "public": true,
+  "routes": [
     {
-      "source": "/(api|auth|gold|ai|agences|clients|engagements|etl|docs|test)(.*)",
-      "destination": "/api/index.py"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/$1"
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
     }
   ]
 }
