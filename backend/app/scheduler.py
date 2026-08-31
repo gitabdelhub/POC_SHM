@@ -14,7 +14,10 @@ Usage (déclencher manuellement depuis le code) :
 
 import logging
 
-from apscheduler.schedulers.background import BackgroundScheduler
+try:
+    from apscheduler.schedulers.background import BackgroundScheduler
+except ImportError:
+    BackgroundScheduler = None
 
 from app.config import settings
 from etl.run_pipeline import run_all
