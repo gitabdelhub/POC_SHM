@@ -1,8 +1,10 @@
 #!/bin/sh
 set -e
 
-echo "==> Attente de PostgreSQL (${DB_HOST:-db}:${DB_PORT:-5432})..."
-until python -c "
+# Si DB_HOST est renseigné, on attend le port
+if [ -n "$DB_HOST" ]; then
+  echo "==> Attente de PostgreSQL ($DB_HOST:${DB_PORT:-5432})..."
+  until python -c "
 import os, socket, sys
 host = os.environ.get('DB_HOST', 'db')
 port = int(os.environ.get('DB_PORT', '5432'))
@@ -13,10 +15,11 @@ try:
 except Exception:
     sys.exit(1)
 "; do
-  echo "==> PostgreSQL pas encore prêt, nouvelle tentative dans 2s..."
-  sleep 2
-done
-echo "==> PostgreSQL prêt."
+    echo "==> PostgreSQL pas encore prêt, nouvelle tentative dans 2s..."
+    sleep 2
+  done
+  echo "==> PostgreSQL prêt."
+fi
 
 echo "==> Création des tables applicatives (init_db)..." ; python -c "import app.models; from app.database import init_db; init_db()"
 
@@ -25,12 +28,15 @@ echo "==> Vérification de la présence des données GOLD..."
 NEED_ETL=$(python -c "
 from sqlalchemy import text
 from app.database import engine
-with engine.connect() as conn:
-    exists = conn.execute(text(\"SELECT to_regclass('public.fact_engagement') IS NOT NULL\")).scalar()
-    rows = 0
-    if exists:
-        rows = conn.execute(text('SELECT COUNT(*) FROM fact_engagement')).scalar() or 0
-    print('1' if rows == 0 else '0')
+try:
+    with engine.connect() as conn:
+        exists = conn.execute(text(\"SELECT to_regclass('public.fact_engagement') IS NOT NULL\")).scalar()
+        rows = 0
+        if exists:
+            rows = conn.execute(text('SELECT COUNT(*) FROM fact_engagement')).scalar() or 0
+        print('1' if rows == 0 else '0')
+except Exception as e:
+    print('1')
 ")
 
 if [ "$NEED_ETL" = "1" ]; then
@@ -41,5 +47,6 @@ fi
 echo "==> Seed des comptes de démo (idempotent)..."
 python -m app.seed_demo
 
-echo "==> Démarrage de l'API (uvicorn) sur :8000"
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+PORT_TO_USE=${PORT:-8000}
+echo "==> Démarrage de l'API (uvicorn) sur :$PORT_TO_USE"
+exec uvicorn app.main:app --host 0.0.0.0 --port "$PORT_TO_USE"
