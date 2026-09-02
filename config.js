@@ -1,5 +1,1 @@
-/* ==========================================================================
-   SAHAM BANK ANALYTICS PORTAL — Configuration d'environnement
-   ========================================================================== */
-
-window.SAHAM_API_BASE = '';
+window.SAHAM_API_BASE = 'https://communist-infrastructure-wrapping-psychology.trycloudflare.com';
