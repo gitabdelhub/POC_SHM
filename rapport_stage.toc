@@ -1,0 +1,48 @@
+\babel@toc {french}{}\relax 
+\contentsline {chapter}{Dédicaces}{1}{Doc-Start}%
+\contentsline {chapter}{Remerciements}{2}{Doc-Start}%
+\contentsline {chapter}{Résumé}{3}{Doc-Start}%
+\contentsline {chapter}{Abstract}{5}{Doc-Start}%
+\contentsline {chapter}{Liste des abréviations}{12}{chapter*.3}%
+\contentsline {chapter}{\numberline {1}Contexte général du projet}{13}{chapter.1}%
+\contentsline {section}{Introduction}{13}{section*.5}%
+\contentsline {section}{\numberline {1.1}Organisme d'accueil : D\&A Technologies}{13}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Présentation du client Saham et problématique}{14}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Objectifs du projet}{15}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Méthodologie de travail : démarche agile SCRUM}{16}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Planification du projet par Sprints}{17}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Conclusion}{19}{section.1.6}%
+\contentsline {chapter}{\numberline {2}Analyse des besoins et exigences}{20}{chapter.2}%
+\contentsline {section}{Introduction}{20}{section*.10}%
+\contentsline {section}{\numberline {2.1}Identification des acteurs du système}{20}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Besoins fonctionnels}{21}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Exigences non fonctionnelles}{22}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Diagrammes de séquence du système}{23}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Conclusion}{25}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Architecture et conception technique}{26}{chapter.3}%
+\contentsline {section}{Introduction}{26}{section*.15}%
+\contentsline {section}{\numberline {3.1}Vue d'ensemble de l'architecture système}{26}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Architecture Medallion des données}{27}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Modèle logique de données de la couche Gold}{28}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Architecture API FastAPI et authentification JWT}{30}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Conception de l'agent IA autonome}{31}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Modèle de sécurité et de validation des requêtes SQL}{32}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Fonctionnalités d'export professionnel}{34}{section.3.7}%
+\contentsline {section}{\numberline {3.8}Conclusion}{35}{section.3.8}%
+\contentsline {chapter}{\numberline {4}Implémentation technique et résultats}{36}{chapter.4}%
+\contentsline {section}{Introduction}{36}{section*.23}%
+\contentsline {section}{\numberline {4.1}Environnement de développement et conteneurisation Docker}{36}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Implémentation des pipelines Data Engineering}{38}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Présentation des interfaces utilisateur du portail}{38}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Conclusion}{40}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Tests et validation}{41}{chapter.5}%
+\contentsline {section}{Introduction}{41}{section*.27}%
+\contentsline {section}{\numberline {5.1}Stratégie de tests et résultats}{41}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Conclusion}{42}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Guide utilisateur}{43}{chapter.6}%
+\contentsline {section}{Introduction}{43}{section*.30}%
+\contentsline {section}{\numberline {6.1}Première connexion et authentification}{43}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Tableau de bord et Chatbot SahamAI}{44}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Conclusion}{44}{section.6.3}%
+\contentsline {chapter}{Conclusion générale et perspectives}{45}{chapter*.32}%
+\contentsline {chapter}{Bibliographie}{47}{chapter*.33}%

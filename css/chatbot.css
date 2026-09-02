@@ -1,0 +1,192 @@
+/* ==========================================================================
+   SAHAM BANK ANALYTICS PORTAL - SAHAMAI CHATBOT (SAHAM RED DESIGN THEME)
+   ========================================================================== */
+
+/* --- Saham Floating FAB Button --- */
+.saham-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 62px;
+    height: 62px;
+    background: linear-gradient(135deg, #C8102E 0%, #8A0B20 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(200, 16, 46, 0.4);
+    border: 2px solid #C9A84C;
+    cursor: pointer;
+    z-index: 9999;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: pulse-fab 3s infinite;
+}
+.saham-fab:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 28px rgba(200, 16, 46, 0.5);
+    animation: none;
+}
+@keyframes pulse-fab {
+    0% { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(200, 16, 46, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0); }
+}
+.saham-fab-icon {
+    color: #ffffff;
+    width: 28px;
+    height: 28px;
+}
+.saham-fab-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #C9A84C;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 2px solid #C8102E;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* --- Chat Window Panel --- */
+.saham-chat-panel {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 440px;
+    height: 600px;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 48px);
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid var(--sec-bg);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    z-index: 9998;
+    overflow: hidden;
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.32s ease-out, opacity 0.32s ease-out;
+}
+.saham-chat-panel.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+.saham-chat-panel.fullscreen {
+    width: 100vw !important;
+    height: 100vh !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    border-radius: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+/* Header */
+.saham-chat-header {
+    background: linear-gradient(135deg, #C8102E 0%, #8A0B20 100%);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    flex-shrink: 0;
+    border-bottom: 2px solid #C9A84C;
+}
+.saham-chat-header-info { display: flex; flex-direction: column; }
+.saham-chat-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.3px;
+}
+.saham-chat-online {
+    width: 8px; height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    animation: pulse-green 2s infinite;
+}
+.saham-chat-subtitle {
+    font-size: 11px;
+    color: #C9A84C;
+    font-weight: 600;
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+}
+.saham-chat-header-actions { display: flex; align-items: center; gap: 8px; }
+.saham-chat-btn {
+    background: none; border: none; color: white; cursor: pointer;
+    padding: 4px; border-radius: 4px; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+}
+.saham-chat-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* Body & Messages */
+.saham-chat-body {
+    flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+}
+.saham-chips-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
+.saham-chip-group { display: flex; flex-direction: column; gap: 8px; }
+.saham-chip-title { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #6b7d78; letter-spacing: 0.5px; }
+.saham-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.saham-chip {
+    background: white; border: 1px solid #e9eceb; padding: 8px 12px; border-radius: 16px;
+    font-size: 12px; color: #3b504a; cursor: pointer; transition: all 0.2s; font-weight: 500;
+}
+.saham-chip:hover { border-color: #C8102E; color: #C8102E; background: #fff5f5; }
+
+.saham-msg { max-width: 85%; display: flex; flex-direction: column; animation: fade-in-up 0.3s ease-out; }
+.saham-msg.user { align-self: flex-end; }
+.saham-msg.user .bubble {
+    background: linear-gradient(135deg, #C8102E 0%, #A60D26 100%);
+    color: white; padding: 12px 16px; border-radius: 16px 16px 0 16px;
+    font-size: 14px; line-height: 1.5; box-shadow: 0 3px 10px rgba(200, 16, 46, 0.25);
+}
+.saham-msg.bot { align-self: flex-start; max-width: 90%; }
+.saham-msg.bot .bubble {
+    background: white; color: #1a2a26; padding: 16px; border-radius: 16px 16px 16px 0;
+    font-size: 14px; line-height: 1.5; border-left: 3px solid #C8102E;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; gap: 12px;
+}
+
+/* SQL Block & Exec Banner */
+.saham-sql-block { background: #1E1E2E; border-radius: 8px; overflow: hidden; margin: 8px 0; }
+.saham-sql-header { background: rgba(0,0,0,0.2); padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #A6ACCD; }
+.saham-sql-badge { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+.saham-sql-content { padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #D9E0EE; overflow-x: auto; line-height: 1.5; }
+.saham-exec-banner { display: flex; align-items: center; gap: 8px; background: #fff5f5; padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #C8102E; font-weight: 600; }
+.saham-spinner { width: 14px; height: 14px; border: 2px solid rgba(200, 16, 46, 0.2); border-top-color: #C8102E; border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+/* Input Area & Controls */
+.saham-chat-input-area { padding: 16px; background: white; border-top: 1px solid #e9eceb; display: flex; gap: 12px; align-items: center; }
+.saham-chat-input { flex: 1; border: 1px solid #e9eceb; border-radius: 24px; padding: 12px 16px; font-size: 14px; outline: none; transition: all 0.2s; background: #FBF8F5; }
+.saham-chat-input:focus { border-color: #C8102E; background: white; }
+.saham-chat-send { background: #C8102E; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+.saham-chat-send:hover { background: #8A0B20; }
+.saham-export-buttons { display: flex; gap: 8px; }
+.saham-export-btn { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: white; border: 1px solid #e9eceb; border-radius: 20px; font-size: 12px; font-weight: 600; color: #2b3e39; cursor: pointer; transition: all 0.2s; }
+.saham-export-btn:hover { background: #f8faf9; border-color: #C8102E; color: #C8102E; }
+
+/* Resize handles & grip */
+.saham-resize-handle { position: absolute; z-index: 10; }
+.saham-resize-handle.nw { top: -5px; left: -5px; width: 14px; height: 14px; cursor: nwse-resize; }
+.saham-resize-handle.n { top: -5px; left: 24px; right: 24px; height: 10px; cursor: ns-resize; }
+.saham-resize-handle.e { top: 24px; bottom: 24px; right: -5px; width: 10px; cursor: ew-resize; }
+.saham-resize-handle.se { bottom: -5px; right: -5px; width: 16px; height: 16px; cursor: nwse-resize; }
+.saham-resize-handle.s { bottom: -5px; left: 24px; right: 24px; height: 10px; cursor: ns-resize; }
+.saham-resize-handle.w { top: 24px; bottom: 24px; left: -5px; width: 10px; cursor: ew-resize; }
+.saham-resize-handle.ne { top: -5px; right: -5px; width: 14px; height: 14px; cursor: nesw-resize; }
+.saham-resize-handle.sw { bottom: -5px; left: -5px; width: 14px; height: 14px; cursor: nesw-resize; }
+.saham-resize-grip { position: absolute; bottom: 4px; right: 4px; width: 14px; height: 14px; z-index: 11; cursor: nwse-resize; opacity: 0.45; pointer-events: none; }
+.saham-resize-grip::before { content: ""; position: absolute; right: 1px; bottom: 1px; width: 6px; height: 6px; border-right: 2px solid #94a3b8; border-bottom: 2px solid #94a3b8; }
+.saham-resize-grip::after { content: ""; position: absolute; right: 5px; bottom: 5px; width: 6px; height: 6px; border-right: 2px solid #94a3b8; border-bottom: 2px solid #94a3b8; opacity: 0.7; }

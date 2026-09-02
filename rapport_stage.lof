@@ -1,0 +1,20 @@
+\babel@toc {french}{}\relax 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Les pôles d'expertise de D\&A Technologies}}{14}{figure.caption.6}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Cycle itératif SCRUM appliqué au projet}}{17}{figure.caption.7}%
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Diagramme de Gantt de la planification du projet}}{19}{figure.caption.9}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Diagramme de cas d'utilisation du système Saham Analytics}}{21}{figure.caption.11}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Diagramme de séquence du processus d'authentification JWT}}{24}{figure.caption.13}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Diagramme de séquence du traitement d'une requête par l'Agent IA}}{25}{figure.caption.14}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Architecture globale de la plateforme Analytics et de l'Agent IA}}{27}{figure.caption.16}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Schéma conceptuel du pipeline Medallion sous PostgreSQL}}{28}{figure.caption.17}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Modèle logique de données (schéma en étoile) de la couche Gold}}{29}{figure.caption.18}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Architecture de l'API FastAPI avec authentification JWT}}{31}{figure.caption.20}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Architecture de l'Agent IA avec Tool Calling, Cache et RAG}}{32}{figure.caption.21}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Vue générale du tableau de bord analytique du Portail Saham}}{39}{figure.caption.25}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Interface de dialogue avec l'Agent IA conversationnel SahamAI}}{39}{figure.caption.26}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
