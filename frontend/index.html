@@ -1694,6 +1694,13 @@
             const email = demoAccounts[role] || (role.toLowerCase() + '@sahambank.ma');
             const password = localStorage.getItem('saham_demo_password') || 'Demo2026!';
 
+            // Détection automatique : si API_BASE est vide (Vercel/Production sans backend), forcer le mode démo
+            if (!API_BASE || API_BASE === '') {
+                console.log('Mode démo activé (backend non détecté sur cette origine)');
+                proceedToDashboard(role, email, 'demo-token-' + role);
+                return;
+            }
+
             // Timeout de sécurité 1.5s max : si le backend tarde ou échoue, passage direct et fluide au dashboard
             const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500));
             Promise.race([
