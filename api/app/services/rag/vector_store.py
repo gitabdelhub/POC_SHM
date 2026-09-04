@@ -16,7 +16,8 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Any, Dict, List, Tuple
 
-import psycopg2
+# import psycopg2  # Commenté pour Vercel - utilise pg8000 à la place
+import pg8000
 from sqlalchemy import text
 
 from app.config import settings
@@ -191,8 +192,8 @@ def execute_read_only_sql(
     if not re.search(r"\blimit\b", sql.lower()):
         sql = sql.rstrip().rstrip(";") + f" LIMIT {max_rows}"
 
-    conn = psycopg2.connect(settings.DATABASE_URL)
-    conn.set_session(readonly=True, autocommit=False)
+    conn = pg8000.connect(settings.DATABASE_URL)
+    conn.autocommit = False
     try:
         cur = conn.cursor()
         cur.execute(sql)
