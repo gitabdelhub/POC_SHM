@@ -27,7 +27,7 @@
   ],
   "routes": [
     {
-      "src": "/(auth|gold|ai|agences|clients|engagements|etl|docs|openapi.json)(.*)",
+      "src": "/(health|auth|gold|ai|agences|clients|engagements|etl|docs|openapi.json)(.*)",
       "dest": "/api/index.py"
     },
     {
