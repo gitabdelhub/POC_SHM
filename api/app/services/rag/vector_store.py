@@ -131,11 +131,11 @@ def get_gold_schema() -> Dict[str, List[Tuple[str, str]]]:
                 SELECT table_name, column_name, data_type
                 FROM information_schema.columns
                 WHERE table_schema = 'public'
-                  AND table_name IN :tables
+                  AND table_name = ANY(:tables)
                 ORDER BY table_name, ordinal_position
                 """
             ),
-            {"tables": tuple(GOLD_TABLES)},
+            {"tables": list(GOLD_TABLES)},
         )
         for table, column, dtype in result:
             schema.setdefault(table, []).append((column, dtype))
