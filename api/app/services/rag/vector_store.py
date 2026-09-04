@@ -16,8 +16,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Any, Dict, List, Tuple
 
-# import psycopg2  # Commenté pour Vercel - utilise pg8000 à la place
-import pg8000
+import psycopg2
 from sqlalchemy import text
 
 from app.config import settings
@@ -131,11 +130,11 @@ def get_gold_schema() -> Dict[str, List[Tuple[str, str]]]:
                 SELECT table_name, column_name, data_type
                 FROM information_schema.columns
                 WHERE table_schema = 'public'
-                  AND table_name = ANY(:tables)
+                  AND table_name IN :tables
                 ORDER BY table_name, ordinal_position
                 """
             ),
-            {"tables": list(GOLD_TABLES)},
+            {"tables": tuple(GOLD_TABLES)},
         )
         for table, column, dtype in result:
             schema.setdefault(table, []).append((column, dtype))
@@ -192,8 +191,8 @@ def execute_read_only_sql(
     if not re.search(r"\blimit\b", sql.lower()):
         sql = sql.rstrip().rstrip(";") + f" LIMIT {max_rows}"
 
-    conn = pg8000.connect(settings.DATABASE_URL)
-    conn.autocommit = False
+    conn = psycopg2.connect(settings.DATABASE_URL)
+    conn.set_session(readonly=True, autocommit=False)
     try:
         cur = conn.cursor()
         cur.execute(sql)
