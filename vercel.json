@@ -1,8 +1,18 @@
 {
-  "rewrites": [
+  "builds": [
     {
-      "source": "/(health|auth|gold|ai|agences|clients|engagements|etl|docs|openapi.json)(.*)",
-      "destination": "/api/index.py"
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(health|auth|gold|ai|agences|clients|engagements|etl|docs|openapi.json)(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
