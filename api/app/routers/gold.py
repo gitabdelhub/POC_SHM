@@ -1,13 +1,12 @@
 from typing import Optional
 
 from fastapi import APIRouter, Depends
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 
-from app.config import settings
+from app.database import engine  # connexion commune (pg8000 + SSL)
 from app.core.deps import get_current_user
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
-engine = create_engine(settings.DATABASE_URL)
 
 
 def run_sql(q: str, params: dict = None):

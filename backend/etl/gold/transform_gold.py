@@ -2,10 +2,11 @@ import random
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, List
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 
 from app.config import settings
+from app.database import engine as shared_engine
 
 SEASONAL_PNB = {1: 0.85, 2: 0.78, 3: 0.92, 4: 0.88, 5: 0.95, 6: 1.05,
                 7: 1.10, 8: 0.82, 9: 1.02, 10: 1.15, 11: 1.25, 12: 1.35}
@@ -24,7 +25,7 @@ class GoldTransformer:
     def __init__(self):
         # Graine fixe pour un PNB/nim/ratios reproductibles d'un run a l'autre
         random.seed(42)
-        self.engine = create_engine(settings.DATABASE_URL)
+        self.engine = shared_engine  # connexion commune (pg8000 + SSL)
         self.SessionLocal = sessionmaker(bind=self.engine)
 
     def _fetch_silver(self, table: str) -> List[Dict[str, Any]]:
