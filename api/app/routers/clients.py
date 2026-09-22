@@ -12,7 +12,7 @@ router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.get("/", response_model=List[ClientResponse])
-async def list_clients(
+def list_clients(
     skip: int = 0,
     limit: int = 100,
     segment: Optional[str] = None,
@@ -37,7 +37,7 @@ async def list_clients(
 
 
 @router.get("/{client_id}", response_model=ClientResponse)
-async def get_client(client_id: str, db: Session = Depends(get_db)):
+def get_client(client_id: str, db: Session = Depends(get_db)):
     client = db.query(Client).filter(Client.id == client_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client non trouvé")
@@ -45,7 +45,7 @@ async def get_client(client_id: str, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=ClientResponse)
-async def create_client(client: ClientCreate, db: Session = Depends(get_db)):
+def create_client(client: ClientCreate, db: Session = Depends(get_db)):
     db_client = Client(**client.model_dump())
     db.add(db_client)
     db.commit()
@@ -54,7 +54,7 @@ async def create_client(client: ClientCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{client_id}", response_model=ClientResponse)
-async def update_client(client_id: str, client_update: ClientUpdate, db: Session = Depends(get_db)):
+def update_client(client_id: str, client_update: ClientUpdate, db: Session = Depends(get_db)):
     client = db.query(Client).filter(Client.id == client_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client non trouvé")
@@ -66,7 +66,7 @@ async def update_client(client_id: str, client_update: ClientUpdate, db: Session
 
 
 @router.delete("/{client_id}")
-async def delete_client(client_id: str, db: Session = Depends(get_db)):
+def delete_client(client_id: str, db: Session = Depends(get_db)):
     client = db.query(Client).filter(Client.id == client_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client non trouvé")

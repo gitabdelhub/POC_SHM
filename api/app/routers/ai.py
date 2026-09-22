@@ -89,7 +89,7 @@ class ExportRequest(BaseModel):
 
 
 @router.post("/ask", response_model=AskResponse)
-async def ask(
+def ask(
     body: AskRequest,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -98,7 +98,7 @@ async def ask(
 
 
 @router.get("/logs")
-async def logs(
+def logs(
     limit: int = 50,
     user: User = Depends(get_current_user),
 ):
@@ -129,7 +129,7 @@ async def logs(
 
 
 @router.post("/export/pdf")
-async def export_pdf(
+def export_pdf(
     body: ExportRequest,
     user: User = Depends(get_current_user),
 ):
@@ -246,7 +246,7 @@ async def export_pdf(
 
 
 @router.post("/export/excel")
-async def export_excel(
+def export_excel(
     body: ExportRequest,
     user: User = Depends(get_current_user),
 ):

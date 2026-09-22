@@ -51,8 +51,8 @@ engine = create_engine(
     db_url,
     connect_args=connect_args,
     pool_pre_ping=True,   # vérifie la connexion avant usage (Neon coupe les connexions inactives)
-    pool_size=3,
-    max_overflow=2,
+    pool_size=5,
+    max_overflow=10,
     echo=False,
 )
 

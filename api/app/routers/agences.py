@@ -12,7 +12,7 @@ router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.get("/", response_model=List[AgenceResponse])
-async def list_agences(
+def list_agences(
     skip: int = 0,
     limit: int = 100,
     ville: Optional[str] = None,
@@ -28,7 +28,7 @@ async def list_agences(
 
 
 @router.get("/{agence_id}", response_model=AgenceResponse)
-async def get_agence(agence_id: str, db: Session = Depends(get_db)):
+def get_agence(agence_id: str, db: Session = Depends(get_db)):
     agence = db.query(Agence).filter(Agence.id == agence_id).first()
     if not agence:
         raise HTTPException(status_code=404, detail="Agence non trouvée")
@@ -36,7 +36,7 @@ async def get_agence(agence_id: str, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=AgenceResponse)
-async def create_agence(agence: AgenceCreate, db: Session = Depends(get_db)):
+def create_agence(agence: AgenceCreate, db: Session = Depends(get_db)):
     db_agence = Agence(**agence.model_dump())
     db.add(db_agence)
     db.commit()
@@ -45,7 +45,7 @@ async def create_agence(agence: AgenceCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{agence_id}", response_model=AgenceResponse)
-async def update_agence(agence_id: str, agence_update: AgenceUpdate, db: Session = Depends(get_db)):
+def update_agence(agence_id: str, agence_update: AgenceUpdate, db: Session = Depends(get_db)):
     agence = db.query(Agence).filter(Agence.id == agence_id).first()
     if not agence:
         raise HTTPException(status_code=404, detail="Agence non trouvée")
@@ -57,7 +57,7 @@ async def update_agence(agence_id: str, agence_update: AgenceUpdate, db: Session
 
 
 @router.delete("/{agence_id}")
-async def delete_agence(agence_id: str, db: Session = Depends(get_db)):
+def delete_agence(agence_id: str, db: Session = Depends(get_db)):
     agence = db.query(Agence).filter(Agence.id == agence_id).first()
     if not agence:
         raise HTTPException(status_code=404, detail="Agence non trouvée")
