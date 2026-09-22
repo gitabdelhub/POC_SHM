@@ -1675,14 +1675,18 @@
             if (nameEl) nameEl.innerText = nameMapping[role] || role;
 
             buildSidebar();
+            let target = 'dashboard';
             if (role === 'Admin') {
-                location.hash = 'admin-add-dash';
+                target = 'admin-add-dash';
             } else {
                 const firstModule = APP.modules.find(m => m.roles && m.roles.includes(role) && m.id !== 'admin');
-                if (firstModule) location.hash = firstModule.id;
-                else location.hash = 'dashboard';
+                if (firstModule) target = firstModule.id;
             }
-            route();
+            // Changer le hash déclenche déjà route() (écouteur 'hashchange') :
+            // on n'appelle route() nous-mêmes que si le hash ne change pas,
+            // sinon le module se chargeait deux fois (et ses appels API aussi).
+            if (location.hash === '#' + target) route();
+            else location.hash = target;
         }
 
         function login(role) {
@@ -2375,12 +2379,21 @@
                 'Admin': { title: 'Vue Complète Système', trendPNB: '+5.4%', trendCred: '+2.1%', trendDep: '+3.8%' }
             };
             const prof = profileData[APP.userRole] || profileData['DG'];
-            const kpis = await apiGet('/gold/kpis') || {};
-            const pnbData = await apiGet('/gold/pnb-mensuel') || [];
-            const credData = await apiGet('/gold/credits-par-type') || [];
-            const agPerf = await apiGet('/gold/performance-agences') || [];
-            const qualData = await apiGet('/gold/qualite-agences') || [];
-            const regionEncours = await apiGet('/gold/encours-par-region') || [];
+            // Les 6 appels partent en même temps (avant : l'un après l'autre).
+            const [kpisR, pnbR, credR, agPerfR, qualR, regionR] = await Promise.all([
+                apiGet('/gold/kpis'),
+                apiGet('/gold/pnb-mensuel'),
+                apiGet('/gold/credits-par-type'),
+                apiGet('/gold/performance-agences'),
+                apiGet('/gold/qualite-agences'),
+                apiGet('/gold/encours-par-region'),
+            ]);
+            const kpis = kpisR || {};
+            const pnbData = pnbR || [];
+            const credData = credR || [];
+            const agPerf = agPerfR || [];
+            const qualData = qualR || [];
+            const regionEncours = regionR || [];
 
             const totClients = kpis.total_clients || '--';
             const totEncours = (kpis.total_encours || 0) / 1e6;
