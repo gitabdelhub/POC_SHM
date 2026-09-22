@@ -39,115 +39,66 @@ def validate_question_by_role(question: str, user: User) -> tuple[bool, Optional
     question_lower = question.lower()
     role = user.role
     
-    # Règles par rôle
+    # Règles par rôle : uniquement des INTERDICTIONS (liste noire).
+    # Une ancienne version exigeait aussi qu'un mot d'une « liste blanche » soit
+    # présent ; écrite au singulier strict (\bclient\b ne reconnaît pas
+    # « clients »), elle refusait beaucoup de questions légitimes.
+    # DG et Admin ont accès à tous les modules dans le portail : aucune restriction.
     role_restrictions = {
-        UserRole.DG: {
-            "allowed_patterns": [r".*"],  # Tout est autorisé pour le DG
-            "forbidden_patterns": []
-        },
-        UserRole.DR: {
-            "allowed_patterns": [
-                r"\bpnb\b", r"\bperformance\b", r"\bcr[ée]dit\b", r"\bencours\b",
-                r"\bagence\b", r"\bclient\b", r"\brisque\b", r"\bnpl\b",
-                r"\bmois\b", r"\bann[ée]e\b", r"\b[ée]volution\b", r"\btendance\b"
-            ],
-            "forbidden_patterns": [
-                r"\bglobal\b", r"\bnationale\b", r"\bbanque enti[èe]re\b",
-                r"\btoutes les r[ée]gions\b", r"\bcomparaison.*r[ée]gion\b",
-                r"\bdr.*dr\b", r"\bdirecteur.*r[ée]gional.*r[ée]gional\b"
-            ]
-        },
-        UserRole.CA: {
-            "allowed_patterns": [
-                r"\bpnb\b", r"\bperformance\b", r"\bcr[ée]dit\b", r"\bencours\b",
-                r"\bclient\b", r"\bsatisfaction\b", r"\bmois\b", r"\bann[ée]e\b"
-            ],
-            "forbidden_patterns": [
-                r"\bglobal\b", r"\bnationale\b", r"\bbanque enti[èe]re\b",
-                r"\btoutes les r[ée]gions\b", r"\bcomparaison.*r[ée]gion\b",
-                r"\bautres agences\b", r"\btop.*agences\b", r"\bclassement.*agences\b",
-                r"\bbenchmark\b", r"\bcomparaison\b", r"\bvs\b",
-                r"\brisque.*npl\b", r"\bprobabilit[ée].*d[ée]faut\b"
-            ]
-        },
-        UserRole.AR: {
-            "allowed_patterns": [
-                r"\brisque\b", r"\bnpl\b", r"\bclient.*risque\b", r"\bprobabilit[ée]\b",
-                r"\bcr[ée]dit.*risque\b", r"\bencours.*risque\b", r"\bdefault\b",
-                r"\bscoring\b", r"\bnotation\b", r"\bclassification\b"
-            ],
-            "forbidden_patterns": [
-                r"\bpnb\b", r"\bproduit.*net.*bancaire\b", r"\bchiffre.*affaires\b",
-                r"\bprofit\b", r"\bmarge\b", r"\bb[ée]n[ée]fice\b",
-                r"\bcompte.*r[ée]sultat\b", r"\brentabilit[ée]\b",
-                r"\bperformance.*financi[èe]re\b"
-            ]
-        },
-        UserRole.ADMIN: {
-            "allowed_patterns": [
-                r"\bsyst[èe]me\b", r"\butilisateur\b", r"\bconnexion\b", r"\blog\b",
-                r"\bstatus\b", r"\b[ée]tat\b", r"\bserviteur\b", r"\bdatabase\b"
-            ],
-            "forbidden_patterns": [
-                r"\bpnb\b", r"\bcr[ée]dit\b", r"\bclient\b", r"\bperformance\b",
-                r"\brisque\b", r"\bnpl\b", r"\bencours\b"
-            ]
-        }
+        UserRole.DG: [],
+        UserRole.ADMIN: [],
+        UserRole.DR: [  # périmètre : sa région
+            r"\bglobal(e|es|aux)?\b", r"\bnational(e|es|aux)?\b", r"\bbanque enti[èe]re\b",
+            r"\btoutes les r[ée]gions\b", r"\bcomparaisons?\b.*\br[ée]gions?\b",
+        ],
+        UserRole.CA: [  # périmètre : son portefeuille, sans comparaison entre agences ni risque
+            r"\bglobal(e|es|aux)?\b", r"\bnational(e|es|aux)?\b", r"\bbanque enti[èe]re\b",
+            r"\btoutes les r[ée]gions\b", r"\bautres agences\b",
+            r"\b(top|classement)\b.*\bagences\b", r"\bbenchmarks?\b", r"\bcomparaisons?\b", r"\bvs\b",
+            r"\bnpl\b", r"\bprobabilit[ée]s?\b.*\bd[ée]faut\b",
+        ],
+        UserRole.AR: [  # périmètre : le risque, sans les résultats financiers
+            r"\bpnb\b", r"\bproduit net bancaire\b", r"\bchiffres? d.affaires\b",
+            r"\bprofits?\b", r"\bmarges?\b", r"\bb[ée]n[ée]fices?\b",
+            r"\bcomptes? de r[ée]sultat\b", r"\brentabilit[ée]s?\b",
+            r"\bperformances? financi[èe]res?\b", r"\bcommissions?\b",
+        ],
     }
-    
-    restrictions = role_restrictions.get(role)
-    if not restrictions:
+
+    forbidden_patterns = role_restrictions.get(role)
+    if forbidden_patterns is None:
         return False, f"Rôle non reconnu : {role}"
-    
-    # Vérifier les patterns interdits
-    for pattern in restrictions["forbidden_patterns"]:
+
+    for pattern in forbidden_patterns:
         if re.search(pattern, question_lower):
-            error_msg = get_forbidden_message(pattern, role)
-            return False, error_msg
-    
-    # Vérifier les patterns autorisés (si restreint)
-    if restrictions["allowed_patterns"] and restrictions["allowed_patterns"] != [r".*"]:
-        allowed = False
-        for pattern in restrictions["allowed_patterns"]:
-            if re.search(pattern, question_lower):
-                allowed = True
-                break
-        
-        if not allowed:
-            return False, get_not_allowed_message(role)
-    
+            return False, get_forbidden_message(pattern, role)
+
     return True, None
 
 def get_forbidden_message(pattern: str, role: UserRole) -> str:
     """Génère un message d'erreur personnalisé selon le pattern et le rôle."""
     if role == UserRole.DR:
-        if "global" in pattern or "nationale" in pattern:
-            return "En tant que Directeur Régional, vous n'avez accès qu'aux données de votre région. Pour les données globales, contactez la Direction Générale."
-        if "comparaison.*région" in pattern:
+        if "comparaison" in pattern:
             return "Les comparaisons inter-régionales ne sont pas autorisées pour votre rôle. Contactez la Direction Générale pour les analyses multi-régionales."
-    
+        return "En tant que Directeur Régional, vous n'avez accès qu'aux données de votre région. Pour les données globales, contactez la Direction Générale."
+
     elif role == UserRole.CA:
-        if "global" in pattern or "nationale" in pattern:
-            return "En tant que Chef d'Agence, vous n'avez accès qu'aux données de votre agence. Pour les données globales, contactez votre Directeur Régional."
-        if "comparaison" in pattern or "vs" in pattern:
-            return "Les comparaisons entre agences ne sont pas autorisées pour votre rôle. Contactez votre Directeur Régional pour les benchmarks."
-        if "risque" in pattern or "npl" in pattern:
+        if "npl" in pattern or "faut" in pattern:
             return "Les données de risque sont restreintes. Contactez l'Analyste Risque pour ces informations."
-    
+        if "global" in pattern or "national" in pattern or "enti" in pattern or "toutes" in pattern:
+            return "En tant que Chargé d'Affaires, vous avez accès aux données de votre portefeuille. Pour les données globales, contactez votre Directeur Régional."
+        return "Les comparaisons entre agences ne sont pas autorisées pour votre rôle. Contactez votre Directeur Régional pour les benchmarks."
+
     elif role == UserRole.AR:
-        if "pnb" in pattern or "profit" in pattern:
-            return "En tant qu'Analyste Risque, vous n'avez accès qu'aux données de risque. Les données financières sont restreintes."
-    
-    elif role == UserRole.ADMIN:
-        return "Les questions métiers ne sont pas autorisées pour le rôle Administrateur. Utilisez la console d'administration pour les tâches système."
-    
+        return "En tant qu'Analyste Risque, vous avez accès aux données de risque. Les données financières (PNB, marges, rentabilité) sont réservées à d'autres profils."
+
     return "Cette question n'est pas autorisée pour votre rôle. Contactez votre supérieur hiérarchique."
 
 def get_not_allowed_message(role: UserRole) -> str:
     """Génère un message pour les questions non autorisées."""
     messages = {
         UserRole.DR: "Votre question ne correspond pas aux types d'analyses autorisées pour les Directeurs Régionaux.",
-        UserRole.CA: "Votre question ne correspond pas aux types d'analyses autorisées pour les Chefs d'Agence.",
+        UserRole.CA: "Votre question ne correspond pas aux types d'analyses autorisées pour les Chargés d'Affaires.",
         UserRole.AR: "Votre question ne correspond pas aux types d'analyses autorisées pour les Analystes Risque.",
         UserRole.ADMIN: "Votre question ne correspond pas aux tâches administratives autorisées."
     }
@@ -1410,6 +1361,19 @@ def _corriger_vocabulaire(texte: str) -> str:
 
 def answer_question(db: Session, user: User, question: str) -> Dict[str, Any]:
     start = time.perf_counter()
+
+    # -1. Contrôle d'accès : certaines analyses sont réservées à certains rôles.
+    #     Fait en premier, pour que ni le cache ni les outils ne le contournent.
+    allowed, refus = validate_question_by_role(question, user)
+    if not allowed:
+        _log_query(db, user, question, "forbidden", None, 0, 0, "refused", None, [], refus)
+        return {
+            "mode": "oob", "answer": refus,
+            "sql": None, "sql_explanation": None,
+            "columns": None, "rows": None, "row_count": 0,
+            "chart": None, "tables": [], "duration_ms": 0,
+            "degraded": False, "from_cache": False,
+        }
 
     # 0. Vérification du cache pour les questions fréquentes
     cache_key = _get_cache_key(question, user.id)
