@@ -3,16 +3,24 @@ from typing import Optional
 from fastapi import APIRouter, Depends
 from sqlalchemy import text
 
+from app import cache
 from app.database import engine  # connexion commune (pg8000 + SSL)
 from app.core.deps import get_current_user
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
-def run_sql(q: str, params: dict = None):
+def _query(q: str, params: dict):
     with engine.connect() as conn:
-        rows = conn.execute(text(q), params or {}).fetchall()
+        rows = conn.execute(text(q), params).fetchall()
         return [dict(r._mapping) for r in rows]
+
+
+def run_sql(q: str, params: dict = None):
+    # Résultat gardé 5 minutes (vidé après chaque ETL) : voir app/cache.py
+    params = params or {}
+    key = (q, tuple(sorted(params.items())))
+    return cache.get_or_compute(key, lambda: _query(q, params))
 
 
 @router.get("/kpis")
