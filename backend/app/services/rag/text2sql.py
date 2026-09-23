@@ -1379,9 +1379,14 @@ def answer_question(db: Session, user: User, question: str) -> Dict[str, Any]:
     cache_key = _get_cache_key(question, user.id)
     cached_response = _get_from_cache(cache_key)
     if cached_response:
-        # Retourner la réponse en cache avec un indicateur
-        cached_response["from_cache"] = True
-        return cached_response
+        # Réponse en cache : on la journalise aussi, pour que l'historique Admin
+        # reflète toutes les questions posées (avant, les répétitions n'y
+        # apparaissaient pas). Copie, pour ne pas modifier l'objet en cache.
+        response = {**cached_response, "from_cache": True}
+        duration_ms = int((time.perf_counter() - start) * 1000)
+        _log_query(db, user, question, "cache", response.get("sql"), response.get("row_count") or 0,
+                   duration_ms, "success", None, response.get("tables") or [], response.get("answer"))
+        return response
 
     # 0.5. Vérification du Tool Calling avancé
     tool_result = _check_tool_calling(question, db)
