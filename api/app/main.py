@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -40,10 +42,14 @@ except Exception:
 @app.on_event("startup")
 async def startup_event():
     logger.info("Démarrage de l'application Saham Bank API")
-    try:
-        init_db()
-    except Exception as e:
-        logger.warning(f"init_db bypass: {e}")
+    # Sur Vercel, la fonction démarre souvent « à froid » : on ne revérifie pas
+    # les tables à chaque démarrage (elles existent déjà dans Neon), ce qui
+    # économise une dizaine d'allers-retours avec la base.
+    if not os.environ.get("VERCEL"):
+        try:
+            init_db()
+        except Exception as e:
+            logger.warning(f"init_db bypass: {e}")
     try:
         if settings.ETL_SCHEDULER_ENABLED:
             start_scheduler()
@@ -72,6 +78,19 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "healthy"}
+
+
+@app.get("/health/db")
+def health_db():
+    """Requête minuscule à la base. Le portail l'appelle dès l'ouverture de la page
+    d'accueil pour « réveiller » la fonction Vercel et la base Neon (mise en veille
+    après quelques minutes d'inactivité) pendant que le visiteur lit la page."""
+    try:
+        with engine.connect() as conn:
+            conn.exec_driver_sql("SELECT 1")
+        return {"status": "healthy", "database": "ok"}
+    except Exception:
+        return {"status": "degraded", "database": "unreachable"}
 
 
 app.include_router(auth.router, prefix="/auth", tags=["Authentification"])

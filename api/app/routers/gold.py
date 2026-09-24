@@ -1,23 +1,30 @@
 from typing import Optional
 
 from fastapi import APIRouter, Depends
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 
-from app.config import settings
+from app import cache
 from app.core.deps import get_current_user
+from app.database import engine  # connexion commune (pg8000 + SSL)
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
-engine = create_engine(settings.DATABASE_URL)
 
 
-def run_sql(q: str, params: dict = None):
+def _query(q: str, params: dict):
     with engine.connect() as conn:
-        rows = conn.execute(text(q), params or {}).fetchall()
+        rows = conn.execute(text(q), params).fetchall()
         return [dict(r._mapping) for r in rows]
 
 
+def run_sql(q: str, params: dict = None):
+    # Résultat gardé 5 minutes (vidé après chaque ETL) : voir app/cache.py
+    params = params or {}
+    key = (q, tuple(sorted(params.items())))
+    return cache.get_or_compute(key, lambda: _query(q, params))
+
+
 @router.get("/kpis")
-async def kpis():
+def kpis():
     row = run_sql("""
         SELECT
             COUNT(DISTINCT fc.client_id) as total_clients,
@@ -33,7 +40,7 @@ async def kpis():
 
 
 @router.get("/clients")
-async def clients():
+def clients():
     return run_sql("""
         SELECT client_id as id, nom, segment, agence_id, ville,
                encours_actuel as encours, score_actuel as score, statut_actuel as statut
@@ -44,7 +51,7 @@ async def clients():
 
 
 @router.get("/engagements")
-async def engagements():
+def engagements():
     return run_sql("""
         SELECT fe.engagement_id as ref, dc.nom as client, dtc.libelle as type,
                fe.montant, fe.duree_mois as duree, fe.taux, fe.score, fe.statut
@@ -57,7 +64,7 @@ async def engagements():
 
 
 @router.get("/pnb-mensuel")
-async def pnb_mensuel(annee: Optional[int] = None):
+def pnb_mensuel(annee: Optional[int] = None):
     q = """
         SELECT dd.annee_mois, SUM(fp.pnb) as pnb
         FROM fact_performance fp
@@ -72,7 +79,7 @@ async def pnb_mensuel(annee: Optional[int] = None):
 
 
 @router.get("/credits-par-type")
-async def credits_par_type():
+def credits_par_type():
     return run_sql("""
         SELECT dtc.libelle as label, COUNT(*) as value
         FROM fact_engagement fe
@@ -82,7 +89,7 @@ async def credits_par_type():
 
 
 @router.get("/clients-par-statut")
-async def clients_par_statut():
+def clients_par_statut():
     return run_sql("""
         SELECT statut_actuel as statut, COUNT(*) as count
         FROM dim_client
@@ -91,7 +98,7 @@ async def clients_par_statut():
 
 
 @router.get("/engagements-par-statut")
-async def engagements_par_statut():
+def engagements_par_statut():
     return run_sql("""
         SELECT statut, COUNT(*) as count
         FROM fact_engagement
@@ -100,7 +107,7 @@ async def engagements_par_statut():
 
 
 @router.get("/risque-par-classe")
-async def risque_par_classe():
+def risque_par_classe():
     return run_sql("""
         SELECT classe_libelle, COUNT(*) as count
         FROM fact_risque
@@ -110,7 +117,7 @@ async def risque_par_classe():
 
 
 @router.get("/performance-agences")
-async def performance_agences():
+def performance_agences():
     return run_sql("""
         SELECT da.nom as agence, da.ville, da.region,
                AVG(fp.pnb) as pnb_moyen,
@@ -125,7 +132,7 @@ async def performance_agences():
 
 
 @router.get("/qualite-agences")
-async def qualite_agences():
+def qualite_agences():
     return run_sql("""
         SELECT da.nom as agence,
                AVG(fq.note_satisfaction_client) as satisfaction_moyenne,
@@ -138,7 +145,7 @@ async def qualite_agences():
 
 
 @router.get("/encours-par-region")
-async def encours_par_region():
+def encours_par_region():
     return run_sql("""
         SELECT da.agence_id, da.nom as agence, da.ville, da.region,
                COALESCE(SUM(fp.encours_credits), 0) as encours_credits,
