@@ -83,7 +83,7 @@ def store_chunks(document_id: int, chunks: List[str], embeddings: List[List[floa
                 text(
                     """
                     INSERT INTO ai_chunks (document_id, content, embedding)
-                    VALUES (:doc_id, :content, :emb::vector)
+                    VALUES (:doc_id, :content, CAST(:emb AS vector))
                     """
                 ),
                 {"doc_id": document_id, "content": content, "emb": str(emb)},
@@ -98,9 +98,9 @@ def search_chunks(embedding: List[float], top_k: int = 4) -> List[Dict[str, Any]
         rows = conn.execute(
             text(
                 """
-                SELECT content, 1 - (embedding <=> :emb::vector) AS score
+                SELECT content, 1 - (embedding <=> CAST(:emb AS vector)) AS score
                 FROM ai_chunks
-                ORDER BY embedding <=> :emb::vector
+                ORDER BY embedding <=> CAST(:emb AS vector)
                 LIMIT :top_k
                 """
             ),
