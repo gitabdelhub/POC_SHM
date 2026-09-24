@@ -8,10 +8,20 @@ import os
 from typing import Any, Dict, List
 
 CSV_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+_REQUIRED_FILES = ("users.csv", "agences.csv", "clients.csv", "engagements.csv", "crm.csv")
 
 
 class BronzeExtractor:
     """Lit les CSV generes et retourne des dictionnaires"""
+
+    @staticmethod
+    def _ensure_csv_seeded() -> None:
+        if all(os.path.exists(os.path.join(CSV_DIR, name)) for name in _REQUIRED_FILES):
+            return
+        print("  [!] CSV manquants : génération automatique des données ETL...")
+        from etl.generate_data import main as generate_data_main
+
+        generate_data_main()
 
     @staticmethod
     def _read_csv(filename: str) -> List[Dict[str, Any]]:
@@ -39,6 +49,7 @@ class BronzeExtractor:
         return self._read_csv("crm.csv")
 
     def extract_all(self) -> Dict[str, List[Dict[str, Any]]]:
+        self._ensure_csv_seeded()
         return {
             "users": self.extract_users(),
             "agences": self.extract_agences(),
