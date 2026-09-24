@@ -11,10 +11,9 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 
 _ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
-_DEFAULT_DB = os.environ.get(
-    "DATABASE_URL",
-    "postgresql+pg8000://user:password@host:port/database"
-)
+# Aucune adresse réelle ici : elle vient de la variable DATABASE_URL (.env ou Vercel)
+_DEFAULT_DB = os.environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432/saham_bank")
+_DEV_SECRET_KEY = "dev-only-secret-change-me"
 
 
 class Settings(BaseSettings):
@@ -24,12 +23,12 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = Field(5432, env="POSTGRES_PORT")
     POSTGRES_DB: str = Field("saham_bank", env="POSTGRES_DB")
     POSTGRES_USER: str = Field("postgres", env="POSTGRES_USER")
-    POSTGRES_PASSWORD: str = Field("postgre_abdel", env="POSTGRES_PASSWORD")
+    POSTGRES_PASSWORD: str = Field("", env="POSTGRES_PASSWORD")
 
     # OAuth 2.0 + PKCE
-    SECRET_KEY: str = Field("saham-bank-analytics-secret-key-2026-super-secure", env="SECRET_KEY")
+    SECRET_KEY: str = Field(_DEV_SECRET_KEY, env="SECRET_KEY")
     OAUTH_CLIENT_ID: str = Field("saham-analytics-portal", env="OAUTH_CLIENT_ID")
-    OAUTH_CLIENT_SECRET: str = Field("saham-secret-key", env="OAUTH_CLIENT_SECRET")
+    OAUTH_CLIENT_SECRET: str = Field("", env="OAUTH_CLIENT_SECRET")
     OAUTH_REDIRECT_URI: str = Field("http://localhost:5500/callback", env="OAUTH_REDIRECT_URI")
 
     # Logging
@@ -66,6 +65,14 @@ class Settings(BaseSettings):
         case_sensitive = True
 
 settings = Settings()
+
+# En ligne (Vercel), on refuse de démarrer avec la clé de développement :
+# sinon n'importe qui pourrait fabriquer des jetons de connexion valides.
+if os.environ.get("VERCEL") and settings.SECRET_KEY == _DEV_SECRET_KEY:
+    raise RuntimeError(
+        "SECRET_KEY manquante : définissez-la dans les variables d'environnement Vercel "
+        "(Settings > Environment Variables)."
+    )
 
 # TODO : Ajouter des fonctions utilitaires si nécessaire
 # Exemple : get_database_url(), get_oauth_config(), etc.
