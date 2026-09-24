@@ -3,7 +3,6 @@ from typing import Any, Dict, List
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 
-from app.config import settings
 from app.database import engine as shared_engine
 
 

@@ -11,9 +11,9 @@ Protégé par JWT : il faut être connecté (n'importe quel rôle peut poser
 une question, mais seul ADMIN/DG voit le log complet).
 """
 
-from typing import Any, Dict, List, Optional
 from datetime import datetime
 from io import BytesIO
+from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
@@ -135,17 +135,17 @@ def export_pdf(
 ):
     """Génère un rapport PDF professionnel à partir de l'historique de chat."""
     try:
-        from reportlab.lib.pagesizes import letter, A4
-        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-        from reportlab.lib.units import inch
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
         from reportlab.lib import colors
-        from reportlab.lib.enums import TA_CENTER, TA_LEFT
-        
+        from reportlab.lib.enums import TA_CENTER
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+        from reportlab.lib.units import inch
+        from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+
         # Création du buffer PDF
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=18)
-        
+
         # Styles
         styles = getSampleStyleSheet()
         title_style = ParagraphStyle(
@@ -156,7 +156,7 @@ def export_pdf(
             spaceAfter=30,
             alignment=TA_CENTER
         )
-        
+
         heading_style = ParagraphStyle(
             'CustomHeading',
             parent=styles['Heading2'],
@@ -165,7 +165,7 @@ def export_pdf(
             spaceAfter=12,
             spaceBefore=20
         )
-        
+
         normal_style = ParagraphStyle(
             'CustomNormal',
             parent=styles['Normal'],
@@ -173,10 +173,10 @@ def export_pdf(
             spaceAfter=12,
             leading=14
         )
-        
+
         # Contenu du document
         story = []
-        
+
         # En-tête
         story.append(Paragraph("SAHAM BANK", ParagraphStyle('BankName', parent=styles['Heading1'], fontSize=20, textColor=colors.HexColor('#1a365d'), alignment=TA_CENTER)))
         story.append(Spacer(1, 0.2*inch))
@@ -186,7 +186,7 @@ def export_pdf(
         if body.author:
             story.append(Paragraph(f"Par {body.author}", ParagraphStyle('AuthorStyle', parent=styles['Normal'], fontSize=9, textColor=colors.gray, alignment=TA_CENTER)))
         story.append(Spacer(1, 0.3*inch))
-        
+
         # Contenu du chat
         for i, msg in enumerate(body.chat_history, 1):
             if msg.get('role') == 'user':
@@ -195,11 +195,11 @@ def export_pdf(
                 answer = msg.get('content', '')
                 if answer:
                     story.append(Paragraph(answer, normal_style))
-                
+
                 # Ajouter les données si disponibles
                 if 'data' in msg and msg['data']:
                     data = msg['data']
-                    
+
                     # Tableau de données
                     if 'columns' in data and 'rows' in data and data['rows']:
                         table_data = [data['columns']] + data['rows']
@@ -216,29 +216,29 @@ def export_pdf(
                         ]))
                         story.append(table)
                         story.append(Spacer(1, 0.2*inch))
-                    
+
                     # SQL si demandé
                     if body.include_sql and 'sql' in data and data['sql']:
                         story.append(Paragraph("Requête SQL :", ParagraphStyle('SQLLabel', parent=styles['Normal'], fontSize=9, fontName='Helvetica-Bold', textColor=colors.HexColor('#718096'))))
                         story.append(Paragraph(data['sql'], ParagraphStyle('SQLCode', parent=styles['Normal'], fontSize=8, fontName='Courier', textColor=colors.HexColor('#2d3748'), backgroundColor=colors.HexColor('#f7fafc'))))
                         story.append(Spacer(1, 0.2*inch))
-                
+
                 story.append(Spacer(1, 0.2*inch))
-        
+
         # Pied de page
         story.append(PageBreak())
         story.append(Paragraph("Document généré par SahamAI - Assistant Analytique Saham Bank", ParagraphStyle('Footer', parent=styles['Normal'], fontSize=8, textColor=colors.gray, alignment=TA_CENTER)))
-        
+
         # Génération du PDF
         doc.build(story)
         buffer.seek(0)
-        
+
         return StreamingResponse(
             buffer,
             media_type="application/pdf",
             headers={"Content-Disposition": f"attachment; filename=rapport_saham_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"}
         )
-        
+
     except ImportError:
         raise HTTPException(status_code=500, detail="Module reportlab non installé. Installez-le avec: pip install reportlab")
     except Exception as e:
@@ -253,14 +253,14 @@ def export_excel(
     """Exporte les données du chat en fichier Excel."""
     try:
         import openpyxl
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from openpyxl.styles import Alignment, Font, PatternFill
         from openpyxl.utils import get_column_letter
-        
+
         # Création du workbook
         wb = openpyxl.Workbook()
         ws = wb.active
         ws.title = "Rapport Analytique"
-        
+
         # En-tête
         ws['A1'] = "SAHAM BANK - Rapport Analytique"
         ws['A1'].font = Font(size=16, bold=True, color="1a365d")
@@ -269,52 +269,52 @@ def export_excel(
         ws['A3'] = f"Généré le: {datetime.now().strftime('%d/%m/%Y %H:%M')}"
         if body.author:
             ws['A4'] = f"Auteur: {body.author}"
-        
+
         row_num = 6
-        
+
         # Contenu du chat
         for i, msg in enumerate(body.chat_history, 1):
             if msg.get('role') == 'user':
                 ws[f'A{row_num}'] = f"Question {i}: {msg.get('content', '')}"
                 ws[f'A{row_num}'].font = Font(bold=True, size=11, color="2c5282")
                 row_num += 1
-                
+
             elif msg.get('role') == 'assistant':
                 answer = msg.get('content', '')
                 if answer:
                     ws[f'A{row_num}'] = f"Réponse: {answer}"
                     ws[f'A{row_num}'].font = Font(size=10)
                     row_num += 1
-                
+
                 # Données si disponibles
                 if 'data' in msg and msg['data']:
                     data = msg['data']
-                    
+
                     if 'columns' in data and 'rows' in data and data['rows']:
                         row_num += 1
                         ws[f'A{row_num}'] = "Données:"
                         ws[f'A{row_num}'].font = Font(bold=True)
                         row_num += 1
-                        
+
                         # En-têtes de tableau
                         for col_idx, col_name in enumerate(data['columns'], 1):
                             cell = ws.cell(row=row_num, column=col_idx, value=col_name)
                             cell.font = Font(bold=True, color="FFFFFF")
                             cell.fill = PatternFill(start_color="4a5568", end_color="4a5568", fill_type="solid")
                             cell.alignment = Alignment(horizontal="center")
-                        
+
                         row_num += 1
-                        
+
                         # Données
                         for row_data in data['rows']:
                             for col_idx, value in enumerate(row_data, 1):
                                 ws.cell(row=row_num, column=col_idx, value=value)
                             row_num += 1
-                        
+
                         # Ajustement des colonnes
                         for col_idx in range(1, len(data['columns']) + 1):
                             ws.column_dimensions[get_column_letter(col_idx)].auto_size = True
-                    
+
                     # SQL si demandé
                     if body.include_sql and 'sql' in data and data['sql']:
                         row_num += 1
@@ -324,20 +324,20 @@ def export_excel(
                         ws[f'A{row_num}'] = data['sql']
                         ws[f'A{row_num}'].font = Font(name="Courier", size=9, color="2d3748")
                         row_num += 1
-                
+
                 row_num += 2
-        
+
         # Sauvegarde dans un buffer
         buffer = BytesIO()
         wb.save(buffer)
         buffer.seek(0)
-        
+
         return StreamingResponse(
             buffer,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             headers={"Content-Disposition": f"attachment; filename=rapport_saham_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"}
         )
-        
+
     except ImportError:
         raise HTTPException(status_code=500, detail="Module openpyxl non installé. Installez-le avec: pip install openpyxl")
     except Exception as e:

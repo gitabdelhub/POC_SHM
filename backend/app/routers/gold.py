@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import text
 
 from app import cache
-from app.database import engine  # connexion commune (pg8000 + SSL)
 from app.core.deps import get_current_user
+from app.database import engine  # connexion commune (pg8000 + SSL)
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
 
