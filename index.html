@@ -1339,6 +1339,11 @@
             }
             return '';
         })();
+        // Réveil anticipé : dès l'ouverture de la page, on « réveille » l'API
+        // (fonction Vercel) et la base Neon, qui se mettent en veille après
+        // quelques minutes sans visite. Le visiteur lit la page d'accueil
+        // pendant ce temps, et sa connexion est ensuite rapide.
+        fetch(API_BASE + '/health/db').catch(function () {});
         async function apiGet(path) {
             try {
                 const token = localStorage.getItem('saham_access_token');
@@ -1697,8 +1702,10 @@
             const email = demoAccounts[role] || (role.toLowerCase() + '@sahambank.ma');
             const password = localStorage.getItem('saham_demo_password') || 'Demo2026!';
 
-            // Timeout de sécurité 1.5s max : si le backend tarde ou échoue, passage direct et fluide au dashboard
-            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500));
+            // Délai de sécurité : si l'API ne répond pas, passage au mode démo.
+            // 12 s et non 1,5 s : un premier démarrage « à froid » sur Vercel + Neon
+            // peut prendre quelques secondes, et le mode démo affiche des 0,00.
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12000));
             Promise.race([
                 fetch(API_BASE + '/auth/login', {
                     method: 'POST',
