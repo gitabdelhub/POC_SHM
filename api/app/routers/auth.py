@@ -19,7 +19,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 
 @router.post("/register", response_model=UserResponse)
-async def register(user: UserCreate, db: Session = Depends(get_db)):
+def register(user: UserCreate, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.email == user.email).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email déjà utilisé")
@@ -38,7 +38,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse)
-async def login(credentials: UserLogin, db: Session = Depends(get_db)):
+def login(credentials: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == credentials.email).first()
     if not user or not verify_password(credentials.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Email ou mot de passe incorrect")
@@ -54,7 +54,7 @@ async def login(credentials: UserLogin, db: Session = Depends(get_db)):
 
 
 @router.post("/refresh", response_model=TokenResponse)
-async def refresh(refresh_token: str, db: Session = Depends(get_db)):
+def refresh(refresh_token: str, db: Session = Depends(get_db)):
     user_id = decode_refresh_token(refresh_token)
     if not user_id:
         raise HTTPException(status_code=401, detail="Refresh token invalide ou expiré")
@@ -71,7 +71,7 @@ async def refresh(refresh_token: str, db: Session = Depends(get_db)):
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     payload = decode_access_token(token)
     if not payload:
         raise HTTPException(status_code=401, detail="Token invalide ou expiré")

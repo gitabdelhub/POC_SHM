@@ -1,15 +1,15 @@
 from typing import Any, Dict, List
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 
-from app.config import settings
+from app.database import engine as shared_engine
 
 
 class SilverLoader:
 
     def __init__(self):
-        self.engine = create_engine(settings.DATABASE_URL)
+        self.engine = shared_engine  # connexion commune (pg8000 + SSL)
         self.SessionLocal = sessionmaker(bind=self.engine)
 
     def create_tables(self):

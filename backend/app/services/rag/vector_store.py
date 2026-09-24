@@ -5,7 +5,7 @@ pgvector est une extension PostgreSQL qui ajoute un type `vector` : on peut stoc
 les embeddings dans la même base et faire une recherche par similarité cosinus (<=>).
 
 Sécurité de l'exécution SQL (Text-to-SQL) :
-  1. Connexion psycopg2 en mode READ ONLY -> l'utilisateur ne peut RIEN modifier.
+  1. Transaction PostgreSQL en mode READ ONLY -> la requête ne peut RIEN modifier.
   2. Le SQL doit commencer par SELECT/WITH et ne contenir aucun mot-clé de modification.
   3. Une clause LIMIT est toujours imposée (évite de ramener toute la table).
   4. Le résultat est tronqué et sérialisé (JSON-safe).
@@ -16,11 +16,13 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Any, Dict, List, Tuple
 
-import psycopg2
 from sqlalchemy import text
 
 from app.config import settings
 from app.database import engine
+
+# Durée maximale d'une requête du chatbot (millisecondes)
+SQL_TIMEOUT_MS = 15000
 
 GOLD_TABLES = [
     "dim_date",
@@ -81,7 +83,7 @@ def store_chunks(document_id: int, chunks: List[str], embeddings: List[List[floa
                 text(
                     """
                     INSERT INTO ai_chunks (document_id, content, embedding)
-                    VALUES (:doc_id, :content, :emb::vector)
+                    VALUES (:doc_id, :content, CAST(:emb AS vector))
                     """
                 ),
                 {"doc_id": document_id, "content": content, "emb": str(emb)},
@@ -96,9 +98,9 @@ def search_chunks(embedding: List[float], top_k: int = 4) -> List[Dict[str, Any]
         rows = conn.execute(
             text(
                 """
-                SELECT content, 1 - (embedding <=> :emb::vector) AS score
+                SELECT content, 1 - (embedding <=> CAST(:emb AS vector)) AS score
                 FROM ai_chunks
-                ORDER BY embedding <=> :emb::vector
+                ORDER BY embedding <=> CAST(:emb AS vector)
                 LIMIT :top_k
                 """
             ),
@@ -130,11 +132,11 @@ def get_gold_schema() -> Dict[str, List[Tuple[str, str]]]:
                 SELECT table_name, column_name, data_type
                 FROM information_schema.columns
                 WHERE table_schema = 'public'
-                  AND table_name IN :tables
+                  AND table_name = ANY(:tables)
                 ORDER BY table_name, ordinal_position
                 """
             ),
-            {"tables": tuple(GOLD_TABLES)},
+            {"tables": list(GOLD_TABLES)},
         )
         for table, column, dtype in result:
             schema.setdefault(table, []).append((column, dtype))
@@ -191,16 +193,19 @@ def execute_read_only_sql(
     if not re.search(r"\blimit\b", sql.lower()):
         sql = sql.rstrip().rstrip(";") + f" LIMIT {max_rows}"
 
-    conn = psycopg2.connect(settings.DATABASE_URL)
-    conn.set_session(readonly=True, autocommit=False)
-    try:
-        cur = conn.cursor()
-        cur.execute(sql)
-        columns = [d[0] for d in cur.description]
-        raw_rows = cur.fetchmany(max_rows)
-        rows = [[_json_safe(v) for v in row] for row in raw_rows]
-        cur.close()
-        return columns, rows
-    finally:
-        conn.rollback()
-        conn.close()
+    # Connexion commune (pg8000), dans une transaction que PostgreSQL lui-même
+    # empêche d'écrire, avec un délai maximal. La transaction est toujours annulée.
+    # exec_driver_sql sans paramètres : le SQL est envoyé tel quel, sans que
+    # les ":" ou "%" qu'il contient soient pris pour des paramètres.
+    with engine.connect() as conn:
+        trans = conn.begin()
+        try:
+            conn.exec_driver_sql("SET TRANSACTION READ ONLY")
+            conn.exec_driver_sql(f"SET LOCAL statement_timeout = {SQL_TIMEOUT_MS}")
+            result = conn.exec_driver_sql(sql)
+            columns = list(result.keys())
+            raw_rows = result.fetchmany(max_rows)
+            rows = [[_json_safe(v) for v in row] for row in raw_rows]
+            return columns, rows
+        finally:
+            trans.rollback()

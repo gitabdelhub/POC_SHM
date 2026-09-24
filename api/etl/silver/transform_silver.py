@@ -128,8 +128,12 @@ class SilverTransformer:
             errors.append(f"Encours negatif: {encours}")
             client["encours"] = 0
         elif encours > 50_000_000:
-            errors.append(f"Encours aberrant: {encours}")
-        client["encours"] = encours if encours is not None else 0
+            errors.append(f"Encours aberrant: {encours}")   # signalé, valeur conservée
+            client["encours"] = encours
+        else:
+            client["encours"] = encours
+        # (Avant : une dernière ligne réécrivait toujours la valeur d'origine,
+        #  ce qui annulait la correction à 0 d'un encours négatif.)
 
         email = str(client.get("email") or "").strip()
         if email == "":
