@@ -9,7 +9,6 @@ import math
 import re
 import time
 from typing import Any, Dict, List, Optional
-from functools import lru_cache
 
 from sqlalchemy.orm import Session
 
@@ -33,121 +32,72 @@ _cache_ttl = 300  # 5 minutes de cache
 def validate_question_by_role(question: str, user: User) -> tuple[bool, Optional[str]]:
     """
     Valide si une question est autorisée selon le rôle de l'utilisateur.
-    
+
     Retourne (is_allowed, error_message)
     """
     question_lower = question.lower()
     role = user.role
-    
-    # Règles par rôle
+
+    # Règles par rôle : uniquement des INTERDICTIONS (liste noire).
+    # Une ancienne version exigeait aussi qu'un mot d'une « liste blanche » soit
+    # présent ; écrite au singulier strict (\bclient\b ne reconnaît pas
+    # « clients »), elle refusait beaucoup de questions légitimes.
+    # DG et Admin ont accès à tous les modules dans le portail : aucune restriction.
     role_restrictions = {
-        UserRole.DG: {
-            "allowed_patterns": [r".*"],  # Tout est autorisé pour le DG
-            "forbidden_patterns": []
-        },
-        UserRole.DR: {
-            "allowed_patterns": [
-                r"\bpnb\b", r"\bperformance\b", r"\bcr[ée]dit\b", r"\bencours\b",
-                r"\bagence\b", r"\bclient\b", r"\brisque\b", r"\bnpl\b",
-                r"\bmois\b", r"\bann[ée]e\b", r"\b[ée]volution\b", r"\btendance\b"
-            ],
-            "forbidden_patterns": [
-                r"\bglobal\b", r"\bnationale\b", r"\bbanque enti[èe]re\b",
-                r"\btoutes les r[ée]gions\b", r"\bcomparaison.*r[ée]gion\b",
-                r"\bdr.*dr\b", r"\bdirecteur.*r[ée]gional.*r[ée]gional\b"
-            ]
-        },
-        UserRole.CA: {
-            "allowed_patterns": [
-                r"\bpnb\b", r"\bperformance\b", r"\bcr[ée]dit\b", r"\bencours\b",
-                r"\bclient\b", r"\bsatisfaction\b", r"\bmois\b", r"\bann[ée]e\b"
-            ],
-            "forbidden_patterns": [
-                r"\bglobal\b", r"\bnationale\b", r"\bbanque enti[èe]re\b",
-                r"\btoutes les r[ée]gions\b", r"\bcomparaison.*r[ée]gion\b",
-                r"\bautres agences\b", r"\btop.*agences\b", r"\bclassement.*agences\b",
-                r"\bbenchmark\b", r"\bcomparaison\b", r"\bvs\b",
-                r"\brisque.*npl\b", r"\bprobabilit[ée].*d[ée]faut\b"
-            ]
-        },
-        UserRole.AR: {
-            "allowed_patterns": [
-                r"\brisque\b", r"\bnpl\b", r"\bclient.*risque\b", r"\bprobabilit[ée]\b",
-                r"\bcr[ée]dit.*risque\b", r"\bencours.*risque\b", r"\bdefault\b",
-                r"\bscoring\b", r"\bnotation\b", r"\bclassification\b"
-            ],
-            "forbidden_patterns": [
-                r"\bpnb\b", r"\bproduit.*net.*bancaire\b", r"\bchiffre.*affaires\b",
-                r"\bprofit\b", r"\bmarge\b", r"\bb[ée]n[ée]fice\b",
-                r"\bcompte.*r[ée]sultat\b", r"\brentabilit[ée]\b",
-                r"\bperformance.*financi[èe]re\b"
-            ]
-        },
-        UserRole.ADMIN: {
-            "allowed_patterns": [
-                r"\bsyst[èe]me\b", r"\butilisateur\b", r"\bconnexion\b", r"\blog\b",
-                r"\bstatus\b", r"\b[ée]tat\b", r"\bserviteur\b", r"\bdatabase\b"
-            ],
-            "forbidden_patterns": [
-                r"\bpnb\b", r"\bcr[ée]dit\b", r"\bclient\b", r"\bperformance\b",
-                r"\brisque\b", r"\bnpl\b", r"\bencours\b"
-            ]
-        }
+        UserRole.DG: [],
+        UserRole.ADMIN: [],
+        UserRole.DR: [  # périmètre : sa région
+            r"\bglobal(e|es|aux)?\b", r"\bnational(e|es|aux)?\b", r"\bbanque enti[èe]re\b",
+            r"\btoutes les r[ée]gions\b", r"\bcomparaisons?\b.*\br[ée]gions?\b",
+        ],
+        UserRole.CA: [  # périmètre : son portefeuille, sans comparaison entre agences ni risque
+            r"\bglobal(e|es|aux)?\b", r"\bnational(e|es|aux)?\b", r"\bbanque enti[èe]re\b",
+            r"\btoutes les r[ée]gions\b", r"\bautres agences\b",
+            r"\b(top|classement)\b.*\bagences\b", r"\bbenchmarks?\b", r"\bcomparaisons?\b", r"\bvs\b",
+            r"\bnpl\b", r"\bprobabilit[ée]s?\b.*\bd[ée]faut\b",
+        ],
+        UserRole.AR: [  # périmètre : le risque, sans les résultats financiers
+            r"\bpnb\b", r"\bproduit net bancaire\b", r"\bchiffres? d.affaires\b",
+            r"\bprofits?\b", r"\bmarges?\b", r"\bb[ée]n[ée]fices?\b",
+            r"\bcomptes? de r[ée]sultat\b", r"\brentabilit[ée]s?\b",
+            r"\bperformances? financi[èe]res?\b", r"\bcommissions?\b",
+        ],
     }
-    
-    restrictions = role_restrictions.get(role)
-    if not restrictions:
+
+    forbidden_patterns = role_restrictions.get(role)
+    if forbidden_patterns is None:
         return False, f"Rôle non reconnu : {role}"
-    
-    # Vérifier les patterns interdits
-    for pattern in restrictions["forbidden_patterns"]:
+
+    for pattern in forbidden_patterns:
         if re.search(pattern, question_lower):
-            error_msg = get_forbidden_message(pattern, role)
-            return False, error_msg
-    
-    # Vérifier les patterns autorisés (si restreint)
-    if restrictions["allowed_patterns"] and restrictions["allowed_patterns"] != [r".*"]:
-        allowed = False
-        for pattern in restrictions["allowed_patterns"]:
-            if re.search(pattern, question_lower):
-                allowed = True
-                break
-        
-        if not allowed:
-            return False, get_not_allowed_message(role)
-    
+            return False, get_forbidden_message(pattern, role)
+
     return True, None
 
 def get_forbidden_message(pattern: str, role: UserRole) -> str:
     """Génère un message d'erreur personnalisé selon le pattern et le rôle."""
     if role == UserRole.DR:
-        if "global" in pattern or "nationale" in pattern:
-            return "En tant que Directeur Régional, vous n'avez accès qu'aux données de votre région. Pour les données globales, contactez la Direction Générale."
-        if "comparaison.*région" in pattern:
+        if "comparaison" in pattern:
             return "Les comparaisons inter-régionales ne sont pas autorisées pour votre rôle. Contactez la Direction Générale pour les analyses multi-régionales."
-    
+        return "En tant que Directeur Régional, vous n'avez accès qu'aux données de votre région. Pour les données globales, contactez la Direction Générale."
+
     elif role == UserRole.CA:
-        if "global" in pattern or "nationale" in pattern:
-            return "En tant que Chef d'Agence, vous n'avez accès qu'aux données de votre agence. Pour les données globales, contactez votre Directeur Régional."
-        if "comparaison" in pattern or "vs" in pattern:
-            return "Les comparaisons entre agences ne sont pas autorisées pour votre rôle. Contactez votre Directeur Régional pour les benchmarks."
-        if "risque" in pattern or "npl" in pattern:
+        if "npl" in pattern or "faut" in pattern:
             return "Les données de risque sont restreintes. Contactez l'Analyste Risque pour ces informations."
-    
+        if "global" in pattern or "national" in pattern or "enti" in pattern or "toutes" in pattern:
+            return "En tant que Chargé d'Affaires, vous avez accès aux données de votre portefeuille. Pour les données globales, contactez votre Directeur Régional."
+        return "Les comparaisons entre agences ne sont pas autorisées pour votre rôle. Contactez votre Directeur Régional pour les benchmarks."
+
     elif role == UserRole.AR:
-        if "pnb" in pattern or "profit" in pattern:
-            return "En tant qu'Analyste Risque, vous n'avez accès qu'aux données de risque. Les données financières sont restreintes."
-    
-    elif role == UserRole.ADMIN:
-        return "Les questions métiers ne sont pas autorisées pour le rôle Administrateur. Utilisez la console d'administration pour les tâches système."
-    
+        return "En tant qu'Analyste Risque, vous avez accès aux données de risque. Les données financières (PNB, marges, rentabilité) sont réservées à d'autres profils."
+
     return "Cette question n'est pas autorisée pour votre rôle. Contactez votre supérieur hiérarchique."
 
 def get_not_allowed_message(role: UserRole) -> str:
     """Génère un message pour les questions non autorisées."""
     messages = {
         UserRole.DR: "Votre question ne correspond pas aux types d'analyses autorisées pour les Directeurs Régionaux.",
-        UserRole.CA: "Votre question ne correspond pas aux types d'analyses autorisées pour les Chefs d'Agence.",
+        UserRole.CA: "Votre question ne correspond pas aux types d'analyses autorisées pour les Chargés d'Affaires.",
         UserRole.AR: "Votre question ne correspond pas aux types d'analyses autorisées pour les Analystes Risque.",
         UserRole.ADMIN: "Votre question ne correspond pas aux tâches administratives autorisées."
     }
@@ -499,7 +449,7 @@ def _generer_titre_graphique(columns: List[str], chart_type: str, question: str)
     if len(columns) >= 2:
         col_x = columns[0].replace("_", " ").title()
         col_y = columns[1].replace("_", " ").title()
-        
+
         if chart_type == "line":
             return f"Évolution de {col_y} par {col_x}"
         elif chart_type == "pie":
@@ -508,7 +458,7 @@ def _generer_titre_graphique(columns: List[str], chart_type: str, question: str)
             return f"Comparaison de {col_y} par {col_x}"
         elif chart_type == "boxplot":
             return f"Distribution de {col_y} par {col_x}"
-    
+
     # Fallback basé sur la question
     question_lower = question.lower()
     if "pnb" in question_lower:
@@ -526,7 +476,7 @@ def _generer_suggestion_erreur(question: str, error: str) -> str:
     """Génère des suggestions basées sur le type d'erreur."""
     error_lower = error.lower()
     question_lower = question.lower()
-    
+
     # Erreurs de table/colonne introuvable
     if "column" in error_lower or "table" in error_lower or "does not exist" in error_lower:
         if "casa" in question_lower:
@@ -535,19 +485,19 @@ def _generer_suggestion_erreur(question: str, error: str) -> str:
             return "Les données de familles de crédits ne sont pas disponibles directement. Essayez une question sur les types de crédits."
         else:
             return "Vérifiez les termes utilisés ou essayez une formulation plus générale."
-    
+
     # Erreurs de date/temps
     if "date" in error_lower or "time" in error_lower:
         return "Les données sont mensuelles. Essayez sans préciser de date exacte ou demandez une période."
-    
+
     # Erreurs de jointure
     if "join" in error_lower or "ambiguous" in error_lower:
         return "La requête est complexe. Simplifiez votre question ou séparez-la en plusieurs parties."
-    
+
     # Erreurs de syntaxe SQL
     if "syntax" in error_lower:
         return "Erreur de génération SQL. Reformulez votre question différemment."
-    
+
     # Erreur générique
     return f"Erreur technique : {error}. Essayez de reformuler votre question."
 
@@ -556,22 +506,22 @@ def _generer_suggestion_erreur(question: str, error: str) -> str:
 def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
     """Détecte si la question peut être traitée par un outil spécialisé."""
     question_lower = question.lower()
-    
+
     # Patterns pour détection d'outils
     tool_patterns = {
         "kpi_calculator": [
-            r"\bkpi\b", r"\bindicateur\b", r"\bperformance.*globale\b", 
+            r"\bkpi\b", r"\bindicateur\b", r"\bperformance.*globale\b",
             r"\bsant[ée].*banque\b", r"\bdiagnostic\b"
         ],
         "comparison_tool": [
             r"\bcompar\b", r"\bvs\b", r"\bcontre\b", r"\bpar rapport [àa]\b"
         ],
         "ranking_tool": [
-            r"\btop\b", r"\bclassement\b", r"\bmeilleur\b", r"\bpire\b", 
+            r"\btop\b", r"\bclassement\b", r"\bmeilleur\b", r"\bpire\b",
             r"\bleading\b", r"\bbottom\b"
         ],
         "trend_analyzer": [
-            r"\b[ée]volution\b", r"\btendance\b", r"\bprogression\b", 
+            r"\b[ée]volution\b", r"\btendance\b", r"\bprogression\b",
             r"\btrend\b", r"\bhistorique\b", r"\bmensuel\b"
         ],
         "email_generator": [
@@ -591,43 +541,43 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
             r"\bfutur\b", r"\bsera\b", r"\bprochain.*mois\b", r"\btendance.*future\b"
         ],
     }
-    
+
     # Détection de l'outil approprié
     detected_tool = None
     for tool_name, patterns in tool_patterns.items():
         if any(re.search(pattern, question_lower) for pattern in patterns):
             detected_tool = tool_name
             break
-    
+
     if not detected_tool:
         return None
-    
+
     # Exécution de l'outil détecté
     try:
         tool_handler = ToolCallHandler(db)
-        
+
         if detected_tool == "kpi_calculator":
             # Déterminer le KPI approprié
             kpi_mapping = {
                 "pnb": "pnb_total",
-                "npl": "npl_average", 
+                "npl": "npl_average",
                 "nim": "nim_average",
                 "encours": "total_encours",
                 "risque": "high_risk_clients",
                 "satisfaction": "satisfaction_avg"
             }
-            
+
             kpi_type = None
             for keyword, kpi in kpi_mapping.items():
                 if keyword in question_lower:
                     kpi_type = kpi
                     break
-            
+
             if not kpi_type:
                 kpi_type = "pnb_total"  # Default
-            
+
             result = tool_handler.execute_tool("kpi_calculator", {"kpi_type": kpi_type})
-            
+
             if result.get("success"):
                 value = result.get("value")
                 unit = result.get("unit", "")
@@ -639,7 +589,7 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                     "chart": None,
                     "from_cache": False
                 }
-        
+
         elif detected_tool == "ranking_tool":
             # Déterminer le type de classement
             if "top" in question_lower and "agence" in question_lower:
@@ -648,9 +598,9 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                 ranking_type = "bottom_agences_npl"
             else:
                 ranking_type = "top_agences_pnb"
-            
+
             result = tool_handler.execute_tool("ranking_tool", {"ranking_type": ranking_type, "limit": 5})
-            
+
             if result.get("success"):
                 rows = result.get("rows", [])
                 if rows:
@@ -666,19 +616,19 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                         "chart": {"type": "bar", "title": f"Classement: {ranking_type}", "labels": [r[0] for r in rows], "values": [r[1] for r in rows]},
                         "from_cache": False
                     }
-        
+
         elif detected_tool == "trend_analyzer":
             # Déterminer la métrique de tendance
             metric = "pnb" if "pnb" in question_lower else "npl"
             result = tool_handler.execute_tool("trend_analyzer", {"metric": metric, "period": "2026"})
-            
+
             if result.get("success"):
                 trend_analysis = result.get("trend_analysis", {})
                 trend = trend_analysis.get("trend", "inconnue")
                 change_pct = trend_analysis.get("change_percentage", 0)
-                
+
                 answer = f"Tendance {metric} : {trend} ({change_pct:+.1f}%)."
-                
+
                 rows = result.get("rows", [])
                 chart = None
                 if rows:
@@ -688,7 +638,7 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                         "labels": [r[0] for r in rows],
                         "values": [r[1] for r in rows]
                     }
-                
+
                 return {
                     "mode": "tool_call",
                     "answer": answer,
@@ -700,7 +650,7 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                     "chart": chart,
                     "from_cache": False
                 }
-        
+
         elif detected_tool == "email_generator":
             # Déterminer le type d'email
             if "rapport" in question_lower or "quotidien" in question_lower:
@@ -711,9 +661,9 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                 email_type = "summary"
             else:
                 email_type = "report"
-            
+
             result = tool_handler.execute_tool("email_generator", {"email_type": email_type})
-            
+
             if result.get("success"):
                 return {
                     "mode": "tool_call",
@@ -722,11 +672,11 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                     "tool_params": {"email_type": email_type},
                     "from_cache": False
                 }
-        
+
         elif detected_tool == "alert_generator":
             alert_type = "kpi"
             result = tool_handler.execute_tool("alert_generator", {"alert_type": alert_type})
-            
+
             if result.get("success"):
                 alerts = result.get("alerts", [])
                 if alerts:
@@ -746,17 +696,17 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                         "tool_params": {"alert_type": alert_type},
                         "from_cache": False
                     }
-        
+
         elif detected_tool == "summary_tool":
             result = tool_handler.execute_tool("summary_tool", {})
-            
+
             if result.get("success"):
                 kpis = result.get("kpis", {})
                 status = result.get("status", "normal")
                 kpi_text = "\n".join([f"- {k}: {v}" for k, v in kpis.items()])
-                
+
                 status_emoji = "✅" if status == "normal" else "⚠️" if status == "attention_requise" else "🚨"
-                
+
                 return {
                     "mode": "tool_call",
                     "answer": f"Résumé système ({result['timestamp']}):\n{status_emoji} Statut: {status}\n\nKPIs:\n{kpi_text}",
@@ -764,7 +714,7 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                     "tool_params": {},
                     "from_cache": False
                 }
-        
+
         elif detected_tool == "prediction_tool":
             # Déterminer le type de prédiction
             if "pnb" in question_lower:
@@ -773,9 +723,9 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                 prediction_type = "npl"
             else:
                 prediction_type = "pnb"  # Default
-            
+
             result = tool_handler.execute_tool("prediction_tool", {"prediction_type": prediction_type})
-            
+
             if result.get("success"):
                 return {
                     "mode": "tool_call",
@@ -784,16 +734,16 @@ def _check_tool_calling(question: str, db: Session) -> Optional[Dict[str, Any]]:
                     "tool_params": {"prediction_type": prediction_type},
                     "from_cache": False
                 }
-    
-    except Exception as e:
+
+    except Exception:
         # En cas d'erreur dans le tool calling, on retourne None pour laisser le système standard traiter
         pass
-    
+
     return None
 
 class ToolCallHandler:
     """Gestionnaire d'outils pour le Tool Calling avancé."""
-    
+
     def __init__(self, db: Session):
         self.db = db
         self.tools = {
@@ -807,13 +757,13 @@ class ToolCallHandler:
             "summary_tool": self._summary_tool,
             "prediction_tool": self._prediction_tool,
         }
-    
+
     def _sql_analyzer_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Outil d'analyse SQL générique."""
         sql = params.get("sql", "")
         if not sql:
             return {"error": "SQL requis"}
-        
+
         try:
             columns, rows = execute_read_only_sql(sql)
             return {
@@ -824,11 +774,11 @@ class ToolCallHandler:
             }
         except Exception as e:
             return {"error": str(e)}
-    
+
     def _kpi_calculator_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Outil de calcul de KPIs bancaires."""
         kpi_type = params.get("kpi_type", "")
-        
+
         kpi_queries = {
             "pnb_total": "SELECT COALESCE(SUM(pnb), 0) AS pnb_total FROM fact_performance",
             "npl_average": "SELECT ROUND(AVG(npl_ratio), 2) AS npl_avg FROM fact_performance",
@@ -837,10 +787,10 @@ class ToolCallHandler:
             "high_risk_clients": "SELECT COUNT(*) AS high_risk_count FROM dim_client WHERE score_actuel < 40",
             "satisfaction_avg": "SELECT ROUND(AVG(note_satisfaction_client), 2) AS satisfaction_avg FROM fact_qualite",
         }
-        
+
         if kpi_type not in kpi_queries:
             return {"error": f"KPI inconnu: {kpi_type}. Options: {list(kpi_queries.keys())}"}
-        
+
         try:
             columns, rows = execute_read_only_sql(kpi_queries[kpi_type])
             if rows and len(rows) > 0:
@@ -853,35 +803,35 @@ class ToolCallHandler:
             return {"error": "Pas de données"}
         except Exception as e:
             return {"error": str(e)}
-    
+
     def _comparison_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Outil de comparaison entre entités."""
         entity_type = params.get("entity_type", "agence")  # agence, region, etc.
         metric = params.get("metric", "pnb")
-        
+
         comparison_queries = {
             "agence_pnb": """
-                SELECT da.nom AS agence, COALESCE(SUM(fp.pnb), 0) AS pnb_total 
-                FROM fact_performance fp 
-                JOIN dim_agence da ON fp.agence_id = da.agence_id 
-                GROUP BY da.nom 
-                ORDER BY pnb_total DESC 
+                SELECT da.nom AS agence, COALESCE(SUM(fp.pnb), 0) AS pnb_total
+                FROM fact_performance fp
+                JOIN dim_agence da ON fp.agence_id = da.agence_id
+                GROUP BY da.nom
+                ORDER BY pnb_total DESC
                 LIMIT 10
             """,
             "agence_npl": """
-                SELECT da.nom AS agence, ROUND(AVG(fp.npl_ratio), 2) AS npl_avg 
-                FROM fact_performance fp 
-                JOIN dim_agence da ON fp.agence_id = da.agence_id 
-                GROUP BY da.nom 
-                ORDER BY npl_avg DESC 
+                SELECT da.nom AS agence, ROUND(AVG(fp.npl_ratio), 2) AS npl_avg
+                FROM fact_performance fp
+                JOIN dim_agence da ON fp.agence_id = da.agence_id
+                GROUP BY da.nom
+                ORDER BY npl_avg DESC
                 LIMIT 10
             """,
         }
-        
+
         query_key = f"{entity_type}_{metric}"
         if query_key not in comparison_queries:
             return {"error": f"Comparaison non disponible: {query_key}"}
-        
+
         try:
             columns, rows = execute_read_only_sql(comparison_queries[query_key])
             return {
@@ -893,34 +843,34 @@ class ToolCallHandler:
             }
         except Exception as e:
             return {"error": str(e)}
-    
+
     def _ranking_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Outil de classement."""
         ranking_type = params.get("ranking_type", "top_agences_pnb")
         limit = params.get("limit", 5)
-        
+
         ranking_queries = {
             "top_agences_pnb": f"""
-                SELECT da.nom AS agence, COALESCE(SUM(fp.pnb), 0) AS total_pnb 
-                FROM fact_performance fp 
-                JOIN dim_agence da ON fp.agence_id = da.agence_id 
-                GROUP BY da.nom 
-                ORDER BY total_pnb DESC 
+                SELECT da.nom AS agence, COALESCE(SUM(fp.pnb), 0) AS total_pnb
+                FROM fact_performance fp
+                JOIN dim_agence da ON fp.agence_id = da.agence_id
+                GROUP BY da.nom
+                ORDER BY total_pnb DESC
                 LIMIT {limit}
             """,
             "bottom_agences_npl": f"""
-                SELECT da.nom AS agence, ROUND(AVG(fp.npl_ratio), 2) AS npl_avg 
-                FROM fact_performance fp 
-                JOIN dim_agence da ON fp.agence_id = da.agence_id 
-                GROUP BY da.nom 
-                ORDER BY npl_avg ASC 
+                SELECT da.nom AS agence, ROUND(AVG(fp.npl_ratio), 2) AS npl_avg
+                FROM fact_performance fp
+                JOIN dim_agence da ON fp.agence_id = da.agence_id
+                GROUP BY da.nom
+                ORDER BY npl_avg ASC
                 LIMIT {limit}
             """,
         }
-        
+
         if ranking_type not in ranking_queries:
             return {"error": f"Classement non disponible: {ranking_type}"}
-        
+
         try:
             columns, rows = execute_read_only_sql(ranking_queries[ranking_type])
             return {
@@ -932,38 +882,38 @@ class ToolCallHandler:
             }
         except Exception as e:
             return {"error": str(e)}
-    
+
     def _trend_analyzer_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Outil d'analyse de tendance temporelle."""
         metric = params.get("metric", "pnb")
         period = params.get("period", "2026")
-        
+
         trend_queries = {
             "pnb_monthly": f"""
-                SELECT dd.annee_mois, COALESCE(SUM(fp.pnb), 0) AS pnb 
-                FROM fact_performance fp 
-                JOIN dim_date dd ON fp.date_id = dd.date_id 
+                SELECT dd.annee_mois, COALESCE(SUM(fp.pnb), 0) AS pnb
+                FROM fact_performance fp
+                JOIN dim_date dd ON fp.date_id = dd.date_id
                 WHERE dd.annee = {period}
-                GROUP BY dd.annee_mois 
+                GROUP BY dd.annee_mois
                 ORDER BY dd.annee_mois
             """,
             "npl_monthly": f"""
-                SELECT dd.annee_mois, ROUND(AVG(fp.npl_ratio), 2) AS npl_avg 
-                FROM fact_performance fp 
-                JOIN dim_date dd ON fp.date_id = dd.date_id 
+                SELECT dd.annee_mois, ROUND(AVG(fp.npl_ratio), 2) AS npl_avg
+                FROM fact_performance fp
+                JOIN dim_date dd ON fp.date_id = dd.date_id
                 WHERE dd.annee = {period}
-                GROUP BY dd.annee_mois 
+                GROUP BY dd.annee_mois
                 ORDER BY dd.annee_mois
             """,
         }
-        
+
         query_key = f"{metric}_monthly"
         if query_key not in trend_queries:
             return {"error": f"Tendance non disponible: {query_key}"}
-        
+
         try:
             columns, rows = execute_read_only_sql(trend_queries[query_key])
-            
+
             # Analyse de tendance simple
             if rows and len(rows) >= 2:
                 first_val = rows[0][1] if len(rows[0]) > 1 else 0
@@ -977,7 +927,7 @@ class ToolCallHandler:
             else:
                 trend = "insuffisamment de données"
                 change_pct = 0
-            
+
             return {
                 "success": True,
                 "trend_type": query_key,
@@ -991,12 +941,12 @@ class ToolCallHandler:
             }
         except Exception as e:
             return {"error": str(e)}
-    
+
     def _email_generator_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Génère un contenu d'email professionnel basé sur les données."""
         email_type = params.get("email_type", "report")
         recipient = params.get("recipient", "direction@company.com")
-        
+
         email_templates = {
             "report": {
                 "subject": "Rapport Analytique Quotidien",
@@ -1011,17 +961,17 @@ class ToolCallHandler:
                 "body": "Synthèse de l'activité hebdomadaire : performance, risque et satisfaction client."
             }
         }
-        
+
         if email_type not in email_templates:
             return {"error": f"Type d'email inconnu: {email_type}"}
-        
+
         try:
             # Récupérer les données KPI pour l'email
             kpi_result = self._kpi_calculator_tool({"kpi_type": "pnb_total"})
-            
+
             template = email_templates[email_type]
             kpi_value = kpi_result.get("value", "N/A") if kpi_result.get("success") else "N/A"
-            
+
             email_content = {
                 "success": True,
                 "email_type": email_type,
@@ -1030,25 +980,25 @@ class ToolCallHandler:
                 "body": f"{template['body']}\n\nPNB Actuel: {kpi_value} MAD\n\nCordialement,\nL'équipe Analytics",
                 "kpi_value": kpi_value
             }
-            
+
             return email_content
         except Exception as e:
             return {"error": str(e)}
-    
+
     def _alert_generator_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Génère des alertes basées sur les seuils critiques."""
         alert_type = params.get("alert_type", "kpi")
-        
+
         alert_queries = {
             "kpi": {
                 "npl_critical": "SELECT da.nom, ROUND(AVG(fp.npl_ratio), 2) AS npl_avg FROM fact_performance fp JOIN dim_agence da ON fp.agence_id = da.agence_id GROUP BY da.nom HAVING AVG(fp.npl_ratio) > 10",
                 "low_performance": "SELECT da.nom, COALESCE(SUM(fp.pnb), 0) AS total_pnb FROM fact_performance fp JOIN dim_agence da ON fp.agence_id = da.agence_id GROUP BY da.nom HAVING COALESCE(SUM(fp.pnb), 0) < 1000000"
             }
         }
-        
+
         if alert_type not in alert_queries:
             return {"error": f"Type d'alerte inconnu: {alert_type}"}
-        
+
         try:
             alerts = []
             for alert_name, query in alert_queries[alert_type].items():
@@ -1061,7 +1011,7 @@ class ToolCallHandler:
                             "value": row[1],
                             "severity": "critique" if "critical" in alert_name else "warning"
                         })
-            
+
             return {
                 "success": True,
                 "alert_type": alert_type,
@@ -1070,39 +1020,39 @@ class ToolCallHandler:
             }
         except Exception as e:
             return {"error": str(e)}
-    
+
     def _summary_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Génère un résumé rapide de l'état du système."""
         try:
             # Récupérer plusieurs KPIs
             pnb_result = self._kpi_calculator_tool({"kpi_type": "pnb_total"})
             npl_result = self._kpi_calculator_tool({"kpi_type": "npl_average"})
-            
+
             summary = {
                 "success": True,
                 "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
                 "kpis": {},
                 "status": "normal"
             }
-            
+
             if pnb_result.get("success"):
                 summary["kpis"]["pnb_total"] = pnb_result.get("value")
-            
+
             if npl_result.get("success"):
                 summary["kpis"]["npl_average"] = npl_result.get("value")
                 if npl_result.get("value", 0) > 8:
                     summary["status"] = "attention_requise"
                 if npl_result.get("value", 0) > 12:
                     summary["status"] = "critique"
-            
+
             return summary
         except Exception as e:
             return {"error": str(e)}
-    
+
     def _prediction_tool(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Outil de prédiction simple basé sur les tendances historiques."""
         prediction_type = params.get("prediction_type", "pnb")
-        
+
         try:
             if prediction_type == "pnb":
                 # Récupérer les données historiques pour la prédiction
@@ -1115,7 +1065,7 @@ class ToolCallHandler:
                     "ORDER BY dd.annee_mois "
                     "LIMIT 6"
                 )
-                
+
                 if len(rows) >= 2:
                     # Prédiction simple : moyenne de croissance des 3 derniers mois
                     values = [float(r[1]) for r in rows[-3:]]
@@ -1123,7 +1073,7 @@ class ToolCallHandler:
                         avg_growth = (values[-1] - values[0]) / len(values) if values[0] > 0 else 0
                         last_value = values[-1]
                         predicted = last_value * (1 + avg_growth)
-                        
+
                         next_month = rows[-1][0] if rows else "2026-09"
                         return {
                             "success": True,
@@ -1134,7 +1084,7 @@ class ToolCallHandler:
                             "period": f"Prochain mois ({next_month})",
                             "method": "Croissance moyenne sur 3 derniers mois"
                         }
-            
+
             elif prediction_type == "npl":
                 columns, rows = execute_read_only_sql(
                     "SELECT dd.annee_mois, ROUND(AVG(fp.npl_ratio), 2) AS npl "
@@ -1145,16 +1095,16 @@ class ToolCallHandler:
                     "ORDER BY dd.annee_mois "
                     "LIMIT 6"
                 )
-                
+
                 if len(rows) >= 2:
                     values = [float(r[1]) for r in rows[-3:]]
                     if values:
                         avg_change = (values[-1] - values[0]) / len(values)
                         last_value = values[-1]
                         predicted = last_value + avg_change
-                        
+
                         next_month = rows[-1][0] if rows else "2026-09"
-                        
+
                         return {
                             "success": True,
                             "prediction_type": "npl",
@@ -1164,42 +1114,41 @@ class ToolCallHandler:
                             "period": f"Prochain mois ({next_month})",
                             "method": "Tendance moyenne sur 3 derniers mois"
                         }
-            
+
             return {
                 "error": f"Prediction non disponible pour {prediction_type} ou données insuffisantes"
             }
-            
+
         except Exception as e:
             return {"error": str(e)}
-    
+
     def execute_tool(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Exécute un outil spécifique."""
         if tool_name not in self.tools:
             return {"error": f"Outil inconnu: {tool_name}. Options: {list(self.tools.keys())}"}
-        
+
         return self.tools[tool_name](params)
 
 
 def _check_temporal_tool(question: str) -> Optional[Dict[str, Any]]:
     """Tool contextuel de date : repond aux questions sur la date et periode courante."""
     from datetime import date as _date
-    import locale as _locale
 
     q_clean = question.lower().strip()
-    
+
     # Mots-clés bancaires qui indiquent que la question n'est PAS purement temporelle
     # Si ces mots sont présents, on laisse le LLM traiter la question normalement
     banking_keywords = [
         r"\bpnb\b", r"\bproduit\s+net\s+bancaire\b", r"\bencours\b", r"\bcr[ée]dit\b",
-        r"\bclient\b", r"\bagence\b", r"\bperformance\b", r"\brisque\b", 
+        r"\bclient\b", r"\bagence\b", r"\bperformance\b", r"\brisque\b",
         r"\bengagement\b", r"\bmontant\b", r"\bcaisse\b", r"\bepargne\b",
         r"\bdep[ôo]t\b", r"\bpret\b", r"\btaux\b", r"\bbenefice\b", r"\bchiffre\b"
     ]
-    
+
     # Si la question contient des mots-clés bancaires, ce n'est pas une question purement temporelle
     if any(re.search(k, q_clean) for k in banking_keywords):
         return None
-    
+
     date_patterns = [
         r"\bquelle?\s+(est\s+)?(la\s+)?date(\s+d'aujourd'hui)?\b",  # quelle/quel
         r"\bquel\s+est\s+le\s+(jour|date)\b",
@@ -1229,7 +1178,7 @@ def _check_temporal_tool(question: str) -> Optional[Dict[str, Any]]:
         mois_nom = mois_fr[today.month]
         trimestre = (today.month - 1) // 3 + 1
         date_str = f"{jour_nom} {today.day} {mois_nom} {today.year}"
-        
+
         # Gestion des questions futures
         if "demain" in q_clean:
             tomorrow = today + _timedelta(days=1)
@@ -1247,7 +1196,7 @@ def _check_temporal_tool(question: str) -> Optional[Dict[str, Any]]:
                 "tables": [],
                 "duration_ms": 2,
             }
-        
+
         return {
             "mode": "date_tool",
             "answer": f"Nous sommes le **{date_str}** (T{trimestre} {today.year}).",
@@ -1345,7 +1294,7 @@ def _generate_answer(
     valeurs = [v for v in valeurs if v is not None]
     total_val = sum(valeurs) if valeurs else 0
     avg_val = total_val / len(valeurs) if valeurs else 0
-    
+
     # Analyse de tendance pour les series temporelles
     tendance = ""
     if len(valeurs) >= 3 and "annee_mois" in str(columns).lower():
@@ -1358,7 +1307,7 @@ def _generate_answer(
             tendance = "Tendance : en baisse. "
         else:
             tendance = "Tendance : stable. "
-    
+
     # Analyse de classement
     classement = ""
     if len(valeurs) >= 2 and len(rows) >= 2:
@@ -1367,10 +1316,10 @@ def _generate_answer(
         if max_idx < len(rows) and len(rows[max_idx]) > 0:
             leader = str(rows[max_idx][0])
             classement = f"Leader : {leader} avec {max_val:,.2f} MAD. "
-    
+
     ligne_agg = f"Moyenne : {avg_val:,.2f} | Total : {total_val:,.2f}\n" if valeurs else ""
     contexte_analytique = f"{tendance}{classement}" if (tendance or classement) else ""
-    
+
     prompt = (
         f"Question : {question}\n"
         f"Nombre de lignes : {len(rows)}\n"
@@ -1411,13 +1360,31 @@ def _corriger_vocabulaire(texte: str) -> str:
 def answer_question(db: Session, user: User, question: str) -> Dict[str, Any]:
     start = time.perf_counter()
 
+    # -1. Contrôle d'accès : certaines analyses sont réservées à certains rôles.
+    #     Fait en premier, pour que ni le cache ni les outils ne le contournent.
+    allowed, refus = validate_question_by_role(question, user)
+    if not allowed:
+        _log_query(db, user, question, "forbidden", None, 0, 0, "refused", None, [], refus)
+        return {
+            "mode": "oob", "answer": refus,
+            "sql": None, "sql_explanation": None,
+            "columns": None, "rows": None, "row_count": 0,
+            "chart": None, "tables": [], "duration_ms": 0,
+            "degraded": False, "from_cache": False,
+        }
+
     # 0. Vérification du cache pour les questions fréquentes
     cache_key = _get_cache_key(question, user.id)
     cached_response = _get_from_cache(cache_key)
     if cached_response:
-        # Retourner la réponse en cache avec un indicateur
-        cached_response["from_cache"] = True
-        return cached_response
+        # Réponse en cache : on la journalise aussi, pour que l'historique Admin
+        # reflète toutes les questions posées (avant, les répétitions n'y
+        # apparaissaient pas). Copie, pour ne pas modifier l'objet en cache.
+        response = {**cached_response, "from_cache": True}
+        duration_ms = int((time.perf_counter() - start) * 1000)
+        _log_query(db, user, question, "cache", response.get("sql"), response.get("row_count") or 0,
+                   duration_ms, "success", None, response.get("tables") or [], response.get("answer"))
+        return response
 
     # 0.5. Vérification du Tool Calling avancé
     tool_result = _check_tool_calling(question, db)
@@ -1496,7 +1463,7 @@ def answer_question(db: Session, user: User, question: str) -> Dict[str, Any]:
         # Gestion améliorée des erreurs avec suggestions
         suggestion = _generer_suggestion_erreur(question, error)
         message_erreur = f"Je n'ai pas pu exécuter cette analyse. {suggestion}"
-        
+
         _log_query(db, user, question, "sql", sql, 0, duration_ms, "error", error, tables, None)
         return {
             "mode": "error",
@@ -1517,7 +1484,7 @@ def answer_question(db: Session, user: User, question: str) -> Dict[str, Any]:
         answer = "Voici l'analyse demandee."
 
     _log_query(db, user, question, "sql", sql, len(rows), duration_ms, "success", None, tables, answer)
-    
+
     response = {
         "mode": "sql",
         "answer": answer,
@@ -1532,7 +1499,7 @@ def answer_question(db: Session, user: User, question: str) -> Dict[str, Any]:
         "degraded": bool(getattr(llm, "degraded", False)),
         "from_cache": False,
     }
-    
+
     # Mettre en cache les réponses SQL réussies
     _set_cache(cache_key, response)
     return response
