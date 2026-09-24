@@ -35,6 +35,10 @@ def run_etl_job() -> None:
         logger.info("Batch ETL terminé avec succès.")
     except Exception as exc:  # ne pas faire tomber le scheduler
         logger.exception("Batch ETL échoué : %s", exc)
+    finally:
+        # Les tables Gold ont (peut-être) changé : on oublie les résultats en cache
+        from app import cache
+        cache.clear()
 
 
 def start_scheduler() -> None:

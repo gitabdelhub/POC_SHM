@@ -12,7 +12,7 @@ router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.get("/", response_model=List[EngagementResponse])
-async def list_engagements(
+def list_engagements(
     skip: int = 0,
     limit: int = 100,
     client_id: Optional[str] = None,
@@ -34,7 +34,7 @@ async def list_engagements(
 
 
 @router.get("/{ref}", response_model=EngagementResponse)
-async def get_engagement(ref: str, db: Session = Depends(get_db)):
+def get_engagement(ref: str, db: Session = Depends(get_db)):
     engagement = db.query(Engagement).filter(Engagement.ref == ref).first()
     if not engagement:
         raise HTTPException(status_code=404, detail="Engagement non trouvé")
@@ -42,7 +42,7 @@ async def get_engagement(ref: str, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=EngagementResponse)
-async def create_engagement(engagement: EngagementCreate, db: Session = Depends(get_db)):
+def create_engagement(engagement: EngagementCreate, db: Session = Depends(get_db)):
     db_engagement = Engagement(**engagement.model_dump())
     db.add(db_engagement)
     db.commit()
@@ -51,7 +51,7 @@ async def create_engagement(engagement: EngagementCreate, db: Session = Depends(
 
 
 @router.put("/{ref}", response_model=EngagementResponse)
-async def update_engagement(ref: str, engagement_update: EngagementUpdate, db: Session = Depends(get_db)):
+def update_engagement(ref: str, engagement_update: EngagementUpdate, db: Session = Depends(get_db)):
     engagement = db.query(Engagement).filter(Engagement.ref == ref).first()
     if not engagement:
         raise HTTPException(status_code=404, detail="Engagement non trouvé")
@@ -63,7 +63,7 @@ async def update_engagement(ref: str, engagement_update: EngagementUpdate, db: S
 
 
 @router.delete("/{ref}")
-async def delete_engagement(ref: str, db: Session = Depends(get_db)):
+def delete_engagement(ref: str, db: Session = Depends(get_db)):
     engagement = db.query(Engagement).filter(Engagement.ref == ref).first()
     if not engagement:
         raise HTTPException(status_code=404, detail="Engagement non trouvé")
