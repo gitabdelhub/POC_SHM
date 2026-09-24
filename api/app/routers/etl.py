@@ -25,7 +25,7 @@ class EtlStatus(BaseModel):
 
 
 @router.post("/run", response_model=EtlStatus, dependencies=[Depends(require_roles("DG", "ADMIN"))])
-async def run_etl_manual():
+def run_etl_manual():
     """Relance le pipeline ETL complet en arrière-plan.
 
     Renvoie immédiatement : le vrai travail se fait en tâche de fond.
