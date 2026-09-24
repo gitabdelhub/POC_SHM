@@ -1,5 +1,9 @@
+import os
+
 import psycopg2
-conn = psycopg2.connect('postgresql://postgres:postgre_abdel@localhost:5432/saham_bank')
+
+# Adresse lue dans l'environnement (ex. : set DATABASE_URL=postgresql://...)
+conn = psycopg2.connect(os.environ["DATABASE_URL"])
 cur = conn.cursor()
 cur.execute("SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename")
 tables = [r[0] for r in cur.fetchall()]

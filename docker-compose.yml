@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: saham_bank
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgre_abdel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Definissez POSTGRES_PASSWORD dans le fichier .env}
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -19,12 +19,12 @@ services:
     build:
       context: ./backend
     environment:
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgre_abdel}@db:5432/saham_bank
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:?Definissez POSTGRES_PASSWORD dans le fichier .env}@db:5432/saham_bank
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
       POSTGRES_DB: saham_bank
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgre_abdel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Definissez POSTGRES_PASSWORD dans le fichier .env}
       DB_HOST: db
       DB_PORT: 5432
       SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-me}
